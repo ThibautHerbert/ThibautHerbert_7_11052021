@@ -1,6 +1,10 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mysql = require('mysql')
+//paquets de sécurité :
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const xss = require('xss-clean');
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -10,6 +14,15 @@ require('dotenv').config()
 //const userRoutes = require('./routes/user');
 //const postRoutes = require('./routes/post');
 //const commentRoutes = require('./routes/comment');
+
+const limiter = rateLimit({ // spécifie le nombre maximums de requêtes
+    max: 100, // 100 par heure
+    windowMs: 60 * 60 * 1000, // pour : 60mn 60secondes 1000 millisecondes
+    message: 'Vous avez réalisé trop de requêtes depuis votre adresse IP, merci de réessayer plus tard',
+  })
+app.use('/api', limiter);
+  // sécurité HTTP Headers
+app.use(helmet());
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json());
@@ -30,6 +43,10 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
  });
+
+// contre les attaques XSS (cross site scripting):
+app.use(xss());
+
 // all routes :
     // routes Users
         // Get All routes from employees table
