@@ -7,6 +7,10 @@ const port = process.env.PORT || 5000
 
 require('dotenv').config()
 
+//const userRoutes = require('./routes/user');
+//const postRoutes = require('./routes/post');
+//const commentRoutes = require('./routes/comment');
+
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json());
 
@@ -19,7 +23,13 @@ const pool = mysql.createPool({
     database        : 'SocialNetworkGroupomania',
 
 });
-
+// empêche les erreurs CORS
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    next();
+ });
 // all routes :
     // routes Users
         // Get All routes from employees table
@@ -110,6 +120,10 @@ app.delete('/:id', (req, res) => {
 
     // faire un filter pour get les plus récents content et messages ?
 */
+//app.use('/api/auth', userRoutes);
+//app.use('/api/posts', postRoutes);
+//app.use('/api/comments', commentRoutes);
+
 app.listen(port, () => console.log(`Listen on port ${port}`))
 
 module.exports = app;
