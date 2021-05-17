@@ -1,18 +1,19 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const mysql = require('mysql')
+const express = require('express');
+const bodyParser = require('body-parser');
+const mysql = require('mysql2');
+const cookieParser = require('cookie-parser'); // est-ce utile ?
 //paquets de sécurité :
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 
-const app = express()
+const app = express();
 const port = process.env.PORT || 5000
+const dotenv = require('dotenv');
+dotenv.config({ path: './.env'})
 
-require('dotenv').config()
-
-//const userRoutes = require('./routes/user');
-//const postRoutes = require('./routes/post');
+const userRoutes = require('./routes/user');
+const postRoutes = require('./routes/post');
 //const commentRoutes = require('./routes/comment');
 
 const limiter = rateLimit({ // spécifie le nombre maximums de requêtes
@@ -24,18 +25,37 @@ app.use('/api', limiter);
   // sécurité HTTP Headers
 app.use(helmet());
 
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(bodyParser.json());
-
+// parse URL encoded bodies as sent by HTML forms
+app.use(express.urlencoded({extended: false}))
+// parse JSON Bodies as sent by API clients
+app.use(express.json());
+app.use(cookieParser());
 // My SQL
+/*
 const pool = mysql.createPool({
     connectionLimit : 10, // max pour créer à la fois
     host            : 'localhost',
-    user            : 'USER',// utilise dotenv
-    password        : 'PASSWORD', // utilise dotenv
+    user            : 'adminGroupomania',// utilise dotenv
+    password        : 'USERddd', // utilise dotenv
     database        : 'SocialNetworkGroupomania',
-
 });
+*/
+
+const connection = mysql.createConnection({
+  host: process.env.HOST,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE
+})
+// pool.connect ne fonctionne pas, seul (create)connection peut s'utiliser avec .connect
+connection.connect((err) => {
+    if(err){
+        throw err + console.log('la connexion à Mysql a échouée');
+    } else {
+        console.log('connexion à Mysql réussie ');
+    }
+})
+
 // empêche les erreurs CORS
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -47,99 +67,31 @@ app.use((req, res, next) => {
 // contre les attaques XSS (cross site scripting):
 app.use(xss());
 
-// all routes :
-    // routes Users
-        // Get All routes from employees table
-app.get('', (req, res) => {
-    pool.getConnection((err, connection) => {
-        if(err) throw err
-        console.log(`connected as id ${ connection.threadId }`) // vérifier l'intérêt ?
-
-        // query(sqlString, callback)
-        connection.query('SELECT * FROM Users', (err, rows) => {
-            connection.release() // return the connection to pool
-
-            if(!err) {
-                res.send(rows)
-            } else {
-                console.log(err)
-            }
-        })
-    })
-});
-        // get an account/employee by Id
-app.get('/:id', (req, res) => {
-    pool.getConnection((err, connection) => {
-        if(err) throw err
-        console.log(`connected as id ${ connection.threadId }`) // vérifier l'intérêt ?
-
-        // query(sqlString, callback)
-        connection.query('SELECT * FROM Users WHERE id= ?', [req.params.idEmployee], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
-            connection.release() // return the connection to pool
-
-            if(!err) {
-                res.send(rows)
-            } else {
-                console.log(err)
-            }
-        })
-    })
-});
-/*
-        // delete an account/employee by Id
-app.delete('/:id', (req, res) => {
-    pool.getConnection((err, connection) => {
-        if(err) throw err
-        console.log(`connected as id ${ connection.threadId }`) // vérifier l'intérêt ?
-
-        // query(sqlString, callback)
-        connection.query('DELETE FROM employees WHERE id= ?', [req.params.idEmployee], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
-            connection.release() // return the connection to pool
-
-            if(!err) {
-                res.send(`Le compte de ${ [req.params.firstName] } ${ [req.params.lastName] } a été supprimé`)
-            } else {
-                console.log(err)
-            }
-        })
-    })
-});
-        // create an account/employee
-        // à vérifier pour le post !! 
-    app.post('/:id', (req, res) => {
-        pool.getConnection((err, connection) => {
-            if(err) throw err
-            console.log(`connected as id ${ connection.threadId }`) // vérifier l'intérêt ?
-            
-            const params = req.body
-
-            // query(sqlString, callback)
-            connection.query('INSERT INTO Users SET ?', params , (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
-                connection.release() // return the connection to pool
-    
-                if(!err) {
-                    res.send(`Le compte de ${ params.firstName } ${ params.lastName } a été créé`)
-                } else {
-                    console.log(err)
-                }
-            })
-        })
-    });
-    // routes Posts
-
-    // routes Comments
-    // create a message FROM messages table
-        // doit récupèrer idMessage + idEmployee + comment + dateMessage
-    // delete a message FROM messages table
-    // create a content FROM content table
-        // doit récupèrer idContent + idEmployee + url + dateContent
-    // delete a content FROM content table
-
     // faire un filter pour get les plus récents content et messages ?
-*/
-//app.use('/api/auth', userRoutes);
-//app.use('/api/posts', postRoutes);
+
+app.use('/api/auth', userRoutes);
+app.use('/api/posts', postRoutes);
 //app.use('/api/comments', commentRoutes);
+/*
+app.get('', (req, res, next) => {
+    connection.query(`SELECT * FROM 'Animal'`, function(err, results, fields) {
+        results = JSON.parse(req.body);
+        console.log('results ' +results);
+        console.log('fields ' + fields);
+    })
+})
+*/
+/*
+// pour test de .query :
+pool.query(`SELECT * FROM Posts`, function(err, rows) {
+        //results = JSON.parse(results);
+        console.log('results ' + rows);
+// problème rows ressort en     [object Object]    
+})
+*/
+app.get('/', (req, res) => {
+    res.send("<h1>Page d'accueil</h1>")
+});
 
 app.listen(port, () => console.log(`Listen on port ${port}`))
 

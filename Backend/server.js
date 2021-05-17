@@ -44,4 +44,5 @@ server.on('listening', () => {
   console.log('Listening on ' + bind);
 });
 
-server.listen(port, () => console.log('Listen on port ${ port }'));
+server.listen(port);
+console.log('quel port ? '+ port)

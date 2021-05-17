@@ -6,7 +6,7 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
 router.post('/', auth, multer, postCtrl.createPost);
-router.post('/:id/like', auth, multer, postCtrl.likePost);
+//router.post('/:id/like', auth, multer, postCtrl.likePost);
 router.put('/:id', auth, multer, postCtrl.modifyPost);
 router.put('/:id', auth, multer, postCtrl.moderatePost); // rajouté pour modérer
 router.delete('/:id', auth, postCtrl.deletePost);
