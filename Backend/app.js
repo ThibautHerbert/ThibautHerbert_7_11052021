@@ -8,7 +8,7 @@ const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 
 const app = express();
-const port = process.env.PORT || 5000
+//const port = process.env.PORT || 5000
 const dotenv = require('dotenv');
 dotenv.config({ path: './.env'})
 
@@ -93,6 +93,6 @@ app.get('/', (req, res) => {
     res.send("<h1>Page d'accueil</h1>")
 });
 
-app.listen(port, () => console.log(`Listen on port ${port}`))
+//app.listen(port, () => console.log(`Listen on port ${port}`))
 
 module.exports = app;

@@ -1,5 +1,6 @@
 // Const Post = require('../models/post');
 const fs = require('fs');
+const mysql = require('mysql2');
                                             // 1ere requête findAll
 /* version de mongoose find ?
 exports.getAllPost = (req, res, next) => {
@@ -8,12 +9,13 @@ exports.getAllPost = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 };
 */
+
 const pool = mysql.createPool({
-    connectionLimit : 10, // max pour créer à la fois
-    host            : 'localhost',
-    user            : 'adminGroupomania',// utilise dotenv
-    password        : 'USERddd', // utilise dotenv
-    database        : 'SocialNetworkGroupomania',
+    connectionLimit : process.env.CONNECTION_LIMIT, // max pour créer à la fois
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
 });
 
 
@@ -36,6 +38,7 @@ exports.getAllPost = (req, res, next) => {
         }
     })
 }
+
 //essai getAll en version promise ?
 /*
 exports.getAllPost = (req, res) => {
@@ -78,16 +81,17 @@ exports.getOnePost = (req, res) => {
 exports.createPost = (req, res) => {
     pool.getConnection((err, connection) => {
         if(err) throw err
-        console.log(`connected as id ${ connection.threadId }`) // vérifier l'intérêt ?
         
         const params = req.body
-
+        const {id, idUser, urlContent, content, dateContent, isModerated} = req.body
+        //const Users = {id, firstName, lastName, department, location, picture, password, email} // 
         // query(sqlString, callback)
         connection.query('INSERT INTO Posts SET ?', params , (err, rows) => { // ? is a placeholder ;
+        //connection.query('INSERT INTO Posts SET ?', {idUser:Users.id, urlContent:urlContent, content: content, dateContent:NOW()} , (err, rows) => {
             connection.release() // return the connection to pool
-
+            // est-ce qu'ici il faut faire un sql JOIN ou un INSERT SELECT pour incrémenter le User.id dans le Posts.idUser ?
             if(!err) {
-                res.send(`Le post de ${ params.firstName } ${ params.lastName } a été créé`)
+                res.send(`Le post n°${ params.idUser } a été créé`) // names undefined pour le moment car pas dans la requête
             } else {
                 console.log(err)
             }
@@ -98,19 +102,20 @@ exports.createPost = (req, res) => {
 exports.modifyPost = (req, res) => {
     pool.getConnection((err, connection) => {
         if(err) throw err
-        const {id, idUser, url, content, dateContent, isModerated} = req.body
+        const {id, idUser, urlContent, content, dateContent, isModerated} = req.body
 
         // query(sqlString, callback)
-        connection.query('UPDATE Posts SET url = ?, content = ?, dateContent = ?, WHERE id = ?', [url, content, dateContent, id] , (err, rows) => { // ? is a placeholder ;
+        connection.query('UPDATE Posts SET urlContent = ?, content = ?, dateContent = ? WHERE id = ?', [urlContent, content, dateContent, id] , (err, rows) => { // ? is a placeholder ;
             connection.release() // return the connection to pool permet de relacher la promesse quand c'est terminé
 
             if(!err) {
-                res.send(`Le post de ${ params.firstName } ${ params.lastName } a été modifié`)
+                res.send(`Le post a été modifié`)
                 // comment appeler des infos de la table users?
             } else {
                 console.log(err)
             }
         })
+        console.log(req.body)
     })
 }
 /*
@@ -137,7 +142,7 @@ exports.deletePost = (req, res) => {
             connection.release() // return the connection to pool permet de relacher la promesse quand c'est terminé
 
             if(!err) {
-                res.send(`Le post de ${ [req.params.firstName] } ${ [req.params.lastName] } a été supprimé`)
+                res.send(`Le post de n° ${ [req.params.id] } a été supprimé`)
             } else {
                 console.log(err)
             }
@@ -168,7 +173,7 @@ exports.deletePost = (req, res, next) => {
 exports.moderatePost = (req, res) => {
     pool.getConnection((err, connection) => {
         if(err) throw err
-        const {id, idUser, url, content, dateContent, isModerated} = req.body
+        const {id, isModerated} = req.body
 // ? faire un switch ?
 /*
         switch(req.body.isModerated) {
@@ -192,8 +197,12 @@ exports.moderatePost = (req, res) => {
             connection.release() // return the connection to pool, permet de relacher la promesse quand c'est terminé
 
             if(!err) {
-                res.send(`Le post de ${ params.firstName } ${ params.lastName } a été modéré, il ne sera plus visible`)
+                if(isModerated==1) {
+                    res.send(`Le post n° ${ id } a été modéré, il ne sera plus visible`)
                 // comment appeler des infos de la table users?
+                } else {
+                    res.send("la modération a été supprimée, le post n° ${ id } sera de nouveau visible")
+                }
             } else {
                 console.log(err)
             }

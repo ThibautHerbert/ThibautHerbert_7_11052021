@@ -2,13 +2,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql2');
 
+//const connection = require('../app'); // import de la connection à la base de données
 const connection = mysql.createConnection({
     host: process.env.HOST,
     user: process.env.USER,
     password: process.env.PASSWORD,
     database: process.env.DATABASE
-});
-
+  })
 //const User = require('../models/user');
 
 exports.signup = (req, res, next) => {
@@ -19,12 +19,12 @@ exports.signup = (req, res, next) => {
     // vérifie qu'il n'y a pas déjà cet email:
     connection.query('SELECT email FROM Users WHERE email = ?', [email], async (error, results) => {
         if(error) {console.log(error)}
-        if( results.length > 0 ) {
-            return res.render({ message: 'Cet email est déjà pris' })
+        if( results.length > 0 ) { // vérifie si email déjà présent
+            return res.render({ message: 'Cet email est déjà pris' }) // marche pas, si adresse mail existe alors le serveur bloque
         } 
     
         let hashedPassword = await bcrypt.hash(password, 10);
-        //console.log(hashedPassword);
+        console.log(hashedPassword);
         connection.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
             //connection.release() // return the connection to pool
             .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été créé`}))
@@ -50,7 +50,7 @@ exports.login = async (req, res, next) => {
                 const id = results[0].id;
                 const token = jwt.sign({ id }, process.env.TOKEN, // id est récupéré de const id donc results [0] voir méthode du cours
                     { expiresIn: process.env.TOKEN_EXPIRY });
-                //console.log("the token is : " + token);
+                console.log("the token is : " + token);
                 const cookieOptions = { // pour rester connecter à la session
                     expires: new Date(
                         Date.now() + process.env.TOKEN_COOKIE_EXPIRY * 24 * 60 * 60 * 1000 // h/j mn/h sec/mn millisec/sec
