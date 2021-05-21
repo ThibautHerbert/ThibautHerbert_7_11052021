@@ -41,21 +41,6 @@ const pool = mysql.createPool({
 });
 */
 
-const connection = mysql.createConnection({
-  host: process.env.HOST,
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE
-})
-// pool.connect ne fonctionne pas, seul (create)connection peut s'utiliser avec .connect
-connection.connect((err) => {
-    if(err){
-        throw err + console.log('la connexion à Mysql a échouée');
-    } else {
-        console.log('connexion à Mysql réussie ');
-    }
-})
-
 // empêche les erreurs CORS
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -90,9 +75,7 @@ pool.query(`SELECT * FROM Posts`, function(err, rows) {
 })
 */
 app.get('/', (req, res) => {
-    res.send("<h1>Page d'accueil</h1>")
+    res.send("<h1>Page d'accueil Backend</h1>")
 });
 
 //app.listen(port, () => console.log(`Listen on port ${port}`))
-
-module.exports = app;

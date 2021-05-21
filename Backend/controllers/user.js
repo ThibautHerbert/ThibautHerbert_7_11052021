@@ -1,14 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const mysql = require('mysql2');
+const db = require('../db'); // import de la connection à la base de données
 
-//const connection = require('../app'); // import de la connection à la base de données
-const connection = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
-  })
 //const User = require('../models/user');
 
 exports.signup = (req, res, next) => {
@@ -17,7 +10,7 @@ exports.signup = (req, res, next) => {
     const {firstName, lastName, department, location, picture, password, email} = req.body;
     // const firstName = req.body.name;
     // vérifie qu'il n'y a pas déjà cet email:
-    connection.query('SELECT email FROM Users WHERE email = ?', [email], async (error, results) => {
+    db.query('SELECT email FROM Users WHERE email = ?', [email], async (error, results) => {
         if(error) {console.log(error)}
         if( results.length > 0 ) { // vérifie si email déjà présent
             return res.render({ message: 'Cet email est déjà pris' }) // marche pas, si adresse mail existe alors le serveur bloque
@@ -25,11 +18,10 @@ exports.signup = (req, res, next) => {
     
         let hashedPassword = await bcrypt.hash(password, 10);
         console.log(hashedPassword);
-        connection.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
+        db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
             //connection.release() // return the connection to pool
             .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été créé`}))
             .catch(error => res.status(400).json({ error })); 
-            
         })
 };
 // v1 login ok mais erreur password undefined ligne 45
@@ -41,7 +33,7 @@ exports.login = async (req, res, next) => {
         if( !email || !password ) { // ne précise pas lequel input est faux pour plus de sécurité de connexion 
             return res.status(400).json({ message: 'Inscrivez un mot de passe et un email correct'}); // s'arrête après le return; message ou error ?
         }
-        connection.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
+        db.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
             //console.log(results);
             if( !results || !(await bcrypt.compare(password, results[0].password)) ) { // results[0].password : mdp hashed de la bdd
                 return res.status(401).json({ message: 'Mot de passe ou email incorrect'}); //garder le return ?
@@ -50,17 +42,9 @@ exports.login = async (req, res, next) => {
                 const id = results[0].id;
                 const token = jwt.sign({ id }, process.env.TOKEN, // id est récupéré de const id donc results [0] voir méthode du cours
                     { expiresIn: process.env.TOKEN_EXPIRY });
-                console.log("the token is : " + token);
-                const cookieOptions = { // pour rester connecter à la session
-                    expires: new Date(
-                        Date.now() + process.env.TOKEN_COOKIE_EXPIRY * 24 * 60 * 60 * 1000 // h/j mn/h sec/mn millisec/sec
-                    ),
-                    httpOnly: true // protection contre attaque
-                }
-                res.cookie('cookie', token, cookieOptions); // met un cookie dans le navigateur 'cookie' nom choisi du cookie
-                res.status(200).redirect("/") // redirige à la page d'accueil
-                res.json({ message: 'Vous êtes connecté'});
-                console.log('Vous êtes connecté'); // n'apparait pas ! pq ?
+                //console.log("the token is : " + token);
+                res.status(200).json({ id, token});
+                //console.log('Vous êtes connecté'); // n'apparait pas ! pq ?
             }
         })
     } catch (error) {
@@ -109,7 +93,7 @@ exports.deleteUser = (req, res) => {
         //connection.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
             //if(err) throw err
             // alors suppression du compte
-            connection.promise().query('DELETE FROM Users WHERE id= ?', [req.body.id]) // ? is a placeholder ; [req] use the bodyparser
+            db.promise().query('DELETE FROM Users WHERE id= ?', [req.body.id]) // ? is a placeholder ; [req] use the bodyparser
                 //connection.release() // return the connection to pool
                 /*
                 if(!err) {
@@ -119,7 +103,7 @@ exports.deleteUser = (req, res) => {
                 }
                 */
              // fin  query delete
-                .then(() => res.status(200).json({ message: `Le compte de ${ [req.body.firstName] } ${ [req.body.lastName] } a été supprimé`}))
+                .then(() => res.status(200).json({ message: `Le compte a été supprimé`}))
                 .catch(error => res.status(400).json({ error })); 
         //}) // fin 1er query
 };

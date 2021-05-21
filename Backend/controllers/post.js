@@ -1,6 +1,6 @@
 // Const Post = require('../models/post');
 const fs = require('fs');
-const mysql = require('mysql2');
+const db = require('../db');
                                             // 1ere requête findAll
 /* version de mongoose find ?
 exports.getAllPost = (req, res, next) => {
@@ -10,31 +10,16 @@ exports.getAllPost = (req, res, next) => {
 };
 */
 
-const pool = mysql.createPool({
-    connectionLimit : process.env.CONNECTION_LIMIT, // max pour créer à la fois
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
-});
-
 
 exports.getAllPost = (req, res, next) => {
-    pool.getConnection((err, connection) => {
-        if(err) {
-            throw console.log('ça ne marche pas ici')
+    console.log('before query');
+    console.log(req.foo);
+    db.query('SELECT * FROM Posts', (err, rows) => {
+        if(!err) {
+            res.send(rows)
+            console.log('in query');
         } else {
-            console.log(`connected to MySQL`) // vérifier l'intérêt ?
-            // query(sqlString, callback)
-            connection.query('SELECT * FROM Posts', (err, rows) => {
-                connection.release() // return the connection to pool
-
-                if(!err) {
-                    res.send(rows)
-                } else {
-                    console.log(err)
-                }
-            })
+            console.log(err)
         }
     })
 }
@@ -60,7 +45,7 @@ exports.getOnePost = (req, res, next) => {
         .catch(error => res.status(404).json({ error }));
 };*/
 exports.getOnePost = (req, res) => {
-    pool.getConnection((err, connection) => {
+    db.getConnection((err, connection) => {
         if(err) {
             throw err 
         } else {
@@ -86,9 +71,8 @@ exports.createPost = (req, res) => {
         const {id, idUser, urlContent, content, dateContent, isModerated} = req.body
         //const Users = {id, firstName, lastName, department, location, picture, password, email} // 
         // query(sqlString, callback)
-        connection.query('INSERT INTO Posts SET ?', params , (err, rows) => { // ? is a placeholder ;
-        //connection.query('INSERT INTO Posts SET ?', {idUser:Users.id, urlContent:urlContent, content: content, dateContent:NOW()} , (err, rows) => {
-            connection.release() // return the connection to pool
+        //connection.query('INSERT INTO Posts SET ?', params , (err, rows) => { // ? is a placeholder ;
+        db.query('INSERT INTO Posts SET ?', {idUser:Users.id, urlContent:urlContent, content: content} , (err, rows) => {
             // est-ce qu'ici il faut faire un sql JOIN ou un INSERT SELECT pour incrémenter le User.id dans le Posts.idUser ?
             if(!err) {
                 res.send(`Le post n°${ params.idUser } a été créé`) // names undefined pour le moment car pas dans la requête
