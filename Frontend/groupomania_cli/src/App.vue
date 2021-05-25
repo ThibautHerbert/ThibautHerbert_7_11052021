@@ -1,9 +1,9 @@
 <template>
   <div id="nav">
     <router-link to="/">Accueil</router-link> |
-    <router-link to="/api/posts">Fil d'actualité</router-link> |
-    <router-link to="/api/auth/signup">S'inscrire</router-link> |
-    <router-link to="/api/auth/login">Se connecter</router-link> 
+    <router-link to="/posts">Fil d'actualité</router-link> |
+    <router-link to="/signup">S'inscrire</router-link> |
+    <router-link to="/login">Se connecter</router-link> 
     
   </div>
   <router-view/>

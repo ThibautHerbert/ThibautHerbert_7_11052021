@@ -12,6 +12,7 @@ export default {
     		picture: '',
     		email: '' ,
           	password:'',
+			passwordError: false,
           	formCompleted: []
     	}
     },
@@ -23,15 +24,20 @@ export default {
            //validate password
             this.passwordError = this.password.length > 7 ? '' : 'Le mot de passe doit avoir au moins 8 caractères'
 	        if(!this.passwordError) {
-	            console.log('firstName : ', this.firstName)
-	            console.log('lastName : ', this.lastName)
-	            console.log('department : ', this.department)
-	            console.log('location : ', this.location)
-	            console.log('picture : ', this.picture)
-	            console.log('department : ', this.department)
-	            console.log('email : ', this.email)
-	            console.log('password : ', this.password)
-	            // const signupForm = {this.firstName, this.lastName, this.department, this.location, this.picture, this.department, this.email, this.password}
+				let signupForm = {"firstName": this.firstName, "lastName": this.lastName, "department": this.department, "location": this.location, "picture": this.picture, "department": this.department,"email": this.email , "password": this.password}
+                console.log('signupForm : '+ signupForm)
+                let signupToSend = JSON.stringify(signupForm)
+                console.log('signupToSend : '+ signupToSend)
+                if (signupToSend) {
+                    fetch('http://localhost:5000/api/auth/signup', {
+                        method : "POST",
+                        body: signupToSend,
+                        headers: {"Content-type": "application/json; charset=UTF-8"}
+                        })
+                    .then(response => response.json()) // reçoit la fonction si elle est remplie/fulfilled
+                    //.then(() => window.location.href = "home.html") // si la requête POST est fulfilled alors rediriger vers la page de confirmation de commande
+                    .catch(err => console.log("promise err " +  err)); // reçoit la fonction si l'envoi est rejeté et indique erreur 
+                }
 	        }
         }
     }
@@ -98,7 +104,7 @@ export default {
 							<label for="passwordInput"> Mot de passe : </label>
 							<input type="text" class="form-control" id="passwordInput" aria-describedby="passwordHelp" placeholder="********" required v-model="password"> 
 							<small id="passwordHelp" class="form-text text-muted"> Indiquez un mot de passe.</small>
-							<div class="errorDiv"><span class="errorpassword"> erreur ! </span></div>
+							<div class="errorDiv" v-if="passwordError"><span class="errorCountry"> {{ passwordError }} </span></div>
 						</div>
 					</div>
 					<div class="form-group">
@@ -108,7 +114,7 @@ export default {
 							<div class="errorDiv"><span class="errorEmail"> erreur ! </span></div>
 					</div>
 					
-					<a href="#" class="btn btn-info" id="confirmOrder">Confirmer mon inscription</a>
+					<button  class="btn btn-info" id="confirmSignup">Confirmer mon inscription</button>
 				</form>
 		</div>
 	</section>

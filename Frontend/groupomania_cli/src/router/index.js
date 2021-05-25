@@ -4,6 +4,7 @@ import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
 import NotFound from '../views/NotFound.vue'
 import Posts from '../views/Posts.vue'
+import PostDetails from '../views/PostDetails.vue'
 
 const routes = [
   {
@@ -12,7 +13,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/api/auth/signup',
+    path: '/signup',
     name: 'Signup',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -20,7 +21,7 @@ const routes = [
     component: Signup
   },
   {
-    path: '/api/auth/login',
+    path: '/login',
     name: 'Login',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -28,9 +29,15 @@ const routes = [
     component: Login
   },
   {
-    path: '/api/posts/', // ou mettre posts/:id ?
+    path: '/posts/', 
     name: 'Posts',
     component: Posts
+  },
+  {
+    path: '/posts/:id', // ou mettre posts/:id ?
+    name: 'PostDetails',
+    component: PostDetails,
+    props : true // si l'on se rend sur la page on peut accéder à la route paramater avec les props
   },
   {
     path: '/:catchAll(.*)', // avec une regex
