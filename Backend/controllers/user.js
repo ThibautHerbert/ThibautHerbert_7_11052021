@@ -2,8 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../db'); // import de la connection à la base de données
 
-//const User = require('../models/user');
-
 exports.signup = (req, res, next) => {
     console.log(req.body);
 
@@ -17,17 +15,16 @@ exports.signup = (req, res, next) => {
         } 
     
         let hashedPassword = await bcrypt.hash(password, 10);
-        console.log(hashedPassword);
+        //console.log(hashedPassword);
         db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
             //connection.release() // return the connection to pool
             .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été créé`}))
             .catch(error => res.status(400).json({ error })); 
         })
 };
-// v1 login ok mais erreur password undefined ligne 45
-// UnhandledPromiseRejectionWarning: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+
 exports.login = async (req, res, next) => {
-    //console.log(req.body);
+    console.log(req.body);
     try { // essai du code
         const {password, email} = req.body;
         if( !email || !password ) { // ne précise pas lequel input est faux pour plus de sécurité de connexion 
@@ -42,8 +39,9 @@ exports.login = async (req, res, next) => {
                 const id = results[0].id;
                 const token = jwt.sign({ id }, process.env.TOKEN, // id est récupéré de const id donc results [0] voir méthode du cours
                     { expiresIn: process.env.TOKEN_EXPIRY });
+                const user = results[0];
                 //console.log("the token is : " + token);
-                res.status(200).json({ id, token});
+                res.status(200).json({ id, token, user}); // renvoyer le user complet aussi ?
                 //console.log('Vous êtes connecté'); // n'apparait pas ! pq ?
             }
         })

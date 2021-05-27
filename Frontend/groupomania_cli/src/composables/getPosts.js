@@ -6,8 +6,8 @@ const getPosts = () => {
 
     const load = async () => {
       try {
-        let data = await fetch('http://localhost:3000/posts') // mettre le /api pour le vrai backend
-        //console.log(data)
+        let data = await fetch('http://localhost:5000/api/posts') // vérifier le port 3 ou 5000 ; mettre le /api pour le vrai backend
+        console.log(data)
         if (!data.ok) {
           throw Error('aucune donnée disponible')
         }

@@ -34,6 +34,6 @@ fetch('http://localhost:3000/api/auth/login', {
   .then(response => response.json()) // reçoit la fonction si elle est remplie/fulfilled
   //.json() returns a callback
   //.then(json => localStorage.setItem("loginForm", JSON.stringify(json)))
-  .then(() => window.location.href = "home.html") // si la requête POST est fulfilled alors rediriger vers la page de confirmation de commande
+  //.then(() => this.$router.push({ name: 'Home' }) // si la requête POST est fulfilled alors rediriger vers la page de confirmation de commande
   .catch(err => console.log("promise err " +  err)); // reçoit la fonction si l'envoi est rejeté et indique erreur 
   

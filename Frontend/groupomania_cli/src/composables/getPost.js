@@ -6,7 +6,7 @@ const getPost = (id) => {
 
     const load = async () => {
       try {
-        let data = await fetch('http://localhost:3000/posts/' + id) // sans le /api
+        let data = await fetch('http://localhost:5000/api/posts/' + id) // sans le /api
         //console.log(data)
         if (!data.ok) {
           throw Error("ce post n'existe pas")

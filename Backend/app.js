@@ -8,7 +8,7 @@ const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 
 const app = express();
-const port = process.env.PORT || 5000
+
 const dotenv = require('dotenv');
 dotenv.config({ path: './.env'})
 
@@ -30,16 +30,6 @@ app.use(express.urlencoded({extended: false}))
 // parse JSON Bodies as sent by API clients
 app.use(express.json());
 app.use(cookieParser());
-// My SQL
-/*
-const pool = mysql.createPool({
-    connectionLimit : 10, // max pour créer à la fois
-    host            : 'localhost',
-    user            : 'adminGroupomania',// utilise dotenv
-    password        : 'USERddd', // utilise dotenv
-    database        : 'SocialNetworkGroupomania',
-});
-*/
 
 // empêche les erreurs CORS
 app.use((req, res, next) => {
@@ -57,25 +47,9 @@ app.use(xss());
 app.use('/api/auth', userRoutes);
 app.use('/api/posts', postRoutes);
 //app.use('/api/comments', commentRoutes);
-/*
-app.get('', (req, res, next) => {
-    connection.query(`SELECT * FROM 'Animal'`, function(err, results, fields) {
-        results = JSON.parse(req.body);
-        console.log('results ' +results);
-        console.log('fields ' + fields);
-    })
-})
-*/
-/*
-// pour test de .query :
-pool.query(`SELECT * FROM Posts`, function(err, rows) {
-        //results = JSON.parse(results);
-        console.log('results ' + rows);
-// problème rows ressort en     [object Object]    
-})
-*/
+
 app.get('/', (req, res) => {
     res.send("<h1>Page d'accueil Backend</h1>")
 });
 
-app.listen(port, () => console.log(`Listen on port ${port}`))
+module.exports = app;

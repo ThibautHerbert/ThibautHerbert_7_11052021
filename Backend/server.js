@@ -12,8 +12,8 @@ const normalizePort = val => {
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '3000'); // renvoie un port valide
-//app.set('port', port);
+const port = normalizePort(process.env.PORT || '5000'); // renvoie un port valide
+app.set('port', port);
 
 const errorHandler = error => { // recherche les erreurs
   if (error.syscall !== 'listen') {
@@ -45,4 +45,3 @@ server.on('listening', () => {
 });
 
 server.listen(port);
-//console.log('quel port ? '+ port)
