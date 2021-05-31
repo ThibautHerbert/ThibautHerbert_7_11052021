@@ -15,9 +15,10 @@ exports.signup = (req, res, next) => {
         } 
     
         let hashedPassword = await bcrypt.hash(password, 10);
+        //console.log('req.file ? ' + req.file)
+        let pictureUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}` // Cannot read property 'filename' of undefined
         //console.log(hashedPassword);
-        db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
-            //connection.release() // return the connection to pool
+        db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location: location, picture: pictureUrl, password: hashedPassword, email:email} )
             .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été créé`}))
             .catch(error => res.status(400).json({ error })); 
         })
@@ -87,10 +88,6 @@ exports.login = (req, res, next) => {
 //deleteUser
     //version avec pool attention, doit refaire avec connection pour que cela marche !
 exports.deleteUser = (req, res) => {
-        // l'utilisateur est connecté
-        //connection.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
-            //if(err) throw err
-            // alors suppression du compte
             db.promise().query('DELETE FROM Users WHERE id= ?', [req.body.id]) // ? is a placeholder ; [req] use the bodyparser
                 //connection.release() // return the connection to pool
                 /*
@@ -123,3 +120,85 @@ exports.deleteUser = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 };
 */
+
+
+
+// à voir comment écrire la modify :
+
+exports.modifyUser = (req, res, next) => {
+    console.log(req.body);
+    const {firstName, lastName, department, location, picture, id} = req.body;
+    /*
+    try { // essai du code
+        const {firstName, lastName, department, location, picture, password, email, id} = req.body;
+        if( !email || !password ) { // ne précise pas lequel input est faux pour plus de sécurité de connexion 
+            return res.status(400).json({ message: 'Inscrivez un mot de passe et un email correct'}); // s'arrête après le return; message ou error ?
+        }
+        /*
+        db.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
+            //console.log(results);
+            if( !results || !(await bcrypt.compare(password, results[0].password)) ) { // results[0].password : mdp hashed de la bdd
+                return res.status(401).json({ message: 'Mot de passe ou email incorrect'}); //garder le return ?
+            } else {
+                */
+                //let hashedPassword = bcrypt.hash(password, 10);
+                db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ? WHERE id = ?', [firstName, lastName, department, location, id]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
+                //db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
+            //connection.release() // return the connection to pool
+                    .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été modifié`}))
+                    .catch(error => res.status(400).json({ error }));
+            //}
+        //})
+    //} catch (error) {
+      //  console.log(error)
+    //}
+};
+
+        //2eme autre façon de faire comme pour le signup
+/*
+    const {firstName, lastName, department, location, picture, password, email} = req.body;
+    // const firstName = req.body.name;
+    // vérifie qu'il n'y a pas déjà cet email:
+    db.query('SELECT email FROM Users WHERE email = ?', [email], async (error, results) => {
+        if(error) {console.log(error)}
+        if( results.length < 0 ) { // vérifie si email déjà présent
+            return res.render({ message: "Cet email n'existe pas" }) // error si adresse mail n'existe pas déjà dans la base
+        } 
+*/
+/*
+        let hashedPassword = await bcrypt.hash(password, 10);
+        //console.log(hashedPassword);
+        db.promise().query('UPDATE INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
+            //connection.release() // return the connection to pool
+            .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été modifié`}))
+            .catch(error => res.status(400).json({ error })); 
+        })
+};*/
+exports.modifyPassword = async (req, res, next) => {
+    console.log(req.body);
+    const {password, id} = req.body;
+    /*
+    try { // essai du code
+        const {password, email, id} = req.body;
+        if( !email) { // 
+            return res.status(400).json({ message: 'Inscrivez un email correct'}); // s'arrête après le return; message ou error ?
+        }
+        /*
+        db.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
+            //console.log(results);
+            if( !results ) ) { //
+                return res.status(401).json({ message: 'Mot de passe ou email incorrect'}); //garder le return ?
+            } else {
+                */
+                let hashedPassword = await bcrypt.hash(password, 10);
+                console.log('crypté: ' + hashedPassword)
+                db.promise().query('UPDATE Users SET password = ? WHERE id = ?', [hashedPassword, id]) // WHERE Id is = ? AND email = ?
+                //db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
+                    .then(() => res.status(200).json({ message: `Le mot de passe a été modifié avec succès, veuillez désormais vous reconnecter avec ce nouveau mot de passe`}))
+                    .catch(error => res.status(400).json({ error }));
+            //}
+        //})
+    //} catch (error) {
+      //  console.log(error)
+    //}
+};

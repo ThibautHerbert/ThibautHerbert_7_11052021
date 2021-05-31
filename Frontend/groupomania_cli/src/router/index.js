@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
+import Account from '../views/Account.vue'
 import NotFound from '../views/NotFound.vue'
 import Posts from '../views/Posts.vue'
 import PostDetails from '../views/PostDetails.vue'
@@ -27,6 +28,11 @@ const routes = [
     path: '/logout',
     name: 'Logout',
     component: Logout
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    component: Account
   },
   {
     path: '/posts/', 

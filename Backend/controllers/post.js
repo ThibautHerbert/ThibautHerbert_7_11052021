@@ -14,7 +14,7 @@ exports.getAllPost = (req, res, next) => {
 exports.getAllPost = (req, res, next) => {
     console.log('before query');
     console.log(req.foo);
-    db.query('SELECT * FROM Posts', (err, rows) => {
+    db.query('SELECT * FROM Posts', (err, rows) => {   // rajouter un order by pour avoir les plus récents en premier
         if(!err) {
             res.send(rows)
             console.log('in query');
@@ -45,62 +45,64 @@ exports.getOnePost = (req, res, next) => {
         .catch(error => res.status(404).json({ error }));
 };*/
 exports.getOnePost = (req, res) => {
-    db.getConnection((err, connection) => {
-        if(err) {
-            throw err 
-        } else {
-            console.log(`connected to MySQL`)
-            connection.query('SELECT * FROM Posts WHERE id= ?', [req.params.id], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
-            connection.release() // return the connection to pool permet de relacher la promesse quand c'est terminé
-
+            db.query('SELECT * FROM Posts WHERE id= ?', [req.params.id], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
             if(!err) {
                 res.send(rows)
             } else {
                 console.log(err)
             }
         })
-    }
-})
 }
                                                     // 3ème requête create
 exports.createPost = (req, res) => {
-    pool.getConnection((err, connection) => {
-        if(err) throw err
-        
         const params = req.body
-        const {id, idUser, urlContent, content, dateContent, isModerated} = req.body
+        //const {idUser, url, body} = req.body
         //const Users = {id, firstName, lastName, department, location, picture, password, email} // 
         // query(sqlString, callback)
         //connection.query('INSERT INTO Posts SET ?', params , (err, rows) => { // ? is a placeholder ;
-        db.query('INSERT INTO Posts SET ?', {idUser:Users.id, urlContent:urlContent, content: content} , (err, rows) => {
+        db.promise().query('INSERT INTO Posts SET ?', params , )
+        //db.promise().query('INSERT INTO Users SET idUser = ?, url = ?, body = ?', [idUser, url, body] )
+            .then(() => res.status(200).json({ message: `Le post a été créé`}))
+            .catch(error => res.status(400).json({ error }));
+            /* 
+        db.query('INSERT INTO Posts SET ?', [idUser, url, body] , (err, rows) => {
             // est-ce qu'ici il faut faire un sql JOIN ou un INSERT SELECT pour incrémenter le User.id dans le Posts.idUser ?
             if(!err) {
-                res.send(`Le post n°${ params.idUser } a été créé`) // names undefined pour le moment car pas dans la requête
+                res.send(`Le post a été créé`) // names undefined pour le moment car pas dans la requête
+                //db.query('INSERT INTO Posts (Id) SELECT userId FROM Users') // est-ce sécurisé ?
             } else {
                 console.log(err)
             }
-        })
-    })
+        })*/
 }
                                                     // 4ème requête modify
 exports.modifyPost = (req, res) => {
-    pool.getConnection((err, connection) => {
-        if(err) throw err
-        const {id, idUser, urlContent, content, dateContent, isModerated} = req.body
-
+        const {id, idUser, url, body, creationDate} = req.body
+        //const params = req.body
         // query(sqlString, callback)
-        connection.query('UPDATE Posts SET urlContent = ?, content = ?, dateContent = ? WHERE id = ?', [urlContent, content, dateContent, id] , (err, rows) => { // ? is a placeholder ;
-            connection.release() // return the connection to pool permet de relacher la promesse quand c'est terminé
-
+        //db.query('UPDATE Posts SET url = ?, content = ?, dateContent = ? WHERE idUser = ?', [url, body, creationDate, id, idUser] , (err, rows) => { // ? is a placeholder ;
+        /*db.query('UPDATE Posts SET ? WHERE idUser = ?', [url, body, creationDate, id, idUser] , (err, rows) => { // ? is a placeholder ;
             if(!err) {
                 res.send(`Le post a été modifié`)
                 // comment appeler des infos de la table users?
             } else {
                 console.log(err)
             }
-        })
-        console.log(req.body)
-    })
+        })*/
+        /*
+        db.promise().query('UPDATE Posts SET ? WHERE idUser = ?', [url, body, creationDate, idUser] )  
+            .then(() => res.status(200).json({ message: `Le post a été modifié`}))
+            .catch(error => res.status(400).json({ error }));
+        */
+        db.promise().query('UPDATE Posts SET url = ?, body = ? WHERE idUser = ?', [url, body, idUser], req.params.id, )  
+        .then(() => res.status(200).json({ message: `Le post a été modifié`}))
+        .catch(error => res.status(400).json({ error }));
+        
+       /*
+        db.promise().query('UPDATE Posts SET ? WHERE idUser = ?',  params, req.params.id, )  
+        .then(() => res.status(200).json({ message: `Le post a été modifié`}))
+        .catch(error => res.status(400).json({ error }));
+        */
 }
 /*
 exports.modifyPost = (req, res, next) => {
@@ -117,13 +119,15 @@ exports.modifyPost = (req, res, next) => {
                                                     // 5ème requête delete
  //version delete : raddy the brand
 exports.deletePost = (req, res) => {
-    pool.getConnection((err, connection) => {
-        if(err) throw err
-        console.log(`connected as id ${ connection.threadId }`) // vérifier l'intérêt ?
-
         // query(sqlString, callback)
-        connection.query('DELETE FROM Posts WHERE id= ?', [req.params.id], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
-            connection.release() // return the connection to pool permet de relacher la promesse quand c'est terminé
+        /*
+        const {id, idUser} = req.body
+        db.promise().query('DELETE FROM Posts WHERE idUser = ? AND id = ?', [idUser], req.params.id, )
+            .then(() => res.status(200).json({ message: `Le post a été supprimé`}))
+            .catch(error => res.status(400).json({ error }));
+            */
+        db.query('DELETE FROM Posts WHERE id= ?', [req.params.id], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
+            
 
             if(!err) {
                 res.send(`Le post de n° ${ [req.params.id] } a été supprimé`)
@@ -131,7 +135,6 @@ exports.deletePost = (req, res) => {
                 console.log(err)
             }
         })
-    })
 };    
 /*
 exports.deletePost = (req, res, next) => {
@@ -155,7 +158,7 @@ exports.deletePost = (req, res, next) => {
 // model of modify + 
 // add 1 to column isModerated instead of default 0
 exports.moderatePost = (req, res) => {
-    pool.getConnection((err, connection) => {
+    
         if(err) throw err
         const {id, isModerated} = req.body
 // ? faire un switch ?
@@ -191,7 +194,6 @@ exports.moderatePost = (req, res) => {
                 console.log(err)
             }
         })
-    })
 }
 
                                                     // 7ème requête like

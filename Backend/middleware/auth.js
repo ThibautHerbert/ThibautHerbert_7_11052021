@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
             throw 'User ID non valable !';
         } else {
             req.user = userId;
-            req.foo = 'sshrhjrrhjr'
+            req.foo = 'req foo du auth'
             next();
         }
     } catch (error) {

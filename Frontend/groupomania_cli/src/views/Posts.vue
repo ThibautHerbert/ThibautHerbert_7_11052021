@@ -3,10 +3,10 @@
     <h2>{{ header }}</h2>
     <h3>{{ subdescription }}</h3>
     <div v-if="error"> {{ error }}</div>
-    <!--<div v-if="posts.length" >-->
+    <div v-if="posts.length" >
         <PostList :posts="posts" />
         <p>test 1</p>
-    <!--</div>-->
+    </div>
    <!-- <div v-else> 
           <div class="spinner-border text-danger" role="status">
             <span class="sr-only">En chargement ...</span>

@@ -65,6 +65,8 @@ export default {
                     });
             console.log('cest la réponse' + response) // affiche object object
             localStorage.setItem("Token", response.data.token)
+            localStorage.setItem("User", JSON.stringify(response.data.user))
+            localStorage.setItem("IdUser", response.data.id)
             this.$router.push({ name: 'Home' })
             }
         }

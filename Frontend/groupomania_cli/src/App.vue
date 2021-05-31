@@ -1,10 +1,16 @@
 <template>
   <div id="nav">
-    <router-link to="/">Accueil</router-link> |
-    <router-link to="/posts">Fil d'actualité</router-link> |
-    <router-link to="/signup">S'inscrire</router-link> |
-    <router-link to="/login">Se connecter</router-link> |
-    <router-link to="/logout" @click="logout">Se déconnecter</router-link> 
+    <router-link :to="{ name: 'Home'}">Accueil</router-link> |
+    <router-link :to="{ name: 'Posts'}">Fil d'actualité</router-link> |
+    <router-link :to="{ name: 'Account', params: { id: user.id }}">Mon compte N°{{user.id}}</router-link>
+    
+    <div class="d-flex justify-content-end">
+      <router-link :to="{ name: 'Signup'}" v-if="userlogged">S'inscrire | </router-link>
+      <router-link :to="{ name: 'Login'}" v-if="userlogged">Se connecter | </router-link> 
+      <router-link :to="{ name: 'Logout'}" @click="logout" v-if="!userlogged">Se déconnecter</router-link> 
+    </div>
+    
+    <p>test Coucou n°{{user.id}} (app.vue)</p>
     
   </div>
   <router-view/>
@@ -14,8 +20,44 @@
 import Logout from './views/Logout'
 
 export default {
+  data() {
+    return {
+      userlogged: false,
+      userConnected : {
+        firstName: '',
+    		lastName: '',
+    		department: '',
+    		location: '',
+    		picture: '',
+    		email: '' ,
+        id: ''
+      }
+    }
+  },
+  created() {
+    this.user = JSON.parse(localStorage.getItem('User'))
+    this.userConnected = JSON.parse(localStorage.getItem('User'))
+    console.log('1 loggé ou pas ?')
+    if ( this.userConnected = localStorage.getItem('User')) {
+      this.userlogged = !this.userlogged
+      console.log('loggé ou pas ?')
+      
+    }
+  },
   methods: {
-    Logout
+    logout() {
+            //mettre un if loggedIn :
+            console.log('logout cliqué')
+            localStorage.removeItem('Token');
+            localStorage.removeItem('User');
+            localStorage.removeItem('IdUser');
+            this.userlogged = ! this.userlogged
+            this.$router.push({ name: "Login" })
+            //renvoyer vers page de connexion
+            //.then(() => this.$router.push({ name: 'Login' })
+        },
+    
+  
   }
   
 }

@@ -33,9 +33,18 @@ export default {
     modifyPost() {
       console.log('modify Post')
     },
+    confirmModifyPost() {
+      console.log('modify Post')
+    },
     deletePost() {
       console.log('delete Post')
-    }
+    },
+    addPost() {
+      console.log('add/show Post')
+    },
+    confirmAddPost() {
+      console.log('add Post in db')
+    },
   }
    /*
   setup(props) {
@@ -59,6 +68,6 @@ h3{
   color: white;
 }
 p{
-  color: white;
+  color: rgb(170, 60, 60);
 }
 </style>

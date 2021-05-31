@@ -8,6 +8,7 @@ export default {
     methods: {
         logout() {
             //mettre un if loggedIn :
+            console.log('logout cliqué')
             localStorage.removeItem('Token');
             //renvoyer vers page de connexion
             //.then(() => this.$router.push({ name: 'Login' })
