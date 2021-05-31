@@ -16,9 +16,9 @@ exports.signup = (req, res, next) => {
     
         let hashedPassword = await bcrypt.hash(password, 10);
         //console.log('req.file ? ' + req.file)
-        let pictureUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}` // Cannot read property 'filename' of undefined
+        
         //console.log(hashedPassword);
-        db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location: location, picture: pictureUrl, password: hashedPassword, email:email} )
+        db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location: location, picture: req.file.filename, password: hashedPassword, email:email} )
             .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été créé`}))
             .catch(error => res.status(400).json({ error })); 
         })
@@ -37,12 +37,12 @@ exports.login = async (req, res, next) => {
                 return res.status(401).json({ message: 'Mot de passe ou email incorrect'}); //garder le return ?
             } else {
                 //console.log(results[0].password);
-                const id = results[0].id;
-                const token = jwt.sign({ id }, process.env.TOKEN, // id est récupéré de const id donc results [0] voir méthode du cours
+                const userId = results[0].id; // modification de id en userId pour envoyer au auth.js ; .id c'est la colonne id de la table Users
+                const token = jwt.sign({ userId }, process.env.TOKEN, // userId est récupéré de const userId donc results [0]
                     { expiresIn: process.env.TOKEN_EXPIRY });
                 const user = results[0];
                 //console.log("the token is : " + token);
-                res.status(200).json({ id, token, user}); // renvoyer le user complet aussi ?
+                res.status(200).json({ userId, token, user}); // renvoyer le user complet aussi ?
                 //console.log('Vous êtes connecté'); // n'apparait pas ! pq ?
             }
         })
@@ -202,3 +202,6 @@ exports.modifyPassword = async (req, res, next) => {
       //  console.log(error)
     //}
 };
+
+
+// getUser

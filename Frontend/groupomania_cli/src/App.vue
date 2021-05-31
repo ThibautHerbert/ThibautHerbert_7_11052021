@@ -5,9 +5,9 @@
     <router-link :to="{ name: 'Account', params: { id: user.id }}">Mon compte N°{{user.id}}</router-link>
     
     <div class="d-flex justify-content-end">
-      <router-link :to="{ name: 'Signup'}" v-if="userlogged">S'inscrire | </router-link>
-      <router-link :to="{ name: 'Login'}" v-if="userlogged">Se connecter | </router-link> 
-      <router-link :to="{ name: 'Logout'}" @click="logout" v-if="!userlogged">Se déconnecter</router-link> 
+      <router-link :to="{ name: 'Signup'}" v-if="!userlogged">S'inscrire | </router-link>
+      <router-link :to="{ name: 'Login'}" v-if="!userlogged">Se connecter | </router-link> 
+      <router-link :to="{ name: 'Logout'}" @click="logout" v-if="userlogged">Se déconnecter</router-link> 
     </div>
     
     <p>test Coucou n°{{user.id}} (app.vue)</p>
@@ -38,11 +38,12 @@ export default {
     this.user = JSON.parse(localStorage.getItem('User'))
     this.userConnected = JSON.parse(localStorage.getItem('User'))
     console.log('1 loggé ou pas ?')
-    if ( this.userConnected = localStorage.getItem('User')) {
+    if ( this.userConnected ) {
       this.userlogged = !this.userlogged
       console.log('loggé ou pas ?')
       
     }
+    console.log(this.userlogged)
   },
   methods: {
     logout() {

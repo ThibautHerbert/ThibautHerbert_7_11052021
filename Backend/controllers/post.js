@@ -14,7 +14,7 @@ exports.getAllPost = (req, res, next) => {
 exports.getAllPost = (req, res, next) => {
     console.log('before query');
     console.log(req.foo);
-    db.query('SELECT * FROM Posts', (err, rows) => {   // rajouter un order by pour avoir les plus récents en premier
+    db.query('SELECT * FROM Posts ORDER BY creationDate DESC', (err, rows) => {   // rajouter un order by pour avoir les plus récents en premier
         if(!err) {
             res.send(rows)
             console.log('in query');

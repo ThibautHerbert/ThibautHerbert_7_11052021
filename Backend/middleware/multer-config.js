@@ -10,10 +10,12 @@ const MIME_TYPES = {
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, 'images')
+        callback(null, 'images')                    //ne l'envoie jamais dans images ?! est-ce que le path est mauvais ?
     },
     filename: (req, file, callback) => {
-        const name = file.originalname + Date.now();
+        console.log(file)
+        console.log(file.originalname)
+        const name = file.originalname + Date.now(); // name à la place de originalname ?
         const extension = MIME_TYPES[file.mimetype];
         const hash = crypto.createHash('md5').update(name).digest('hex'); //  méthode pour créer le hachage et passer le nom de l'algorithme de hachage comme 1er argument; 2ème argument le sel en string
         callback(null, hash + '.' + extension); // null signifie il n'y a pas d'erreur
@@ -21,4 +23,4 @@ const storage = multer.diskStorage({
 });
 
 
-module.exports = multer({ storage }).single('image'); // méthode multer; on lui passe un objet storage; et méthode single pour indiquer fichier unique et image uniquement
+module.exports = multer({ storage }).single('picture'); // méthode multer; on lui passe un objet storage; et méthode single pour indiquer fichier unique et image uniquement

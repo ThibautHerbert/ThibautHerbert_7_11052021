@@ -6,12 +6,16 @@ module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1]; // récupère le 2ème élément
         const decodedToken = jwt.verify(token, process.env.TOKEN); // token en caché avec dotenv
-        const userId = decodedToken.userId; // vérifier cette ligne
-        if (req.body.userId && req.body.userId !== userId) {
-            throw 'User ID non valable !';
+        const userId = decodedToken.userId; //  userId provient de exports.login controllers/user.js
+        if (req.body.idUser && req.body.idUser !== userId) { // vérifie s'il y a bien le idUser dans le body de la requête mais que le userId donc l'id du token décodé n'est pas différent
+            //throw 'User ID non valable !';
+            res.status(401).json({ error: 'Mauvais identifiant, reconnectez-vous avec le bon identifiant !'});
         } else {
             req.user = userId;
+            console.log(userId)
             req.foo = 'req foo du auth'
+            req.bidule = req.body.userId
+            // req.token = token; pas sûr utilité ?
             next();
         }
     } catch (error) {

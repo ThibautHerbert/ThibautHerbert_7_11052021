@@ -55,7 +55,7 @@ export default {
                 }
 				*/
 				// méthode 2
-				/*
+				
 				const formData = new FormData()
 				formData.append('picture', this.picture)
 				formData.append('firstName', this.firstName);
@@ -65,11 +65,12 @@ export default {
 				formData.append('email', this.email);
 				formData.append('password', this.password);
 				console.log(formData)
-				*/
+				/*
 				let signupForm = {"firstName": this.firstName, "lastName": this.lastName, "department": this.department, "location": this.location, "picture": this.picture, "email": this.email , "password": this.password}
                 console.log('signupForm : '+ signupForm)
                 //let signupToSend = JSON.stringify(signupForm)
-				axios.post('http://localhost:5000/api/auth/signup', signupForm)
+				*/
+				axios.post('http://localhost:5000/api/auth/signup', formData)
 					.then(() => console.log('inscription réussie'))
 					.then(response => response.json())
 					//.then(() => this.$router.push({ name: 'Login' })
