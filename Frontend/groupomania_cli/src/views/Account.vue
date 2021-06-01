@@ -1,18 +1,56 @@
 <template>
     <div> 
-        <div> 
-            <h1>Mon compte</h1>
-            <p>{{userId}}</p>
-            <button class="btn btn-primary" @click="ModifyAccount">Modifier mon compte</button>
-            <button class="btn btn-danger" @click="DeleteAccount">Supprimer mon compte</button>
-            <button class="btn btn-info" @click="ModifyPassword">Changer mon mot de passe</button>
+        <div>
+            <h2>Bienvenue sur ton compte : firstName</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-4 "><img src="../assets/images/pexels-monstera-6373931-1000px.jpg" alt="carte de présentation"></div>
+                <div class="col-md-4 accountDetails pb-2">
+                    <h1>Mon compte</h1>
+                    <div class="d-flex justify-content-around ">
+                        <ul class="list-group text-start">
+                            <li class="list-group-item d-flex">Prénom : gillous</li>
+                            <li class="list-group-item d-flex">Nom  : deegrhlthremtgtt </li>
+                            <li class="list-group-item d-flex ">Département  : Ressources Humaines</li>
+                            <li class="list-group-item d-flex">Lieu de travail  :</li>
+                            <li class="list-group-item d-flex">Mail  :</li>
+                            
+                        </ul>
+                        <div>
+                            <label class=" p-1 d-flex">Image de profil  :</label>
+                            <img src="../assets/images/pexels-cottonbro-5474028.jpg" alt="photo de profil" id="PicProfile" class="rounded-circle">
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+           
+            <div class="my-3 d-flex justify-content-center">
+                <button class="btn btn-modify mx-1" @click="ModifyAccount">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                    </svg>
+                    Modifier mon compte</button>
+                <button class="btn btn-delete mx-1" @dblclick="DeleteAccount">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash " viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg>
+                    Supprimer mon compte</button>
+                <button class="btn btn-secondary btn-password mx-1" @click="ModifyPassword">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-unlock" viewBox="0 0 16 16">
+                    <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2zM3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H3z"/>
+                    </svg>
+                    Changer mon mot de passe</button>
+            </div>
+            
             <!--modifier le compte -->
             <div> 
                 <div class="iconTop mx-auto"> 
                             <img src="../assets/Logos/icon.png" class="img-fluid" alt="logo Groupomania">
                 </div>
-                <div class="col-sm-6 blockForm mx-auto" v-if="showModifyAccount">
-                    <h3>Modifier le compte</h3>
+                <div class="col-sm-6 blockForm mx-auto py-2" v-if="showModifyAccount">
+                    <h3>Modifier mes informations</h3>
                     <div class="form-group col-md-7 mx-auto">
                         <label for="firstNameInput" class="errorLabel">Mon Prénom : {{ user.firstName}}</label>
                         <input type="text" class="form-control error" id="firstNameInput" aria-describedby="firstNameHelp" placeholder="{{ user.firstName}} Modifiez votre prénom." required v-model="userModified.firstName">
@@ -75,8 +113,8 @@
                 </div>
             </div>
             <!--modifier le mdp -->
-            <div class="col-sm-6 blockForm mx-auto" v-if="showModifyPassword">
-                <h3>Changer de mot de passe</h3>
+            <div class="col-sm-6 blockForm mx-auto pt-2" v-if="showModifyPassword">
+                <h3>Changer mon mot de passe</h3>
                 <!--
                 <div class="form-row my-3">
                     <div class="form-group col-md-5 mx-auto">
@@ -114,7 +152,7 @@ export default {
 				department: this.department,
 				location: this.location,
             },
-            userId: JSON.parse(localStorage.getItem('IdUser')),
+            //userId: JSON.parse(localStorage.getItem('IdUser')),
             newPassword : this.newPassword
         }
     },
@@ -209,6 +247,33 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.accountDetails{
+    border:#162846 solid 5px;
+}
+img{
+    max-width: 100%;
+}
+#PicProfile{
+    height: 150px;
+    width: 150px;
+    object-fit: cover;  
+}
+.btn-delete{
+    background: #D1515A;
+    font-weight: bold;
+}
+.btn-modify{
+    background: #162846;
+    font-weight: bold;
+    color: white;
+}
+.btn-password{
+    font-weight: bold;
+}
 
+.list-group{
+    max-width: 50%;
+    
+}
 </style>

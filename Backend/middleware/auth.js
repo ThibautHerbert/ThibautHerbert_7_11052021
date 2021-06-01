@@ -14,7 +14,6 @@ module.exports = (req, res, next) => {
             req.user = userId;
             console.log(userId)
             req.foo = 'req foo du auth'
-            req.bidule = req.body.userId
             // req.token = token; pas sûr utilité ?
             next();
         }

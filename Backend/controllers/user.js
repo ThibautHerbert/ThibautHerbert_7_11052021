@@ -38,7 +38,7 @@ exports.login = async (req, res, next) => {
             } else {
                 //console.log(results[0].password);
                 const userId = results[0].id; // modification de id en userId pour envoyer au auth.js ; .id c'est la colonne id de la table Users
-                const token = jwt.sign({ userId }, process.env.TOKEN, // userId est récupéré de const userId donc results [0]
+                const token = jwt.sign({ userId }, process.env.TOKEN, // userId est récupéré de const userId donc results [0] ; ajout le userId dans le token
                     { expiresIn: process.env.TOKEN_EXPIRY });
                 const user = results[0];
                 //console.log("the token is : " + token);
@@ -205,3 +205,20 @@ exports.modifyPassword = async (req, res, next) => {
 
 
 // getUser
+// Récupère l'utilisateur qui est connecté
+exports.getOneUser = async (req, res, next) => {
+    console.log(req.body);
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.TOKEN); // token en caché avec dotenv
+    const userId = decodedToken.userId;
+   
+    db.query('SELECT * FROM Users WHERE id = ?', [userId], async (err, rows) => {
+        //console.log(results);
+        if(!err) {
+            res.send(rows)
+            console.log('getOneUser a fonctionné' + rows);
+        } else {
+            console.log(err)
+        }
+    })
+}

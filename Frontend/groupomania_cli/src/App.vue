@@ -2,7 +2,7 @@
   <div id="nav">
     <router-link :to="{ name: 'Home'}">Accueil</router-link> |
     <router-link :to="{ name: 'Posts'}">Fil d'actualité</router-link> |
-    <router-link :to="{ name: 'Account', params: { id: user.id }}">Mon compte N°{{user.id}}</router-link>
+    <router-link :to="{ name: 'Account', params: { id: userConnected1[0].id }}">Mon compte N°{{userConnected1[0].id}}</router-link>
     
     <div class="d-flex justify-content-end">
       <router-link :to="{ name: 'Signup'}" v-if="!userlogged">S'inscrire | </router-link>
@@ -10,13 +10,15 @@
       <router-link :to="{ name: 'Logout'}" @click="logout" v-if="userlogged">Se déconnecter</router-link> 
     </div>
     
-    <p>test Coucou n°{{user.id}} (app.vue)</p>
-    
+    <p>test Coucou n° {{userConnected1[0].id}} {{userConnected1[0].firstName}}</p>
+  
   </div>
   <router-view/>
 </template>
 
 <script>
+import axios from 'axios'
+
 import Logout from './views/Logout'
 
 export default {
@@ -31,7 +33,16 @@ export default {
     		picture: '',
     		email: '' ,
         id: ''
-      }
+      },
+      userConnected1 : [{
+        firstName: '',
+    		lastName: '',
+    		department: '',
+    		location: '',
+    		picture: '',
+    		email: '' ,
+        id: ''
+      }],
     }
   },
   created() {
@@ -43,7 +54,12 @@ export default {
       console.log('loggé ou pas ?')
       
     }
-    console.log(this.userlogged)
+    console.log('userlogged: ' + this.userlogged)
+
+    axios.get('/auth')
+      .then(response => this.userConnected1 = response.data)
+      .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
+      .catch(error => console.log(error))
   },
   methods: {
     logout() {

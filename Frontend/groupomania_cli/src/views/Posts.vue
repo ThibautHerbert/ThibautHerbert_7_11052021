@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="Post-vue">
     <h2>{{ header }}</h2>
     <h3>{{ subdescription }}</h3>
     <div v-if="error"> {{ error }}</div>
@@ -81,6 +81,6 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 
 </style>

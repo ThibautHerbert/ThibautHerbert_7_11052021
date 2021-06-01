@@ -27,9 +27,9 @@ import axios from 'axios'
 
 export default {
   name: 'Home',
-  /*data() {
+  data() {
     return {
-      user : {
+      user1 : {
         firstName: '',
     		lastName: '',
     		department: '',
@@ -39,10 +39,12 @@ export default {
         id: ''
       }
     }
-  },*/
+  },
   components: { PostList },
   methods: {
-    
+    getUser() {
+
+    }
     
     
   },
@@ -59,6 +61,8 @@ export default {
   created() {
     this.user = JSON.parse(localStorage.getItem('User'))
     //console.log('user est : ' + user)
+
+    
   },
   /*
   mounted() {
