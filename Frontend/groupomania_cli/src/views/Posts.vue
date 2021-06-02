@@ -5,7 +5,7 @@
     <div v-if="error"> {{ error }}</div>
     <div v-if="posts.length" >
         <PostList :posts="posts" />
-        <p>test 1</p>
+        <p>fin de tous les posts page post.vue</p>
     </div>
    <!-- <div v-else> 
           <div class="spinner-border text-danger" role="status">
@@ -14,9 +14,7 @@
         </div>  --> 
     <div v-for="post in posts" :key="post.id">
          <p> {{ post.Creationdate }}</p>
-         <p>test 2</p>
     </div>
-    <p>test 3</p>
     
   </div>
 </template>

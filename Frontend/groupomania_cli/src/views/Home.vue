@@ -1,16 +1,22 @@
 <template>
   <div class="home">
+    <div class="d-flex justify-content-center">
+      <img src="../assets/images/pexels-andrea-piacquadio-927022-profil.jpg" alt="image de profil" class="rounded-circle" width="50">
+      <h3 class="mx-3">Bonjour {{ user.firstName}}</h3>
+      <p>Team {{ user.location }}</p>
+    </div>
     <div class="row">
-      <div class="col-sm-3 mx-auto">
-        <img alt="Groupomania logo" src="../assets/Logos/icon.svg">
+      <div class="d-flex justify-content-center align-items-center flex-wrap">
+        <h1>Bienvenue sur le réseau Groupomania</h1>
+        <img alt="Groupomania logo" src="../assets/Logos/icon-100px.png" >
+      </div>
+      
+      <div class="">
+        <img alt="Groupomania logo" src="../assets/images/pexels-andrea-piacquadio-927022-1000px.jpg" class="home-image">
       </div>
     </div>
-    <h1>Page d'accueil Groupomania</h1>
-    <div class="d-flex justify-content-center">
-      <img src="{{ user.picture }}" alt="image de profil" class="rounded-circle" width="50">
-      <h3 class="mx-3">Bonjour {{ user.firstName}}</h3>
-      <p>Team {{ user.location}}</p>
-    </div>
+    
+    
     <div>
       <h4>Voici les derniers posts :</h4>
     </div>
@@ -120,5 +126,13 @@ export default {
 }
 </script>
 <style scoped>
-
+@media screen and (min-width: 320px) and (max-width: 380px) {
+  .home-image {
+    
+    max-width: 300px;
+  }
+  h1 {
+    margin-top: 10px;
+  }
+}
 </style>

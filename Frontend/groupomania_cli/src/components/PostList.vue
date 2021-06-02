@@ -24,7 +24,7 @@ export default {
     <div>
         <div v-for="post in posts" :key="post.id">
             <SinglePost :post="post" />
-            <div class="card">
+            <div class="">
                 <div class="d-flex justify-content-end mx-3 ">
                     <div class="mx-3">
                         <button class="btn btn-outline-secondary border rounded m-1" @click="writeComment">
@@ -34,7 +34,7 @@ export default {
                 </div>
                 <div>
                     <div class="card mx-auto" style="width: 80%;">
-                        <div class="card-body">
+                        <div class="card-body bg-light ">
                             <div class="d-flex">
                                 <img src="../assets/images/pexels-cottonbro-5473950-300px.jpg" class="d-flex justify-content-start m-1 rounded-circle PicProfile" alt="photo du commentateur du post">
                                 <h5 class="card-title mx-3">Nom du commentateur</h5>

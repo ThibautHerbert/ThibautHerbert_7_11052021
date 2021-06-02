@@ -133,6 +133,9 @@ export default {
     font-family: 'Calibri', 'Courier New', Courier, monospace;
     color: black;
 }
+.bg-logo{
+    background: #42b983;
+}
 
 
 </style>
