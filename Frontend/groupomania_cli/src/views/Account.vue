@@ -1,23 +1,23 @@
 <template>
     <div> 
         <div>
-            <h2>Bienvenue sur ton compte : firstName</h2>
+            <h2>Bienvenue sur ton compte : {{userConnected[0].firstName}}</h2>
             <div class="row justify-content-center">
                 <div class="col-md-4 "><img src="../assets/images/pexels-monstera-6373931-1000px.jpg" alt="carte de présentation"></div>
                 <div class="col-md-4 accountDetails pb-2">
                     <h1>Mon compte</h1>
                     <div class="d-flex justify-content-around ">
                         <ul class="list-group text-start">
-                            <li class="list-group-item d-flex">Prénom : gillous</li>
-                            <li class="list-group-item d-flex">Nom  : deegrhlthremtgtt </li>
-                            <li class="list-group-item d-flex ">Département  : Ressources Humaines</li>
-                            <li class="list-group-item d-flex">Lieu de travail  :</li>
-                            <li class="list-group-item d-flex">Mail  :</li>
+                            <li class="list-group-item d-flex">Prénom : {{userConnected[0].firstName}}</li>
+                            <li class="list-group-item d-flex">Nom  : {{userConnected[0].lastName}} </li>
+                            <li class="list-group-item d-flex ">Département  : {{userConnected[0].department}}</li>
+                            <li class="list-group-item d-flex">Lieu de travail  : {{userConnected[0].location}}</li>
+                            <li class="list-group-item d-flex">Mail  : {{userConnected[0].email}}</li>
                             
                         </ul>
                         <div>
                             <label class=" p-1 d-flex">Image de profil  :</label>
-                            <img src="../assets/images/pexels-cottonbro-5474028.jpg" alt="photo de profil" id="PicProfile" class="rounded-circle">
+                            <img src="../assets/images/pexels-cottonbro-5474028.jpg " alt="photo de profil" id="PicProfile" class="rounded-circle">
                         </div>
                         
                     </div>
@@ -145,12 +145,23 @@ export default {
         return {
             showModifyAccount: false,
             showModifyPassword: false,
+            userConnected : [{
+                firstName: '',
+                lastName: '',
+                department: '',
+                location: '',
+                picture: '',
+                email: '' ,
+                id: ''
+            }],
             userModified : {
                 picture: this.picture,
 				firstName: this.firstName,
 				lastName: this.lastName,
 				department: this.department,
 				location: this.location,
+                //mail: this.mail,
+                //password: this.password
             },
             //userId: JSON.parse(localStorage.getItem('IdUser')),
             newPassword : this.newPassword
@@ -161,6 +172,10 @@ export default {
     //console.log('user est : ' + user)
     //this.userId = 
     //console.log('userId est : ' + userId)
+    axios.get('/auth') // récupère l'utilisateur connecté
+      .then(response => this.userConnected = response.data)
+      .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
+      .catch(error => console.log(error))
     },
     methods: {
         ModifyAccount() {
@@ -205,7 +220,7 @@ export default {
         },
         DeleteAccount(){
             console.log('Supprimer mon compte')
-            const id = this.user.id // changer si besoin
+            const id = this.userConnected[0].id // changer si besoin
             console.log( "y'a quoi dans" + id)
             debugger
             if(id == id) { //mettre admin aussi
@@ -220,15 +235,16 @@ export default {
             )}
         },
         async ConfirmModifyAccount() {
-            //mettre une vérification de l'email et mot de passe avant validation
+            //mettre une vérification de l'email et mot de passe avant validation ?
             console.log('confirmer Modifier mon compte')
-            const id = this.user.id // changer si besoin // ou = req.params.id si id dans url
+            const id = this.userConnected[0].id // changer si besoin // ou = req.params.id si id dans url
             const userModified = this.userModified
             console.log( "y'a quoi dans id " + id)
             console.log( "y'a quoi dans user modifié " + JSON.stringify(userModified))
-            debugger
+            
+            
             const formData = new FormData()
-                formData.append('id', id) // ou id tout court
+                formData.append('id', this.userConnected[0].id) // ou id tout court
 				//formData.append('picture', this.userModified.picture)
 				formData.append('firstName', this.userModified.firstName);
 				formData.append('lastName', this.userModified.lastName);

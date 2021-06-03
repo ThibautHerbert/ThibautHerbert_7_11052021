@@ -159,27 +159,11 @@ exports.deletePost = (req, res, next) => {
 // add 1 to column isModerated instead of default 0
 exports.moderatePost = (req, res) => {
     
+        // faire une première query pour vérifier si user isAdmin = 1 ?
+
         if(err) throw err
         const {id, isModerated} = req.body
-// ? faire un switch ?
-/*
-        switch(req.body.isModerated) {
-            case 0: 
-                if(req.body.isModerated == 1)
-                    connection.query('UPDATE Posts SET isModerated = 0 WHERE id = ?', [isModerated, id] , (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
-                        connection.release() // return the connection to pool
-                            .then(() => res.status(201).json({ message: "la modération a été supprimée, le post sera de nouveau visible"}))
-                            .catch(error => res.status(400).json({ error })); 
-            }
-            break;
-            case 1 :
-                if(req.body.isModerated == 0)
-                    connection.query('UPDATE Posts SET isModerated = 1 WHERE id = ?', [isModerated, id] , (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
-                        connection.release() // return the connection to pool
-                            .then(() => res.status(201).json({ message: "Le post a été modéré, il ne sera plus visible"}))
-                            .catch(error => res.status(400).json({ error }));
-*/
-        // query(sqlString, callback)
+
         connection.query('UPDATE Posts SET isModerated = ? WHERE id = ?', [isModerated, id] , (err, rows) => { // ? is a placeholder ; 
             connection.release() // return the connection to pool, permet de relacher la promesse quand c'est terminé
 

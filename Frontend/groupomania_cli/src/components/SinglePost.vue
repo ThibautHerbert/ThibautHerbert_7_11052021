@@ -1,36 +1,48 @@
 <template>
-  <div class="post container">
+<div>
+  <div v-if="showModifyPost">
+    <ModifyPost :userConnected="userConnected"/>
+  </div>
+
+  <p>test{{post.idUser}}</p>
+  <div class="post container" v-if="post.isModerated== 0">
     <div class="media ">
       <div class="d-flex">
         <div class=""><img src="../assets/images/pexels-cottonbro-5474028.jpg" class="d-flex justify-content-start m-1 rounded-circle PicProfile" alt="photo du créateur du post"></div>
         <div class="media-body  flex-grow-1 ">
           <router-link :to="{ name: 'PostDetails', params: { id: post.id }}">
-            <h5 class="mt-0 mx-2 text-start nav-link">Prénom + Post n°{{ post.id }}</h5>
+            <h5 class="mt-0 mx-2 text-start nav-link"> {{userConnected[0].firstName}} {{userConnected[0].lastName}} n du post.idUser:{{post.idUser}} a publié Post n°{{ post.id }}</h5>
           </router-link>
         </div>
         <div class="mt-1">
-          <button @click="modifyPost" class="btn btn-success align-self-end">
+          <button @click="toggleModifyPost" class="btn btn-success align-self-end" v-show="userConnected[0].id == userPost[0].id ">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
                       <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                       <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                       </svg>
             </button>
-          <button @click="deletePost" class="btn btn-danger justify-end m-1">
+          <button @click="deletePost" class="btn btn-danger justify-end m-1" v-show="userConnected[0].id == userPost[0].id ">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash" viewBox="0 0 16 16">
             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
             <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
           </svg>
           </button>
+          <button @click="moderatePost" class="btn btn-warning justify-end m-1" v-show="userConnected[0].isAdmin = 1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
+            </svg>
+          </button>
         </div>
       </div>
       <div class="body-post justify-content-start">
         <p class="text-start mx-2">{{ post.body }}</p>
-        <p class="bg-light border">Mettre embed ou un meta pour afficher la source ? lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
+        <p class="bg-light border" v-if="post.url">Mettre embed ou un meta pour afficher la source ? lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
         <p class="text-end creationDate-post px-1"> Publié le : {{ post.creationDate }}</p>
       </div>
       <div class="row">
-        <div class="mx-3 text-start d-flex flex-wrap">
-          <button class="btn btn-outline-secondary border rounded-pill m-1" @click="likePost">
+        <div class="mx-3 text-start d-flex flex-wrap"  >
+          <button class="btn btn-outline-secondary border rounded-pill m-1 " @click="likePost" :class="{ isIntered: isIntered }">
               <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z">
               </path></svg>
               Intéressant</button>
@@ -53,45 +65,162 @@
                 <path d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8zm0 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z"/>
                 </svg>
               Ecrire un commentaire</button>
-          </div>
-          
-        
-                
-          
-          
-            
+          </div>   
         </div>   
       </div>
-      
-      
-        
-      </div>
+    </div>
   </div>
-  
+  <div v-else> 
+    <div>Post modéré mettre un v-show pour que cela soit seulement visible d'un admin
+      
+      <div class="body-post  media">
+        <p class="fw-bold fw-light fs-5 mt-2">Le post n°{{ post.id }} dont l'idUser est :{{post.idUser}} a été modéré </p>
+        <p class="text-center mx-2">{{ post.body }}</p>
+        <p class="bg-light border" v-if="post.url">Mettre embed ou un meta pour afficher la source ? lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
+        <p class="text-end creationDate-post px-1"> Publié le : {{ post.creationDate }}</p>
+        <button @click="deModeratePost" class="btn btn-warning justify-end m-1" v-show="userConnected[0].isAdmin = 1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+          <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+          <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
+          </svg>
+          Retirer la modération
+        </button>
+      </div>
+      
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
 import { computed } from 'vue'
+import axios from 'axios'
+import ModifyPost from './ModifyPost.vue'
 
 export default {
-  props: ['post'],
- 
+  components: { ModifyPost },
+  props: ['post'], // ou posts ?
+  data() {
+      return {
+          showModifyPost: false,
+          isIntered:false,
+          idUser:'', // doublon avec id
+          userConnected : [{ // données sur les utilisateurs connectés
+            firstName: '',
+            lastName: '',
+            department: '',
+            location: '',
+            picture: '',
+            email: '' ,
+            id: '',
+            isAdmin:''
+          }],
+          userPost : [{ // données sur les utilisateurs qui ont postés
+            firstName: '',
+            lastName: '',
+            department: '',
+            location: '',
+            picture: '',
+            email: '' ,
+            id: '35' // enlever le chiffre représentant l'id d'un utilisateur connecté pour utiliser v-show sur les btn modify et delete post ;; peut être récupéré de idUser de Post
+          }],
+          Post : [{ // données sur les publications  // post ou Post ? données pour modifications du post?
+            id: '',
+            idUser: '',
+            body: '',
+            url: '',
+            creationDate: '',
+            isModerated: '' ,
+          }],
+          
+      }
+  },
+  created() {
+        axios.get('/auth')
+        //.then(response => this.idUser = response.data[0].id)
+          .then(response => this.userConnected = response.data) //response.data ???
+          .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
+          //.then(response => console.log(response.data))
+          .catch(error => console.log(error))
+  },
   methods: {
-    modifyPost() {
+    toggleModifyPost() {
+            console.log('modify Post ouvre un espace pour modifier un post')
+            this.showModifyPost = !this.showModifyPost
+        },
+    modifyPost() {               // où modifier le post dans single post ou dans WritePost ou dans ModifyPost.vue (pas encore créé)
       console.log('modify Post')
+      //if (UserConnected[0].id == UserPost[0].id) { // si l'utilisateur connecté correspond à l'utilisateur qui a créé le post
+      if(this.Post.body) {
+				
+				const formData = new FormData()
+				formData.append('body', this.Post.body)
+				formData.append('url', this.Post.url);
+        formData.append('idUser', this.userConnected[0].id);
+				console.log(formData)
+        try {
+            axios.put('http://localhost:5000/api/posts/', formData) // /posts/
+                .then(() => console.log('post modifié'))
+                .then(response => response.json())
+                // rafraichir la page ?
+                //.then(() => this.$router.push({ name: 'Posts' })
+                .catch( err => console.log(err))
+        } catch (error) {
+        console.log(error)
+				}         
+	    }
     },
     confirmModifyPost() {
       console.log('modify Post')
     },
     deletePost() {
       console.log('delete Post')
+      console.log(post.idUser)
+      console.log(userConnected[0].id) // marche pas
+      /*
+      if (userConnected[0].id == userPost[0].id) { // si l'utilisateur connecté correspond à l'utilisateur qui a créé le post
+        try {
+          const id = userPost[0].id
+          console.log('id' + id)
+            axios.delete('http://localhost:5000/api/posts/' + id) // /posts/
+                .then(() => console.log('post supprimé'))
+                .then(response => response.json())
+                // rafraichir la page ?
+                //.then(() => this.$router.push({ name: 'Posts' })
+                .catch( err => console.log(err))
+        } catch (error) {
+        console.log(error)
+				}         
+      }*/
     },
-    addPost() {
-      console.log('add/show Post')
+    moderatePost() {
+      console.log('click modération du post')
+      if(this.Post.body) {
+				const isModerated = 1
+				const formData = new FormData()
+				formData.append('isModerated', isModerated)
+        formData.append('id', this.userConnected[0].id);
+				console.log(formData)
+        try {
+            axios.put('http://localhost:5000/api/posts/', formData) // /posts/
+                .then(() => console.log('post modifié'))
+                .then(response => response.json())
+                // rafraichir la page ?
+                //.then(() => this.$router.push({ name: 'Posts' })
+                .catch( err => console.log(err))
+        } catch (error) {
+        console.log(error)
+				}         
+	    }
     },
-    confirmAddPost() {
-      console.log('add Post in db')
+    deModeratePost() {
+      console.log('click modération retirée du post')
     },
+    likePost() {
+      console.log('click intéressant')
+      this.isIntered = !this.isIntered
+      console.log(this.isIntered) // le toggle marche mais la classe ne se met pas sur le button ??
+    }
   }
    /*
   setup(props) {
@@ -103,7 +232,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
 
 .media{
   
@@ -127,5 +256,9 @@ export default {
 .svg-inline--fa{
   width: 15px;
   height: 15px;
+}
+.isInterested{
+  background: green;
+  color: white;
 }
 </style>

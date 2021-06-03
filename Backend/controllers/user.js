@@ -211,7 +211,11 @@ exports.getOneUser = async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN); // token en caché avec dotenv
     const userId = decodedToken.userId;
-   
+    
+    const id = req.body;   /// attention j'ai rajouté le const id et c'est lui qui est récupéré dans le query et non le userId
+    // if idUser du post
+    //if idUser du comment
+    //db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
     db.query('SELECT * FROM Users WHERE id = ?', [userId], async (err, rows) => {
         //console.log(results);
         if(!err) {

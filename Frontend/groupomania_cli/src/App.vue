@@ -62,10 +62,11 @@ export default {
   created() {
     this.user = JSON.parse(localStorage.getItem('User'))
     this.userConnected = JSON.parse(localStorage.getItem('User'))
+    this.userConnecté = JSON.parse(localStorage.getItem('User'))
     console.log('1 loggé ou pas ?')
-    if ( this.userConnected ) {
+    if ( this.userConnecté ) {
       this.userlogged = !this.userlogged
-      console.log('loggé ou pas ?')
+      console.log('loggé ou pas ? 16h43')
       
     }
     console.log('userlogged: ' + this.userlogged)

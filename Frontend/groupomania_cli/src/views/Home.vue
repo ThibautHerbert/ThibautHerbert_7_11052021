@@ -10,13 +10,10 @@
         <h1>Bienvenue sur le réseau Groupomania</h1>
         <img alt="Groupomania logo" src="../assets/Logos/icon-100px.png" >
       </div>
-      
       <div class="">
         <img alt="Groupomania logo" src="../assets/images/pexels-andrea-piacquadio-927022-1000px.jpg" class="home-image">
       </div>
     </div>
-    
-    
     <div>
       <h4>Voici les derniers posts :</h4>
     </div>
