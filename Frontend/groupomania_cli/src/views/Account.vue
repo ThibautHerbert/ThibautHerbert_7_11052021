@@ -172,7 +172,7 @@ export default {
     //console.log('user est : ' + user)
     //this.userId = 
     //console.log('userId est : ' + userId)
-    axios.get('/auth') // récupère l'utilisateur connecté
+    axios.get('/auth/connected') // récupère l'utilisateur connecté
       .then(response => this.userConnected = response.data)
       .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
       .catch(error => console.log(error))

@@ -15,7 +15,7 @@
       </div>
     </div>
     <div>
-      <h4>Voici les derniers posts :</h4>
+      <h4>Découvrir les derniers posts :</h4>
     </div>
     <PostList :posts="posts" />
   </div>

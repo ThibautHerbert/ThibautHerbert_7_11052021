@@ -43,8 +43,8 @@ export default {
         /*closeWritingPost() {
             this.$emit('closePost')
         },*/
-        writeAComment() {
-            console.log('write a comment')
+        showComment() {
+            console.log('show a comment')
         },
         /*likePost(){
             console.log('like a post')
@@ -73,7 +73,7 @@ export default {
             <div class="">
                 <div class="d-flex justify-content-end mx-3 ">
                     <div class="mx-3">
-                        <button class="btn btn-outline-secondary border rounded m-1" @click="writeAComment">
+                        <button class="btn btn-outline-secondary border rounded m-1" @click="showComment">
                             
                         Afficher les commentaires</button>
                     </div>

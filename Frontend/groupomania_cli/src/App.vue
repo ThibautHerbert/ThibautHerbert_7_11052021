@@ -20,6 +20,7 @@
       <router-link :to="{ name: 'Home'}">Accueil</router-link> |
       <router-link :to="{ name: 'Posts'}">Fil d'actualité</router-link> |
       <router-link :to="{ name: 'Account', params: { id: userConnected1[0].id }}">Mon compte N°{{userConnected1[0].id}}</router-link>
+      <!--<router-link :to="{ name: 'Account', params: { id: userConnected1[0].id }}">Mon compte N°{{userConnected1[0].id}}</router-link>-->
       <p>test Coucou n° {{userConnected1[0].id}} {{userConnected1[0].firstName}}</p>
     
     </div>
@@ -71,7 +72,7 @@ export default {
     }
     console.log('userlogged: ' + this.userlogged)
 
-    axios.get('/auth')
+    axios.get('/auth/connected')
       .then(response => this.userConnected1 = response.data)
       .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
       .catch(error => console.log(error))

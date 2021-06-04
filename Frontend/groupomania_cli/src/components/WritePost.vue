@@ -17,9 +17,6 @@
             <div class="d-flex ">
                 <button class="btn btn-success" @click="handleSendPost">Publier</button>
             </div>
-            <div class="d-flex ">
-                <button class="btn btn-success" @click="handleModifyPost">Publier la modification</button>
-            </div>
             
         </div>
   </div>
@@ -39,7 +36,7 @@ export default {
        }
     },
     created() {
-        axios.get('/auth')
+        axios.get('/auth/connected')
         .then(response => this.idUser = response.data[0].id)
         .then(response => this.picture = response.data[0].picture)
         .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)

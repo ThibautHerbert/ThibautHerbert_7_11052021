@@ -206,13 +206,13 @@ exports.modifyPassword = async (req, res, next) => {
 
 // getUser
 // Récupère l'utilisateur qui est connecté
-exports.getOneUser = async (req, res, next) => {
+exports.getUserConnected = async (req, res, next) => {
     console.log(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN); // token en caché avec dotenv
     const userId = decodedToken.userId;
     
-    const id = req.body;   /// attention j'ai rajouté le const id et c'est lui qui est récupéré dans le query et non le userId
+    //const id = req.body;   /// attention j'ai rajouté le const id et c'est lui qui est récupéré dans le query et non le userId
     // if idUser du post
     //if idUser du comment
     //db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
@@ -220,7 +220,26 @@ exports.getOneUser = async (req, res, next) => {
         //console.log(results);
         if(!err) {
             res.send(rows)
+            console.log('getUserConnected a fonctionné' + rows);
+        } else {
+            console.log(err)
+        }
+    })
+}
+// récupère un utilisateur avec son id
+exports.getOneUser = async (req, res, next) => {
+    // const id = req.params.id;
+    const {id} = req.body;   /// attention j'ai rajouté le const id et c'est lui qui est récupéré dans le query et non le userId
+    // if idUser du post
+    //if idUser du comment
+    //db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
+        console.log('Avant getOneUser')
+    db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
+        //console.log(results);
+        if(!err) {
+            res.send(rows)
             console.log('getOneUser a fonctionné' + rows);
+            console.log('in query getOneUser');
         } else {
             console.log(err)
         }

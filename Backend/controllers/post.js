@@ -14,6 +14,7 @@ exports.getAllPost = (req, res, next) => {
 exports.getAllPost = (req, res, next) => {
     console.log('before query');
     console.log(req.foo);
+    // être plus précis pour formater la date ?
     db.query('SELECT * FROM Posts ORDER BY creationDate DESC', (err, rows) => {   // rajouter un order by pour avoir les plus récents en premier
         if(!err) {
             res.send(rows)

@@ -41,7 +41,16 @@ export default {
               body:"",
               creationDate:"",
               isModerated:""
-            }
+            },
+            userPost : [{ // données sur les utilisateurs qui ont postés
+              firstName: '',
+              lastName: '',
+              department: '',
+              location: '',
+              picture: '',
+              email: '' ,
+              id: '' 
+            }],
         }
     },
     /*
@@ -61,11 +70,23 @@ export default {
       
     },*/
      mounted() {
+       console.log(this.posts.idUser)
       axios.get('posts/', {headers: {Authorization: 'Bearer ' + localStorage.getItem('Token')}})
       .then(response => this.posts = response.data)
       .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
       .catch(error => console.log(error))
     },
+    created() {
+      const id = 35
+      axios.get('/auth', { id: 35}) // quelle donnée mettre ici ? cela ne marche pas
+        //console.log('hello' + this.post.idUser)
+        //console.log('hello coucou' +  post.idUser)
+        //.then(response => this.idUser = response.data[0].id)
+          .then(response => this.userPost = response.data) //response.data ???
+          .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
+          //.then(response => console.log(response.data))
+          .catch(error => console.log(error))
+    }
     /*
     setup() {
             const { posts, error, load } = getPosts()
