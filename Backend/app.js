@@ -14,7 +14,7 @@ dotenv.config({ path: './.env'})
 
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
-//const commentRoutes = require('./routes/comment');
+const commentRoutes = require('./routes/comment');
 
 const limiter = rateLimit({ // spécifie le nombre maximums de requêtes
     max: 100, // 100 par heure
@@ -46,7 +46,7 @@ app.use(xss());
 
 app.use('/api/auth', userRoutes);
 app.use('/api/posts', postRoutes);
-//app.use('/api/comments', commentRoutes);
+app.use('/api/comments', commentRoutes);
 
 app.get('/', (req, res) => {
     res.send("<h1>Page d'accueil Backend</h1>")

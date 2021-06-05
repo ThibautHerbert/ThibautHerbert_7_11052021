@@ -11,7 +11,7 @@ exports.getAllPost = (req, res, next) => {
 */
 
 
-exports.getAllPost = (req, res, next) => {
+exports.getAllPosts = (req, res, next) => {
     console.log('before query');
     console.log(req.foo);
     // être plus précis pour formater la date ?
@@ -127,6 +127,9 @@ exports.deletePost = (req, res) => {
             .then(() => res.status(200).json({ message: `Le post a été supprimé`}))
             .catch(error => res.status(400).json({ error }));
             */
+//pour supprimer les images du dossier (images ou picture ?)
+    //const filename = post.imageUrl.split('/images/')[1];
+    //fs.unlink(`images/${filename}`, () => {
         db.query('DELETE FROM Posts WHERE id= ?', [req.params.id], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
             
 
@@ -136,6 +139,7 @@ exports.deletePost = (req, res) => {
                 console.log(err)
             }
         })
+    //})
 };    
 /*
 exports.deletePost = (req, res, next) => {
@@ -161,24 +165,22 @@ exports.deletePost = (req, res, next) => {
 exports.moderatePost = (req, res) => {
     
         // faire une première query pour vérifier si user isAdmin = 1 ?
+    //const {isAdmin == 1} = req.body
+    if(err) throw err
+    const {id, isModerated} = req.body
 
-        if(err) throw err
-        const {id, isModerated} = req.body
-
-        connection.query('UPDATE Posts SET isModerated = ? WHERE id = ?', [isModerated, id] , (err, rows) => { // ? is a placeholder ; 
-            connection.release() // return the connection to pool, permet de relacher la promesse quand c'est terminé
-
-            if(!err) {
-                if(isModerated==1) {
-                    res.send(`Le post n° ${ id } a été modéré, il ne sera plus visible`)
-                // comment appeler des infos de la table users?
-                } else {
-                    res.send("la modération a été supprimée, le post n° ${ id } sera de nouveau visible")
-                }
+    db.query('UPDATE Posts SET isModerated = ? WHERE id = ?', [isModerated, id] , (err, rows) => {
+        if(!err) {
+            if(isModerated==1) {
+                res.send(`Le post n° ${ id } a été modéré, il ne sera plus visible`)
+            // comment appeler des infos de la table users?
             } else {
-                console.log(err)
+                res.send("la modération a été supprimée, le post n° ${ id } sera de nouveau visible")
             }
-        })
+        } else {
+            console.log(err)
+        }
+    })
 }
 
                                                     // 7ème requête like

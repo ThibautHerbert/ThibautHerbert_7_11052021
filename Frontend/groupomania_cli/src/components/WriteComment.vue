@@ -2,8 +2,8 @@
   <div> 
         <div class="card-body write-comment mx-auto" >
             <div class="d-flex align-items-center">
-                <img src="{{ picture }}" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
-                <label for="FormControlTextarea1">Commentez ! opt :répondez à prénom dont id: {{post.idUser}}</label>
+                <img src="{{userConnected[0].picture}}" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
+                <label for="FormControlTextarea1">Commentez la publication {{userConnected[0].firstName}} ! opt :répondez à prénom dont id: {{post.idUser}}</label>
             </div>
             <div class="form-group ">
                 <form>
@@ -20,20 +20,19 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 
 export default {
-    props: ['post'], // ou posts ? marche pas
+    name: 'WriteComment',
+    props: ['post', 'comment', 'userConnected'], // ou posts ? marche pas
     name: 'WriteComment',
     data() {
        return {
         // données pour un nouveau Commentaire
         body:'',
-        idUser:'', // id de la personne qui commente
-        idPost:'', // id du post commenté
-        
-        user: [{}],
-        userConnected: [{}],
+        idUser: this.userConnected[0].id, // id de la personne qui commente
+        idPost: this.post.id, // id du post commenté
        }
     },
     methods: {
@@ -44,19 +43,16 @@ export default {
         handleSendComment() {
              // avec ou sans async handleSendComment() {
 	        if(this.body) {
-				
-				const formData = new FormData()
-				formData.append('body', this.body)
-				formData.append('idPost', this.idPost);
-                formData.append('idUser', this.idUser);
-				console.log(formData)
 				/*
-				let signupForm = {"firstName": this.firstName, "lastName": this.lastName, "department": this.department, "location": this.location, "picture": this.picture, "email": this.email , "password": this.password}
-                console.log('signupForm : '+ signupForm)
-                //let signupToSend = JSON.stringify(signupForm)
+				const formData = new FormData()
+				formData.append('idUser', this.idUser);
+                formData.append('body', this.body)
+				formData.append('idPost', this.idPost);
+				console.log(formData)
 				*/
+				let commentToSend = {"idUser": this.idUser, "body": this.body, "idPost": this.idPost}
                 try {
-                    axios.post('http://localhost:5000/api/comments/', formData) // /posts/
+                    axios.post('http://localhost:5000/api/comments/', commentToSend) // /posts/
                         .then(() => console.log('commentaire publié'))
                         .then(response => response.json())
                         // rafraichir la page ?

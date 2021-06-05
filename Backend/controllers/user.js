@@ -234,7 +234,7 @@ exports.getOneUser = async (req, res, next) => {
     //if idUser du comment
     //db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
         console.log('Avant getOneUser')
-    db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
+    db.query('SELECT * FROM Users WHERE id = ?', [req.body], async (err, rows) => {
         //console.log(results);
         if(!err) {
             res.send(rows)

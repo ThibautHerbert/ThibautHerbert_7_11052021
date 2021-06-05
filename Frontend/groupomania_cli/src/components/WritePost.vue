@@ -2,8 +2,8 @@
   <div> 
         <div class="card-body write-post mx-auto" >
             <div class="d-flex align-items-center">
-                <img src="{{ picture }}" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
-                <label for="FormControlTextarea1">Postez un message !</label>
+                <img src="{{ userConnected[0].picture }}" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
+                <label for="FormControlTextarea1">Postez un message {{userConnected[0].firstName}} !</label>
             </div>
             <div class="form-group ">
                 <form>
@@ -26,6 +26,8 @@
 import axios from 'axios'
 
 export default {
+    name: 'WritePost',
+    props: ['userConnected'],
     data() {
        return {
         // données pour un nouveau Post
@@ -33,8 +35,10 @@ export default {
         url:'',
         idUser:'',
         picture:'',
+        
        }
     },
+    /*
     created() {
         axios.get('/auth/connected')
         .then(response => this.idUser = response.data[0].id)
@@ -43,6 +47,7 @@ export default {
         .then(response => console.log('picture' + response.data.picture))
         .catch(error => console.log(error))
     },
+    */
     methods: {
         closeWritingPost() {
             this.$emit('closePost')

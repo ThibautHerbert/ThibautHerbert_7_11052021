@@ -21,22 +21,24 @@
       <router-link :to="{ name: 'Posts'}">Fil d'actualité</router-link> |
       <router-link :to="{ name: 'Account', params: { id: userConnected1[0].id }}">Mon compte N°{{userConnected1[0].id}}</router-link>
       <!--<router-link :to="{ name: 'Account', params: { id: userConnected1[0].id }}">Mon compte N°{{userConnected1[0].id}}</router-link>-->
-      <p>test Coucou n° {{userConnected1[0].id}} {{userConnected1[0].firstName}}</p>
-    
     </div>
     
     <router-view/>
+    <!--
+    <Posts />
+    -->
     <Footer />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import Footer from './components/Footer'
+import Footer from './components/Footer.vue'
 import Logout from './views/Logout'
+import Posts from './views/Posts.vue'
 
 export default {
-  components: { Footer },
+  components: { Footer, Posts },
   data() {
     return {
       userlogged: false,
@@ -72,10 +74,10 @@ export default {
     }
     console.log('userlogged: ' + this.userlogged)
 
-    axios.get('/auth/connected')
-      .then(response => this.userConnected1 = response.data)
-      .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-      .catch(error => console.log(error))
+  axios.get('/auth/connected')
+    .then(response => this.userConnected1 = response.data)
+    .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
+    .catch(error => console.log(error))
   },
   methods: {
     logout() {

@@ -6,11 +6,10 @@ const auth = require('../middleware/auth');
 
 
 router.post('/', auth, commentCtrl.createComment); // pas besoin d'image, multer enlevé ?!
-router.post('/:id/like', auth, commentCtrl.likeComment);
-router.put('/:id', auth, commentCtrl.modifyComment);
-router.put('/:id', auth, commentCtrl.moderateComment); // rajouté pour modérer
-router.delete('/:id', auth, commentCtrl.deleteComment);
+router.put('/', auth, commentCtrl.modifyComment);
+router.put('/moderate', auth, commentCtrl.moderateComment); // rajouté pour modérer
+router.delete('/', auth, commentCtrl.deleteComment);
 router.get('/:id', auth, commentCtrl.getOneComment);
-router.get('/', auth, commentCtrl.getAllComment);
+router.get('/', auth, commentCtrl.getAllComments);
 
 module.exports = router;
