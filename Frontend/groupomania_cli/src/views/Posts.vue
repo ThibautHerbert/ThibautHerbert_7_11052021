@@ -92,6 +92,8 @@ export default {
         .catch(error => console.log(error))
   
       const id = 35
+    }
+      /*
       axios.get('/auth', { id: 35}) // quelle donnée mettre ici ? cela ne marche pas
         //console.log('hello' + this.post.idUser)
         //console.log('hello coucou' +  post.idUser)
@@ -100,7 +102,7 @@ export default {
           .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
           //.then(response => console.log(response.data))
           .catch(error => console.log(error))
-    }
+    }*/
     /*
     setup() {
             const { posts, error, load } = getPosts()

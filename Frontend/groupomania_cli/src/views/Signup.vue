@@ -70,7 +70,7 @@ export default {
                 console.log('signupForm : '+ signupForm)
                 //let signupToSend = JSON.stringify(signupForm)
 				*/
-				axios.post('http://localhost:5000/api/auth/signup', formData)
+				axios.post('auth/signup', formData)
 					.then(() => console.log('inscription réussie'))
 					.then(response => response.json())
 					//.then(() => this.$router.push({ name: 'Login' })

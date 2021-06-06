@@ -127,7 +127,7 @@ exports.deleteUser = (req, res, next) => {
 
 exports.modifyUser = (req, res, next) => {
     console.log(req.body);
-    const {firstName, lastName, department, location, picture, id} = req.body;
+    const {firstName, lastName, location, department, id} = req.body; //picture
     /*
     try { // essai du code
         const {firstName, lastName, department, location, picture, password, email, id} = req.body;
@@ -142,7 +142,7 @@ exports.modifyUser = (req, res, next) => {
             } else {
                 */
                 //let hashedPassword = bcrypt.hash(password, 10);
-                db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ? WHERE id = ?', [firstName, lastName, department, location, id]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
+                db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ? WHERE id = ?', [firstName, lastName, location, department, id]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
                 //db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
             //connection.release() // return the connection to pool
                     .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été modifié`}))
@@ -226,6 +226,7 @@ exports.getUserConnected = async (req, res, next) => {
         }
     })
 }
+/*
 // récupère un utilisateur avec son id
 exports.getOneUser = async (req, res, next) => {
     // const id = req.params.id;
@@ -245,3 +246,4 @@ exports.getOneUser = async (req, res, next) => {
         }
     })
 }
+*/

@@ -32,29 +32,25 @@ export default {
         // données pour un nouveau Post
         body:'',
         url:'',
-        idUser:'',
+        idUser: this.userConnected[0].id,
         picture:'',
        }
     },
     created() {
-        axios.get('/auth')
-        .then(response => this.idUser = response.data[0].id)
-        .then(response => this.picture = response.data[0].picture)
-        .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-        .then(response => console.log('picture' + response.data.picture))
-        .catch(error => console.log(error))
+        
     },
     methods: {
         closeWritingPost() {
             this.$emit('closePost')
         },
-        async handleModifyPost() { // avec ou sans async handleSignup() {
+        handleModifyPost() { // avec ou sans async handleSignup() {
 	        if(this.body) {
 				
 				const formData = new FormData()
 				formData.append('body', this.body)
 				formData.append('url', this.url);
                 formData.append('idUser', this.idUser);
+                formData.append('id', this.post.id);
 				console.log(formData)
 				/*
 				let signupForm = {"firstName": this.firstName, "lastName": this.lastName, "department": this.department, "location": this.location, "picture": this.picture, "email": this.email , "password": this.password}
@@ -62,7 +58,7 @@ export default {
                 //let signupToSend = JSON.stringify(signupForm)
 				*/
                 try {
-                    axios.put('http://localhost:5000/api/posts/', formData) // /posts/
+                    axios.put('posts/' + this.post.id, formData) // /posts/
                         .then(() => console.log('post modifié'))
                         .then(response => response.json())
                         // rafraichir la page ?

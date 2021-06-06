@@ -78,7 +78,7 @@ exports.createPost = (req, res) => {
 }
                                                     // 4ème requête modify
 exports.modifyPost = (req, res) => {
-        const {id, idUser, url, body, creationDate} = req.body
+        const {id, idUser, url, body} = req.body
         //const params = req.body
         // query(sqlString, callback)
         //db.query('UPDATE Posts SET url = ?, content = ?, dateContent = ? WHERE idUser = ?', [url, body, creationDate, id, idUser] , (err, rows) => { // ? is a placeholder ;
@@ -95,8 +95,8 @@ exports.modifyPost = (req, res) => {
             .then(() => res.status(200).json({ message: `Le post a été modifié`}))
             .catch(error => res.status(400).json({ error }));
         */
-        db.promise().query('UPDATE Posts SET url = ?, body = ? WHERE idUser = ?', [url, body, idUser], req.params.id, )  
-        .then(() => res.status(200).json({ message: `Le post a été modifié`}))
+        db.promise().query('UPDATE Posts SET url = ?, body = ? WHERE idUser = ? && id = ?', [url, body, idUser, id], req.params.id, )  
+        .then(() => res.status(200).json({ message: `Le post a été modifié 2`}))
         .catch(error => res.status(400).json({ error }));
         
        /*
@@ -130,9 +130,11 @@ exports.deletePost = (req, res) => {
 //pour supprimer les images du dossier (images ou picture ?)
     //const filename = post.imageUrl.split('/images/')[1];
     //fs.unlink(`images/${filename}`, () => {
-        db.query('DELETE FROM Posts WHERE id= ?', [req.params.id], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
-            
-
+        //db.query('DELETE FROM Posts WHERE id= ?', [req.params.id], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
+        db.promise().query('DELETE FROM Posts WHERE id= ?', [req.params.id])
+            .then(() => res.status(200).json({ message: `Le post a modéré 2`}))
+            .catch(error => res.status(400).json({ error }));
+/*
             if(!err) {
                 res.send(`Le post de n° ${ [req.params.id] } a été supprimé`)
             } else {
@@ -140,6 +142,7 @@ exports.deletePost = (req, res) => {
             }
         })
     //})
+    */
 };    
 /*
 exports.deletePost = (req, res, next) => {
@@ -166,12 +169,12 @@ exports.moderatePost = (req, res) => {
     
         // faire une première query pour vérifier si user isAdmin = 1 ?
     //const {isAdmin == 1} = req.body
-    if(err) throw err
-    const {id, isModerated} = req.body
+    
+    const {isModerated, id } = req.body
 
     db.query('UPDATE Posts SET isModerated = ? WHERE id = ?', [isModerated, id] , (err, rows) => {
         if(!err) {
-            if(isModerated==1) {
+            if(isModerated=1) {
                 res.send(`Le post n° ${ id } a été modéré, il ne sera plus visible`)
             // comment appeler des infos de la table users?
             } else {

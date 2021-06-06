@@ -31,7 +31,7 @@
                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                     </svg>
                     Modifier mon compte</button>
-                <button class="btn btn-delete mx-1" @dblclick="DeleteAccount">
+                <button class="btn btn-delete mx-1" @dblclick="deleteAccount">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash " viewBox="0 0 16 16">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -52,19 +52,19 @@
                 <div class="col-sm-6 blockForm mx-auto py-2" v-if="showModifyAccount">
                     <h3>Modifier mes informations</h3>
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="firstNameInput" class="errorLabel">Mon Prénom : {{ user.firstName}}</label>
-                        <input type="text" class="form-control error" id="firstNameInput" aria-describedby="firstNameHelp" placeholder="{{ user.firstName}} Modifiez votre prénom." required v-model="userModified.firstName">
+                        <label for="firstNameInput" class="errorLabel">Mon Prénom : {{ userConnected[0].firstName}}</label>
+                        <input type="text" class="form-control error" id="firstNameInput" aria-describedby="firstNameHelp" placeholder="{{ userConnected[0].firstName}} Modifiez votre prénom." required v-model="userModified.firstName">
                         <small id="firstNameHelp" class="form-text text-muted errorText"> Modifiez votre prénom.</small>
                     </div>
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="lastNameInput">Nom : {{ user.lastName}}</label>
+                        <label for="lastNameInput">Nom : {{ userConnected[0].lastName}}</label>
                         <input type="text" class="form-control" id="lastNameInput" aria-describedby="lastNameHelp" placeholder="Durand" required v-model="userModified.lastName">
                         <small id="lastNameHelp" class="form-text text-muted"> Modifiez votre nom de famille.</small>
                     </div>
                 
                 
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="departmentSelect">Département - Pôle : {{ user.department}}</label>
+                        <label for="departmentSelect">Département - Pôle : {{ userConnected[0].department}}</label>
                         <select name="department" class="form-select" aria-label="Choix du département" required id="departmentSelect" v-model="userModified.department">
                             <option value="">Sélectionnez votre pôle d'activité</option>
                             <option value="Ressources Humaines">Ressources Humaines</option>
@@ -80,7 +80,7 @@
                     </div>
                 
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="locationSelect">Lieu - Où ? - Dans quel bureau ? {{ user.location}}</label>
+                        <label for="locationSelect">Lieu - Où ? - Dans quel bureau ? {{ userConnected[0].location}}</label>
                         <select name="location" class="form-select" id="locationSelect" required v-model="userModified.location">
                             <option value="">Sélectionnez votre bureau</option>
                             <option value="Nantes">Nantes</option>
@@ -98,7 +98,7 @@
                     <p class="text-warning my-4 ">N'oubliez pas de retaper votre email et votre mot de passe pour confirmer les modifications.</p>
                     <div class="my-4">
                         <div class="form-group col-md-7 mx-auto ">
-                            <label for="emailInput"> Adresse Email : {{ user.email}}</label>
+                            <label for="emailInput"> Adresse Email : {{ userConnected[0].email}}</label>
                             <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="sophiedurand@protonmail.com" required v-model="email">
                             <small id="emailHelp" class="form-text text-muted"> Modifiez votre adresse courriel interne.</small>
                         </div>
@@ -160,6 +160,7 @@ export default {
 				lastName: this.lastName,
 				department: this.department,
 				location: this.location,
+                id: ''// error occured in hook walkComponentTree this.userConnected[0].id,
                 //mail: this.mail,
                 //password: this.password
             },
@@ -168,10 +169,7 @@ export default {
         }
     },
     created() {
-    this.user = JSON.parse(localStorage.getItem('User'))
-    //console.log('user est : ' + user)
-    //this.userId = 
-    //console.log('userId est : ' + userId)
+    
     axios.get('/auth/connected') // récupère l'utilisateur connecté
       .then(response => this.userConnected = response.data)
       .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
@@ -218,43 +216,45 @@ export default {
                         .catch(error => console.log(error))
                 }
         },
-        DeleteAccount(){
+        deleteAccount(){
             console.log('Supprimer mon compte')
-            const id = this.userConnected[0].id // changer si besoin
-            console.log( "y'a quoi dans" + id)
+            const idDelete = this.userConnected[0].id // changer si besoin
+            //console.log( "y'a quoi dans" + id)
             debugger
-            if(id == id) { //mettre admin aussi
-                axios.delete('http://localhost:5000/api/auth/', {id})
-                    .then(() => localStorage.removeItem('Token'))
-                    .then(() => localStorage.removeItem('IdUser'))
-                    .then(() => localStorage.removeItem('User'))
-                    .then(response => console.log('réponse de la delete' + response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-                    .then(() => alert('Votre compte a bien été supprimé'))
-                    .then(() => this.$router.push({ name: 'Signup' })
-                    .catch(error => console.log(error))
-            )}
+            //if(idDelete) { //mettre admin aussi
+            axios.delete('auth/', {idDelete})
+                //.then(() => localStorage.removeItem('Token'))
+                //.then(() => localStorage.removeItem('IdUser'))
+                //.then(() => localStorage.removeItem('User'))
+                .then(response => console.log('réponse de la delete' + response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
+                .then(() => alert('Votre compte a bien été supprimé'))
+                .then(() => this.$router.push({ name: 'Signup' }))
+                .catch(error => console.log(error))
+            //)}
         },
-        async ConfirmModifyAccount() {
+        ConfirmModifyAccount() {
             //mettre une vérification de l'email et mot de passe avant validation ?
             console.log('confirmer Modifier mon compte')
+            /*
             const id = this.userConnected[0].id // changer si besoin // ou = req.params.id si id dans url
-            const userModified = this.userModified
+            const userModified = this.userModified;
             console.log( "y'a quoi dans id " + id)
             console.log( "y'a quoi dans user modifié " + JSON.stringify(userModified))
-            
+            */
             
             const formData = new FormData()
-                formData.append('id', this.userConnected[0].id) // ou id tout court
-				//formData.append('picture', this.userModified.picture)
+                 // ou id tout court
+				//formData.append('picture', refs.img) // comment utiliser les refs ?
 				formData.append('firstName', this.userModified.firstName);
 				formData.append('lastName', this.userModified.lastName);
+                formData.append('location', this.userModified.location);
 				formData.append('department', this.userModified.department);
-				formData.append('location', this.userModified.location);
+				formData.append('id', this.userConnected[0].id)
 				//formData.append('email', this.email);
 				//formData.append('password', this.password);
-
+                
                 try {
-					await axios.put('http://localhost:5000/api/auth/', formData)
+					 axios.put('auth/', formData)
 				} catch (error) {
 					console.log(error)
 				}

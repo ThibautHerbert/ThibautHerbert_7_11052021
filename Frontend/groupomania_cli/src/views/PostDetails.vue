@@ -30,7 +30,7 @@ export default {
             }]
         }
     },
-    props: ['id'],
+    props: ['id', 'post'],
     /*
     created() {
         axios.get('http://localhost:5000/api/posts/' + props.id)

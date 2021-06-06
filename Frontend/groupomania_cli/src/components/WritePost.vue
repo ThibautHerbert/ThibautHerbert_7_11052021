@@ -33,7 +33,7 @@ export default {
         // données pour un nouveau Post
         body:'',
         url:'',
-        idUser:'',
+        idUser: this.userConnected[0].id,
         picture:'',
         
        }
@@ -66,7 +66,7 @@ export default {
                 //let signupToSend = JSON.stringify(signupForm)
 				*/
                 try {
-                    axios.post('http://localhost:5000/api/posts/', formData) // /posts/
+                    axios.post('posts/', formData) // /posts/
                         .then(() => console.log('post publié'))
                         .then(response => response.json())
                         // rafraichir la page ?

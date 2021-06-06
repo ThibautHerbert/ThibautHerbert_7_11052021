@@ -52,7 +52,7 @@ export default {
 				*/
 				let commentToSend = {"idUser": this.idUser, "body": this.body, "idPost": this.idPost}
                 try {
-                    axios.post('http://localhost:5000/api/comments/', commentToSend) // /posts/
+                    axios.post('comments/', commentToSend) // /posts/
                         .then(() => console.log('commentaire publié'))
                         .then(response => response.json())
                         // rafraichir la page ?

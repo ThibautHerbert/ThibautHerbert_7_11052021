@@ -61,8 +61,14 @@ export default {
     })
   },
   */
+
   created() {
     this.user = JSON.parse(localStorage.getItem('User'))
+
+    // à remplacer par userConnected
+
+
+
     //console.log('user est : ' + user)
 
     
