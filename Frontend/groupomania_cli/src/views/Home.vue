@@ -1,11 +1,11 @@
 <template>
   <div class="home">
     <div class="d-flex justify-content-center">
-      <img src="../assets/images/pexels-andrea-piacquadio-927022-profil.jpg" alt="image de profil" class="rounded-circle" width="50">
+      <img :src="url + user.picture" alt="image de profil" class="rounded-circle" width="50" height="50">
       <h3 class="mx-3">Bonjour {{ user.firstName}}</h3>
       <p>Team {{ user.location }}</p>
     </div>
-    <div class="row">
+    <div class="">
       <div class="d-flex justify-content-center align-items-center flex-wrap">
         <h1>Bienvenue sur le réseau Groupomania</h1>
         <img alt="Groupomania logo" src="../assets/Logos/icon-100px.png" >
@@ -32,6 +32,7 @@ export default {
   name: 'Home',
   data() {
     return {
+      url:'http://localhost:5000/images/',
       user1 : {
         firstName: '',
     		lastName: '',

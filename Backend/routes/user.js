@@ -6,7 +6,7 @@ const auth = require('../middleware/auth');
 
 router.post('/signup', multer, userCtrl.signup); //multer
 router.post('/login', userCtrl.login);
-//router.get('/', auth, userCtrl.getOneUser); 
+router.get('/user', auth, userCtrl.getOneUser); 
 router.get('/connected', auth, userCtrl.getUserConnected);
 router.delete('/', auth, userCtrl.deleteUser); // ou /:id ou /account/:id
 router.put('/', auth, userCtrl.modifyUser); ///:id rajouter le multer pour l'image

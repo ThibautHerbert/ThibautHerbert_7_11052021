@@ -226,7 +226,7 @@ exports.getUserConnected = async (req, res, next) => {
         }
     })
 }
-/*
+
 // récupère un utilisateur avec son id
 exports.getOneUser = async (req, res, next) => {
     // const id = req.params.id;
@@ -235,15 +235,17 @@ exports.getOneUser = async (req, res, next) => {
     //if idUser du comment
     //db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
         console.log('Avant getOneUser')
-    db.query('SELECT * FROM Users WHERE id = ?', [req.body], async (err, rows) => {
+    //db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
         //console.log(results);
-        if(!err) {
-            res.send(rows)
-            console.log('getOneUser a fonctionné' + rows);
-            console.log('in query getOneUser');
-        } else {
-            console.log(err)
-        }
-    })
+    db.promise().query('SELECT * FROM Users WHERE id = ?', [id])
+        .then(() => res.status(200).json({ message: `utilisateur récupéré`}))
+        .catch(error => res.status(400).json({ error }));
+       // if(!err) {
+        //    res.send(rows)
+       //     console.log('getOneUser a fonctionné' + rows);
+         //   console.log('in query getOneUser');
+        //} else {
+       //     console.log(err)
+       // }
+   // })
 }
-*/

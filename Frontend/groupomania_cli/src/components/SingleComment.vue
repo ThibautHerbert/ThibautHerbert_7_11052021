@@ -8,7 +8,7 @@
             <div class="card mx-auto" style="width: 80%;" v-show="comment.idPost == post.id">
                 <div class="card-body bg-light ">
                     <div class="d-flex">
-                        <img src="../assets/images/pexels-cottonbro-5473950-300px.jpg" class="d-flex justify-content-start m-1 rounded-circle PicProfile" alt="photo du commentateur du post">
+                        <img src="../assets/images/pexels-cottonbro-5473950-300px.jpg" class="d-flex justify-content-start m-1 rounded-circle PicProfileComment" alt="photo du commentateur du post" >
                         <h5 class="card-title mx-3 d-flex flex-grow-1">Nom du commentateur</h5>
                         <div class="mt-1">
                         <button @click="toggleModifyComment" class="btn btn-success align-self-end" v-show="userConnected[0].id == comment.idUser ">
@@ -158,3 +158,13 @@ export default {
 }
 
 </script>
+
+<style scoped>
+
+.PicProfileComment{
+    height: 70px;
+    width: 70px;
+    min-width: 70px;
+    
+}
+</style>>

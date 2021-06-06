@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
+const path = require('path');
+
 const cookieParser = require('cookie-parser'); // est-ce utile ?
 //paquets de sécurité :
 const helmet = require('helmet');
@@ -17,7 +19,7 @@ const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 
 const limiter = rateLimit({ // spécifie le nombre maximums de requêtes
-    max: 100, // 100 par heure
+    max: 200, // 100 par heure
     windowMs: 60 * 60 * 1000, // pour : 60mn 60secondes 1000 millisecondes
     message: 'Vous avez réalisé trop de requêtes depuis votre adresse IP, merci de réessayer plus tard',
   })
@@ -42,7 +44,7 @@ app.use((req, res, next) => {
 // contre les attaques XSS (cross site scripting):
 app.use(xss());
 
-    // faire un filter pour get les plus récents content et messages ?
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/auth', userRoutes);
 app.use('/api/posts', postRoutes);

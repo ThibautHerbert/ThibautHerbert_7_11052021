@@ -2,9 +2,9 @@
     <div> 
         <div>
             <h2>Bienvenue sur ton compte : {{userConnected[0].firstName}}</h2>
-            <div class="row justify-content-center">
-                <div class="col-md-4 "><img src="../assets/images/pexels-monstera-6373931-1000px.jpg" alt="carte de présentation"></div>
-                <div class="col-md-4 accountDetails pb-2">
+            <div class="d-flex flex-wrap justify-content-center align-items-center">
+                <div class="col-md-4 presentation"><img src="../assets/images/pexels-monstera-6373931-1000px.jpg" alt="carte de présentation"></div>
+                <div class="col-md-4 accountDetails my-2 pb-2 my-account">
                     <h1>Mon compte</h1>
                     <div class="d-flex justify-content-around ">
                         <ul class="list-group text-start">
@@ -17,7 +17,7 @@
                         </ul>
                         <div>
                             <label class=" p-1 d-flex">Image de profil  :</label>
-                            <img src="../assets/images/pexels-cottonbro-5474028.jpg " alt="photo de profil" id="PicProfile" class="rounded-circle">
+                            <img :src="url + userConnected[0].picture" alt="photo de profil" id="PicProfile" class="rounded-circle">
                         </div>
                         
                     </div>
@@ -145,6 +145,7 @@ export default {
         return {
             showModifyAccount: false,
             showModifyPassword: false,
+            url: 'http://localhost:5000/images/',
             userConnected : [{
                 firstName: '',
                 lastName: '',
@@ -266,9 +267,11 @@ export default {
 <style scoped>
 .accountDetails{
     border:#162846 solid 5px;
+    max-width: 350px;
 }
-img{
+.presentation img{
     max-width: 100%;
+    height: 200px;
 }
 #PicProfile{
     height: 150px;
@@ -292,4 +295,5 @@ img{
     max-width: 50%;
     
 }
+
 </style>
