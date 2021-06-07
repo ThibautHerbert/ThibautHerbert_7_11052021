@@ -2,8 +2,8 @@
     <div> 
         <div class="card-body write-comment mx-auto" >
             <div class="d-flex align-items-center">
-                <img src="{{userConnected[0].picture}}" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
-                <label for="FormControlTextarea1">Modifiez votre publication {{userConnected[0].firstName}}</label>
+                <img :src="urlImg + $root.logged.picture" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
+                <label for="FormControlTextarea1">Modifiez votre publication {{$root.logged.firstName}}</label>
             </div>
             <div class="form-group ">
                 <form>
@@ -26,8 +26,9 @@ export default {
     data() {
        return {
         // données pour un nouveau Post
+        urlImg: 'http://localhost:5000/images/',
         body:'',
-        idUser: this.userConnected[0].id,
+        idUser: this.$root.logged.id,
         id: this.comment.id, // id du comment
         idPost: this.post.id,
         

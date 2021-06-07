@@ -11,7 +11,7 @@ export default {
             console.log('logout cliqué')
             localStorage.removeItem('Token');
             //renvoyer vers page de connexion
-            //.then(() => this.$router.push({ name: 'Login' })
+            //this.$router.push({ name: 'Login' })
         }
     }
 }

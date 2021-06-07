@@ -40,7 +40,7 @@ const routes = [
     component: Posts
   },
   {
-    path: '/posts/:id', // ou mettre posts/:id ?
+    path: '/posts/:id', // indique l'accès aux parameters de l'url
     name: 'PostDetails',
     component: PostDetails,
     props : true // si l'on se rend sur la page on peut accéder à la route paramater avec les props

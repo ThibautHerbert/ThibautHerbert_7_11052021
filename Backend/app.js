@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const path = require('path');
 
@@ -27,10 +26,12 @@ app.use('/api', limiter);
   // sécurité HTTP Headers
 app.use(helmet());
 
-// parse URL encoded bodies as sent by HTML forms
-app.use(express.urlencoded({extended: false}))
 // parse JSON Bodies as sent by API clients
 app.use(express.json());
+// parse URL encoded bodies as sent by HTML forms
+app.use(express.urlencoded({extended: false}))
+
+
 app.use(cookieParser());
 
 // empêche les erreurs CORS

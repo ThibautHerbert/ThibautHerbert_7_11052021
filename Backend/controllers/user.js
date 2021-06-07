@@ -126,32 +126,14 @@ exports.deleteUser = (req, res, next) => {
 // à voir comment écrire la modify :
 
 exports.modifyUser = (req, res, next) => {
-    console.log(req.body);
-    const {firstName, lastName, location, department, id} = req.body; //picture
-    /*
-    try { // essai du code
-        const {firstName, lastName, department, location, picture, password, email, id} = req.body;
-        if( !email || !password ) { // ne précise pas lequel input est faux pour plus de sécurité de connexion 
-            return res.status(400).json({ message: 'Inscrivez un mot de passe et un email correct'}); // s'arrête après le return; message ou error ?
-        }
-        /*
-        db.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
-            //console.log(results);
-            if( !results || !(await bcrypt.compare(password, results[0].password)) ) { // results[0].password : mdp hashed de la bdd
-                return res.status(401).json({ message: 'Mot de passe ou email incorrect'}); //garder le return ?
-            } else {
-                */
-                //let hashedPassword = bcrypt.hash(password, 10);
-                db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ? WHERE id = ?', [firstName, lastName, location, department, id]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
-                //db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
-            //connection.release() // return the connection to pool
+    console.log(req.body, req.user)
+    //res.send(200).json({...req.body}) 
+    //return
+    const {firstName, lastName, location, department} = req.body; //picture
+    
+                db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ? WHERE id = ?', [firstName, lastName, location, department, req.user]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
                     .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été modifié`}))
                     .catch(error => res.status(400).json({ error }));
-            //}
-        //})
-    //} catch (error) {
-      //  console.log(error)
-    //}
 };
 
         //2eme autre façon de faire comme pour le signup
@@ -175,32 +157,11 @@ exports.modifyUser = (req, res, next) => {
         })
 };*/
 exports.modifyPassword = async (req, res, next) => {
-    console.log(req.body);
-    const {password, id} = req.body;
-    /*
-    try { // essai du code
-        const {password, email, id} = req.body;
-        if( !email) { // 
-            return res.status(400).json({ message: 'Inscrivez un email correct'}); // s'arrête après le return; message ou error ?
-        }
-        /*
-        db.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
-            //console.log(results);
-            if( !results ) ) { //
-                return res.status(401).json({ message: 'Mot de passe ou email incorrect'}); //garder le return ?
-            } else {
-                */
-                let hashedPassword = await bcrypt.hash(password, 10);
-                console.log('crypté: ' + hashedPassword)
-                db.promise().query('UPDATE Users SET password = ? WHERE id = ?', [hashedPassword, id]) // WHERE Id is = ? AND email = ?
-                //db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
-                    .then(() => res.status(200).json({ message: `Le mot de passe a été modifié avec succès, veuillez désormais vous reconnecter avec ce nouveau mot de passe`}))
-                    .catch(error => res.status(400).json({ error }));
-            //}
-        //})
-    //} catch (error) {
-      //  console.log(error)
-    //}
+    const {password} = req.body;
+    let hashedPassword = await bcrypt.hash(password, 10);
+    db.promise().query('UPDATE Users SET password = ? WHERE id = ?', [hashedPassword, req.user]) // WHERE Id is = ? AND email = ?
+        .then(() => res.status(200).json({ message: `Le mot de passe a été modifié avec succès, veuillez désormais vous reconnecter avec ce nouveau mot de passe`}))
+        .catch(error => res.status(400).json({ error }));
 };
 
 
@@ -219,7 +180,7 @@ exports.getUserConnected = async (req, res, next) => {
     db.query('SELECT * FROM Users WHERE id = ?', [userId], async (err, rows) => {
         //console.log(results);
         if(!err) {
-            res.send(rows)
+            res.send(rows[0])
             console.log('getUserConnected a fonctionné' + rows);
         } else {
             console.log(err)
@@ -228,6 +189,7 @@ exports.getUserConnected = async (req, res, next) => {
 }
 
 // récupère un utilisateur avec son id
+/*
 exports.getOneUser = async (req, res, next) => {
     // const id = req.params.id;
     const {id} = req.body;   /// attention j'ai rajouté le const id et c'est lui qui est récupéré dans le query et non le userId
@@ -237,15 +199,52 @@ exports.getOneUser = async (req, res, next) => {
         console.log('Avant getOneUser')
     //db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
         //console.log(results);
-    db.promise().query('SELECT * FROM Users WHERE id = ?', [id])
+    db.promise().query('SELECT * FROM Users WHERE id = ?', {"id": req.body})
         .then(() => res.status(200).json({ message: `utilisateur récupéré`}))
+        //.then(res => res.send(rows))
         .catch(error => res.status(400).json({ error }));
-       // if(!err) {
-        //    res.send(rows)
+        /*if(!err) {
+           res.send(rows)
        //     console.log('getOneUser a fonctionné' + rows);
-         //   console.log('in query getOneUser');
-        //} else {
-       //     console.log(err)
-       // }
-   // })
+            console.log('rows ' + rows + 'vide ?');
+            
+        } else {
+            console.log(err)
+        }
+    })*/
+//}
+
+// version 2 getOneUser
+/*
+exports.getOneUser = async (req, res, next) => {
+    const {id} = req.body;
+    db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
+        if(!err) {
+            res.send(rows)
+            console.log('rows ' + rows + 'vide ?'); 
+        } else {
+            console.log(err)
+        }
+    })
+}
+*/
+exports.getOneUser = async (req, res, next) => {
+    const {id} = req.body;
+    db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
+        if(err) {
+            console.log(err)
+            res.status(500).json({ status: 500, message: "Une erreur est survenue : " + err.message });
+        } else {
+            if (rows.length) {
+                console.log( "Utilisateur trouvé.");
+                
+                res.status(200).json({ status: 200, message: "Utilisateur trouvé." });
+                res.send(rows)
+            } else {
+                console.log( "Utilisateur non trouvé.");
+                res.status(404).send({ status: 404, message: "Utilisateur non trouvé." });
+            }
+            
+        }
+    })
 }

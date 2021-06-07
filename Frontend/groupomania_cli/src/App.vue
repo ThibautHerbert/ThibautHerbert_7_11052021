@@ -6,20 +6,20 @@
     </a>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
       <li>
-        <router-link :to="{ name: 'Signup'}" v-if="userlogged" class="dropdown-item">S'inscrire</router-link>
+        <router-link :to="{ name: 'Signup'}" v-if="logged" class="dropdown-item">S'inscrire</router-link>
       </li>
       <li>
-        <router-link :to="{ name: 'Login'}" v-if="userlogged" class="dropdown-item">Se connecter</router-link> 
+        <router-link :to="{ name: 'Login'}" v-if="logged" class="dropdown-item">Se connecter</router-link> 
       </li>
       <li>
-        <router-link :to="{ name: 'Logout'}" @click="logout" v-if="userlogged" class="dropdown-item">Se déconnecter</router-link>
+        <router-link :to="{ name: 'Logout'}" @click="logout" v-if="logged" class="dropdown-item">Se déconnecter</router-link>
       </li>
     </ul>
   </div>
-    <div id="nav">
+    <div id="nav" v-if="logged">
       <router-link :to="{ name: 'Home'}">Accueil</router-link> |
       <router-link :to="{ name: 'Posts'}">Fil d'actualité</router-link> |
-      <router-link :to="{ name: 'Account', params: { id: userConnected1[0].id }}">Mon compte N°{{userConnected1[0].id}}</router-link>
+      <router-link :to="{ name: 'Account', params: { id: logged.id }}">Mon compte</router-link>
       <!--<router-link :to="{ name: 'Account', params: { id: userConnected1[0].id }}">Mon compte N°{{userConnected1[0].id}}</router-link>-->
     </div>
     
@@ -41,43 +41,14 @@ export default {
   components: { Footer, Posts },
   data() {
     return {
-      userlogged: false,
-      userConnected : {
-        firstName: '',
-    		lastName: '',
-    		department: '',
-    		location: '',
-    		picture: '',
-    		email: '' ,
-        id: ''
-      },
-      userConnected1 : [{
-        firstName: '',
-    		lastName: '',
-    		department: '',
-    		location: '',
-    		picture: '',
-    		email: '' ,
-        id: ''
-      }],
+      logged: null,
+      
     }
   },
   created() {
-    //this.user = JSON.parse(localStorage.getItem('User'))
-    //this.userConnected = JSON.parse(localStorage.getItem('User'))
-    //this.userConnecté = JSON.parse(localStorage.getItem('User'))
-    console.log('1 loggé ou pas ?')
-    if ( this.userConnected1 ) {
-      this.userlogged = !this.userlogged
-      console.log('loggé ou pas ? 16h43')
-      
-    }
-    console.log('userlogged: ' + this.userlogged)
-
-  axios.get('/auth/connected')
-    .then(response => this.userConnected1 = response.data)
-    .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-    .catch(error => console.log(error))
+    axios.get('/auth/connected')
+      .then(response => this.logged = response.data)
+      .catch(error => console.log(error))
   },
   methods: {
     logout() {

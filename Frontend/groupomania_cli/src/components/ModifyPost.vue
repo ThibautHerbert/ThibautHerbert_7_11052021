@@ -2,8 +2,8 @@
   <div> 
         <div class="card-body write-post mx-auto" >
             <div class="d-flex align-items-center">
-                <img src="{{ picture }}" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
-                <label for="FormControlTextarea1">Modifiez votre publication {{userConnected[0].firstName}} !</label>
+                <img :src="urlImg + $root.logged.picture"  class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
+                <label for="FormControlTextarea1">Modifiez votre publication {{$root.logged.firstName}} !</label>
             </div>
             <div class="form-group ">
                 <form>
@@ -29,34 +29,26 @@ export default {
     props: ['post', 'userConnected'],
     data() {
        return {
+        urlImg: 'http://localhost:5000/images/',
         // données pour un nouveau Post
         body:'',
         url:'',
-        idUser: this.userConnected[0].id,
+        idUser: this.$root.logged.id,
         picture:'',
        }
     },
-    created() {
-        
-    },
     methods: {
-        closeWritingPost() {
+        closeWritingPost() {                    // comment l'utiliser ?
             this.$emit('closePost')
         },
         handleModifyPost() { // avec ou sans async handleSignup() {
 	        if(this.body) {
-				
 				const formData = new FormData()
 				formData.append('body', this.body)
 				formData.append('url', this.url);
                 formData.append('idUser', this.idUser);
                 formData.append('id', this.post.id);
-				console.log(formData)
-				/*
-				let signupForm = {"firstName": this.firstName, "lastName": this.lastName, "department": this.department, "location": this.location, "picture": this.picture, "email": this.email , "password": this.password}
-                console.log('signupForm : '+ signupForm)
-                //let signupToSend = JSON.stringify(signupForm)
-				*/
+				
                 try {
                     axios.put('posts/' + this.post.id, formData) // /posts/
                         .then(() => console.log('post modifié'))

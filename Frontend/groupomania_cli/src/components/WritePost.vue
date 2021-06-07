@@ -2,8 +2,8 @@
   <div> 
         <div class="card-body write-post mx-auto" >
             <div class="d-flex align-items-center">
-                <img src="{{ userConnected[0].picture }}" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
-                <label for="FormControlTextarea1">Postez un message {{userConnected[0].firstName}} !</label>
+                <img :src="urlImg + $root.logged.picture" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
+                <label for="FormControlTextarea1">Postez un message {{$root.logged.firstName}} !</label>
             </div>
             <div class="form-group ">
                 <form>
@@ -31,9 +31,10 @@ export default {
     data() {
        return {
         // données pour un nouveau Post
+        urlImg: 'http://localhost:5000/images/',
         body:'',
         url:'',
-        idUser: this.userConnected[0].id,
+        idUser: this.$root.logged.id,
         picture:'',
         
        }
@@ -60,17 +61,15 @@ export default {
 				formData.append('url', this.url);
                 formData.append('idUser', this.idUser);
 				console.log(formData)
-				/*
-				let signupForm = {"firstName": this.firstName, "lastName": this.lastName, "department": this.department, "location": this.location, "picture": this.picture, "email": this.email , "password": this.password}
-                console.log('signupForm : '+ signupForm)
-                //let signupToSend = JSON.stringify(signupForm)
-				*/
+				
                 try {
                     axios.post('posts/', formData) // /posts/
-                        .then(() => console.log('post publié'))
+                        .then(() => alert('post publié'))
+                        .then(() => location.reload())
                         .then(response => response.json())
                         // rafraichir la page ?
-                        //.then(() => this.$router.push({ name: 'Posts' })
+                        
+                        
                         .catch( err => console.log(err))
                 } catch (error) {
 					console.log(error)

@@ -12,10 +12,10 @@ exports.getAllPost = (req, res, next) => {
 
 
 exports.getAllPosts = (req, res, next) => {
-    console.log('before query');
-    console.log(req.foo);
+    //console.log('before query');
+    //console.log(req.foo);
     // être plus précis pour formater la date ?
-    db.query('SELECT * FROM Posts ORDER BY creationDate DESC', (err, rows) => {   // rajouter un order by pour avoir les plus récents en premier
+    db.query('SELECT P.*, U.id user_id, U.firstname user_name, U.picture user_picture, U.location user_location FROM Posts P RIGHT JOIN Users U ON U.id = P.idUser ORDER BY P.creationDate DESC', (err, rows) => {   // rajouter un order by pour avoir les plus récents en premier
         if(!err) {
             res.send(rows)
             console.log('in query');
@@ -166,15 +166,14 @@ exports.deletePost = (req, res, next) => {
 // model of modify + 
 // add 1 to column isModerated instead of default 0
 exports.moderatePost = (req, res) => {
-    
         // faire une première query pour vérifier si user isAdmin = 1 ?
     //const {isAdmin == 1} = req.body
     
-    const {isModerated, id } = req.body
+    const {isModerated, idUser, id } = req.body
 
-    db.query('UPDATE Posts SET isModerated = ? WHERE id = ?', [isModerated, id] , (err, rows) => {
+    db.query('UPDATE Posts SET isModerated = ? WHERE idUser = ? && id = ?', [isModerated, idUser, id] , (err, rows) => {
         if(!err) {
-            if(isModerated=1) {
+            if(isModerated==1) {
                 res.send(`Le post n° ${ id } a été modéré, il ne sera plus visible`)
             // comment appeler des infos de la table users?
             } else {

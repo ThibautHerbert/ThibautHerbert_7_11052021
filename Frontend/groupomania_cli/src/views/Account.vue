@@ -1,25 +1,23 @@
 <template>
     <div> 
         <div>
-            <h2>Bienvenue sur ton compte : {{userConnected[0].firstName}}</h2>
+            <h2>Bienvenue sur ton compte : {{$root.logged.firstName}}</h2>
             <div class="d-flex flex-wrap justify-content-center align-items-center">
                 <div class="col-md-4 presentation"><img src="../assets/images/pexels-monstera-6373931-1000px.jpg" alt="carte de présentation"></div>
                 <div class="col-md-4 accountDetails my-2 pb-2 my-account">
                     <h1>Mon compte</h1>
                     <div class="d-flex justify-content-around ">
                         <ul class="list-group text-start">
-                            <li class="list-group-item d-flex">Prénom : {{userConnected[0].firstName}}</li>
-                            <li class="list-group-item d-flex">Nom  : {{userConnected[0].lastName}} </li>
-                            <li class="list-group-item d-flex ">Département  : {{userConnected[0].department}}</li>
-                            <li class="list-group-item d-flex">Lieu de travail  : {{userConnected[0].location}}</li>
-                            <li class="list-group-item d-flex">Mail  : {{userConnected[0].email}}</li>
-                            
+                            <li class="list-group-item d-flex">Prénom : {{$root.logged.firstName}}</li>
+                            <li class="list-group-item d-flex">Nom  : {{$root.logged.lastName}} </li>
+                            <li class="list-group-item d-flex ">Département  : {{$root.logged.department}}</li>
+                            <li class="list-group-item d-flex">Lieu de travail  : {{$root.logged.location}}</li>
+                            <li class="list-group-item d-flex">Mail  : {{$root.logged.email}}</li>
                         </ul>
                         <div>
                             <label class=" p-1 d-flex">Image de profil  :</label>
-                            <img :src="url + userConnected[0].picture" alt="photo de profil" id="PicProfile" class="rounded-circle">
+                            <img :src="url + $root.logged.picture" alt="photo de profil" id="PicProfile" class="rounded-circle">
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -52,20 +50,18 @@
                 <div class="col-sm-6 blockForm mx-auto py-2" v-if="showModifyAccount">
                     <h3>Modifier mes informations</h3>
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="firstNameInput" class="errorLabel">Mon Prénom : {{ userConnected[0].firstName}}</label>
-                        <input type="text" class="form-control error" id="firstNameInput" aria-describedby="firstNameHelp" placeholder="{{ userConnected[0].firstName}} Modifiez votre prénom." required v-model="userModified.firstName">
+                        <label for="firstNameInput" class="errorLabel">Mon Prénom : </label>
+                        <input type="text" class="form-control error" id="firstNameInput" aria-describedby="firstNameHelp" placeholder="{{ $root.logged.firstName}} Modifiez votre prénom." required v-model="user.firstName">
                         <small id="firstNameHelp" class="form-text text-muted errorText"> Modifiez votre prénom.</small>
                     </div>
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="lastNameInput">Nom : {{ userConnected[0].lastName}}</label>
-                        <input type="text" class="form-control" id="lastNameInput" aria-describedby="lastNameHelp" placeholder="Durand" required v-model="userModified.lastName">
+                        <label for="lastNameInput">Nom : </label>
+                        <input type="text" class="form-control" id="lastNameInput" aria-describedby="lastNameHelp" placeholder="Durand" required v-model="user.lastName">
                         <small id="lastNameHelp" class="form-text text-muted"> Modifiez votre nom de famille.</small>
                     </div>
-                
-                
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="departmentSelect">Département - Pôle : {{ userConnected[0].department}}</label>
-                        <select name="department" class="form-select" aria-label="Choix du département" required id="departmentSelect" v-model="userModified.department">
+                        <label for="departmentSelect"> Dans quel département ? {{ $root.logged.department}}</label>
+                        <select name="department" class="form-select" aria-label="Choix du département" required id="departmentSelect" v-model="user.department">
                             <option value="">Sélectionnez votre pôle d'activité</option>
                             <option value="Ressources Humaines">Ressources Humaines</option>
                             <option value="Informatique">Informatique</option>
@@ -78,10 +74,9 @@
                         </select>
                         <small id="departmentHelp" class="form-text text-muted"> Modifiez votre pôle d'activité.</small>
                     </div>
-                
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="locationSelect">Lieu - Où ? - Dans quel bureau ? {{ userConnected[0].location}}</label>
-                        <select name="location" class="form-select" id="locationSelect" required v-model="userModified.location">
+                        <label for="locationSelect">Dans quel bureau es-tu ? </label>
+                        <select name="location" class="form-select" id="locationSelect" required v-model="user.location">
                             <option value="">Sélectionnez votre bureau</option>
                             <option value="Nantes">Nantes</option>
                             <option value="Paris">Paris</option>
@@ -95,40 +90,16 @@
                         <input class="form-control" type="file" id="picture" ref="img" @change="imgUpload">
                         <small id="pictureHelp" class="form-text text-muted"> Téléchargez une autre photo ou image de profil.</small>
                     </div>
-                    <p class="text-warning my-4 ">N'oubliez pas de retaper votre email et votre mot de passe pour confirmer les modifications.</p>
-                    <div class="my-4">
-                        <div class="form-group col-md-7 mx-auto ">
-                            <label for="emailInput"> Adresse Email : {{ userConnected[0].email}}</label>
-                            <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="sophiedurand@protonmail.com" required v-model="email">
-                            <small id="emailHelp" class="form-text text-muted"> Modifiez votre adresse courriel interne.</small>
-                        </div>
-                        <div class="form-group col-md-7 mx-auto">
-                            <label for="passwordInput"> Mot de passe : </label>
-                            <input type="text" class="form-control" id="passwordInput" aria-describedby="passwordHelp" placeholder="********" required v-model="password"> 
-                            <small id="passwordHelp" class="form-text text-muted"> Modifiez votre mot de passe.</small>
-                            <div class="errorDiv" v-if="passwordError"><span class="errorCountry"> {{ passwordError }} </span></div>	
-                        </div>
-                    </div>
                     <button class="btn btn-danger" @click="ConfirmModifyAccount">Confirmer les modifications du compte</button>
                 </div>
             </div>
             <!--modifier le mdp -->
             <div class="col-sm-6 blockForm mx-auto pt-2" v-if="showModifyPassword">
                 <h3>Changer mon mot de passe</h3>
-                <!--
-                <div class="form-row my-3">
-                    <div class="form-group col-md-5 mx-auto">
-                        <label for="emailInput"> Confirmez votre adresse mail : </label>
-                        <input type="email" class="form-control" id="emailInputLogin" aria-describedby="emailHelp" placeholder="sophiedurand@protonmail.com" required v-model="email">
-                        <small id="emailHelp" class="form-text text-muted"> Indiquez votre adresse courriel interne.</small>
-                    </div>
-                </div>
-                -->
                 <div class="form-group col-md-5 mx-auto">
                     <label for="countryInput"> Nouveau mot de passe : </label>
-                    <input type="text" class="form-control" id="countryInput" aria-describedby="countryHelp" placeholder="********" required v-model="newPassword"> 
+                    <input type="text" class="form-control" id="countryInput" aria-describedby="countryHelp" placeholder="...de plus de 7 caractères" required v-model="newPassword"> 
                     <small id="countryHelp" class="form-text text-muted"> Indiquez un nouveau mot de passe.</small>
-                    <p> test mdp {{newPassword}}</p>
                     <div class="errorDiv" v-if="passwordError"><span class="errorCountry"> {{ passwordError }} </span></div>
                 </div>
                 <button class="btn btn-success my-5" id="confirmNewPassword" @click="confirmModifyPassword"> Confirmer le nouveau mot de passe</button>
@@ -146,35 +117,16 @@ export default {
             showModifyAccount: false,
             showModifyPassword: false,
             url: 'http://localhost:5000/images/',
-            userConnected : [{
-                firstName: '',
-                lastName: '',
-                department: '',
-                location: '',
-                picture: '',
-                email: '' ,
-                id: ''
-            }],
-            userModified : {
-                picture: this.picture,
-				firstName: this.firstName,
-				lastName: this.lastName,
-				department: this.department,
-				location: this.location,
-                id: ''// error occured in hook walkComponentTree this.userConnected[0].id,
-                //mail: this.mail,
-                //password: this.password
-            },
-            //userId: JSON.parse(localStorage.getItem('IdUser')),
+            user : {},
             newPassword : this.newPassword
         }
     },
-    created() {
-    
-    axios.get('/auth/connected') // récupère l'utilisateur connecté
-      .then(response => this.userConnected = response.data)
-      .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-      .catch(error => console.log(error))
+    mounted() {
+        this.user.picture = this.$root.logged.picture
+        this.user.firstName = this.$root.logged.firstName
+        this.user.lastName = this.$root.logged.lastName
+        this.user.department = this.$root.logged.department
+        this.user.location = this.$root.logged.location
     },
     methods: {
         ModifyAccount() {
@@ -185,33 +137,11 @@ export default {
             console.log('clic sur Modifier mon mot de passe')
             this.showModifyPassword = !this.showModifyPassword
         },
-        confirmModifyPassword() { //async
-            // ATTENTION variables plus utiles passwordForm passwordToSend sauf pour le if
-            let passwordForm = {"id": this.userId , "password": this.newPassword}
-                console.log('newpassword : '+ passwordForm)
-                debugger
-                let passwordToSend = JSON.stringify(passwordForm)
-                console.log('passwordToSend : '+ passwordToSend)
-                if (passwordToSend) {
-                    /*
-                    const response = await axios.put('auth/account', { // juste login le début de l'url et sans / voir axios.js
-                        /*email: this.email,
-                        password: this.password,
-                        id: this.userId*/
-                        /*passwordToSend,
-                        headers: {Authorization: 'Bearer ' + localStorage.getItem('Token')}
+        confirmModifyPassword() {
+            if (this.newPassword) {
+                axios.put('auth/account', {
+                    password: this.newPassword
                     })
-                    response 
-                    this.$router.push({ name: 'Login' }) // retaper ses informations pour se connecter
-                    alert('Veuillez vous reconnecter avec le nouveau mot de passe')
-                    console.log(response) // voir utilité d'utiliser un const response ici vu que c'est seulement un put
-                    */
-                    axios.put('auth/account', { // juste login le début de l'url et sans / voir axios.js
-                        //passwordToSend,
-                        password: this.newPassword,
-                        id: this.userId,
-                    })
-                        .then(response => console.log('réponse de la modifypassword' + response)) // utilité ??
                         .then(() => this.$router.push({ name: 'Login' })) // retaper ses informations pour se connecter
                         .then(() => alert('Veuillez vous reconnecter avec le nouveau mot de passe'))
                         .catch(error => console.log(error))
@@ -219,43 +149,27 @@ export default {
         },
         deleteAccount(){
             console.log('Supprimer mon compte')
-            const idDelete = this.userConnected[0].id // changer si besoin
-            //console.log( "y'a quoi dans" + id)
-            debugger
+            const idDelete = this.$root.logged.id // changer si besoin
             //if(idDelete) { //mettre admin aussi
             axios.delete('auth/', {idDelete})
                 //.then(() => localStorage.removeItem('Token'))
-                //.then(() => localStorage.removeItem('IdUser'))
-                //.then(() => localStorage.removeItem('User'))
                 .then(response => console.log('réponse de la delete' + response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
                 .then(() => alert('Votre compte a bien été supprimé'))
                 .then(() => this.$router.push({ name: 'Signup' }))
                 .catch(error => console.log(error))
-            //)}
         },
         ConfirmModifyAccount() {
-            //mettre une vérification de l'email et mot de passe avant validation ?
             console.log('confirmer Modifier mon compte')
-            /*
-            const id = this.userConnected[0].id // changer si besoin // ou = req.params.id si id dans url
-            const userModified = this.userModified;
-            console.log( "y'a quoi dans id " + id)
-            console.log( "y'a quoi dans user modifié " + JSON.stringify(userModified))
-            */
-            
             const formData = new FormData()
-                 // ou id tout court
 				//formData.append('picture', refs.img) // comment utiliser les refs ?
-				formData.append('firstName', this.userModified.firstName);
-				formData.append('lastName', this.userModified.lastName);
-                formData.append('location', this.userModified.location);
-				formData.append('department', this.userModified.department);
-				formData.append('id', this.userConnected[0].id)
-				//formData.append('email', this.email);
-				//formData.append('password', this.password);
-                
+				formData.append('firstName', this.user.firstName);
+				formData.append('lastName', this.user.lastName);
+                formData.append('location', this.user.location);
+				formData.append('department', this.user.department);
+
                 try {
-					 axios.put('auth/', formData)
+					 axios.post('auth/profile', {"firstName":this.user.firstName, "lastName":this.user.lastName, "location": this.user.location, "department": this.user.department})
+                     .then(response => alert('profil modifié'))
 				} catch (error) {
 					console.log(error)
 				}
@@ -290,10 +204,8 @@ export default {
 .btn-password{
     font-weight: bold;
 }
-
 .list-group{
     max-width: 50%;
-    
 }
 
 </style>

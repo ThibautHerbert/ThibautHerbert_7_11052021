@@ -22,7 +22,7 @@ exports.getAllPost = (req, res, next) => {
 
 exports.getAllComments = (req, res, next) => {
     // être plus précis pour formater la date ?
-    db.query('SELECT * FROM Comments ORDER BY creationDate ASC', (err, rows) => {   // rajouter un order by pour avoir les plus récents en premier
+    db.query('SELECT C.*, U.id user_id, U.firstname user_name, U.picture user_picture, U.location user_location FROM Comments C LEFT JOIN Users U ON U.id = C.idUser ORDER BY creationDate ASC', (err, rows) => {   // rajouter un order by pour avoir les plus récents en premier
         if(!err) {
             res.send(rows)
         } else {

@@ -1,17 +1,11 @@
 <script>
-//import { defineComponent } from '@vue/composition-api'
 
 export default {
     name: 'Footer'
-        
 }
 </script>
 
 <template>
-    
-        
-        
-  
     <footer class="card text-center">
         <div class="card-header">
             A propos

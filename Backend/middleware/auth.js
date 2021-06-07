@@ -12,9 +12,6 @@ module.exports = (req, res, next) => {
             res.status(401).json({ error: 'Mauvais identifiant, reconnectez-vous avec le bon identifiant !'});
         } else {
             req.user = userId;
-            console.log(userId)
-            req.foo = 'req foo du auth'
-            // req.token = token; pas sûr utilité ?
             next();
         }
     } catch (error) {

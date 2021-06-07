@@ -2,30 +2,20 @@
   <div class="Post-vue">
     <h2>{{ header }}</h2>
     <h3>{{ subdescription }}</h3>
-    <div v-if="error"> {{ error }}</div>
     <div v-if="posts.length" >
-        <PostList :posts="posts" :userConnected="userConnected"/>
-        <p>fin de tous les posts page post.vue</p>
+        <PostList :posts="posts" />
     </div>
    <!-- <div v-else> 
           <div class="spinner-border text-danger" role="status">
             <span class="sr-only">En chargement ...</span>
           </div>
         </div>  --> 
-    <div v-for="post in posts" :key="post.id">
-         <p> {{ post.Creationdate }}</p>
-    </div>
-    
   </div>
 </template>
 
 <script>
-//import getPosts from '../composables/getPosts'
 import PostList from '../components/PostList'
-
 import axios from 'axios'
-
-// import { ref } from 'vue' // plus besoin de cet import si utilisé dans le composable
 
 export default {
     props: [ 'id'],
@@ -34,83 +24,16 @@ export default {
         return {
             header: "Bienvenue dans le fil d'actu",
             subdescription : "Retrouvez tous les posts des collègues",
-            posts: {
-              id:"",
-              idUser:"",
-              url:"",
-              body:"",
-              creationDate:"",
-              isModerated:""
-            },
-            userPost : [{ // données sur les utilisateurs qui ont postés
-              firstName: '',
-              lastName: '',
-              department: '',
-              location: '',
-              picture: '',
-              email: '' ,
-              id: '' 
-            }],
-            userConnected : [{
-              firstName: '',
-              lastName: '',
-              department: '',
-              location: '',
-              picture: '',
-              email: '' ,
-              id: ''
-            }],
+            posts: [],
         }
     },
-    /*
-    methods: {
-      getPosts(){
-        fetch('http://localhost:5000/api/auth/signup', {
-          method : "GET",
-          body: signupToSend,
-          headers: {"Content-type": "application/json; charset=UTF-8", "Authorization": token}
-          })
-      },
-      */
-     /*
-      async handlePosts() {
-        const response = await axios.get('')
-      }
-      
-    },*/
      mounted() {
-       console.log(this.posts.idUser)
-      axios.get('posts/', {headers: {Authorization: 'Bearer ' + localStorage.getItem('Token')}})
+      axios.get('posts', {headers: {Authorization: 'Bearer ' + localStorage.getItem('Token')}})
       .then(response => this.posts = response.data)
-      .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
       .catch(error => console.log(error))
     },
-    created() {
-      axios.get('/auth/connected')
-        .then(response => this.userConnected = response.data)
-        .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-        .catch(error => console.log(error))
-  
-      const id = 35
-    }
-      /*
-      axios.get('/auth', { id: 35}) // quelle donnée mettre ici ? cela ne marche pas
-        //console.log('hello' + this.post.idUser)
-        //console.log('hello coucou' +  post.idUser)
-        //.then(response => this.idUser = response.data[0].id)
-          .then(response => this.userPost = response.data) //response.data ???
-          .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-          //.then(response => console.log(response.data))
-          .catch(error => console.log(error))
-    }*/
-    /*
-    setup() {
-            const { posts, error, load } = getPosts()
-            load()
-            return { posts, error }   
-            },
-            */
-    }
+      
+}
    
     
 

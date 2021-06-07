@@ -1,31 +1,31 @@
 <template>
 <div>
   <div v-if="showModifyPost">
-    <ModifyPost :post="post" :userConnected="userConnected"/>
+    <ModifyPost :post="post" />
   </div>
   <div class="post container" v-if="post.isModerated== 0">
     <div class="media ">
       <div class="d-flex">
-        <div><img :src= "url + userConnected[0].picture" class="d-flex justify-content-start m-1 rounded-circle PicProfile" alt="photo du créateur du post"></div>
+        <div><img :src= "url + post.user_picture" class="d-flex justify-content-start m-1 rounded-circle PicProfile" alt="photo du créateur du post"></div>
         <div class="media-body  flex-grow-1 ">
           <router-link :to="{ name: 'PostDetails', params: { id: post.id }}">
-            <h5 class="mt-0 mx-2 text-start nav-link"> {{userConnected[0].firstName}} {{userConnected[0].lastName}} idUser: {{post.idUser}} a publié le post n°{{ post.id }}</h5>
+            <h5 class="mt-0 mx-2 text-start nav-link"> {{post.user_name}} de Team {{post.user_location}} a publié :</h5>
           </router-link>
         </div>
         <div class="mt-1">
-          <button @click="toggleModifyPost" class="btn btn-success align-self-end" v-show="userConnected[0].id == post.idUser ">
+          <button @click="toggleModifyPost" class="btn btn-success align-self-end" v-show="$root.logged.id == post.idUser ">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
                       <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                       <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                       </svg>
             </button>
-          <button @click="deletePost" class="btn btn-danger justify-end m-1" v-show="userConnected[0].id == post.idUser ">
+          <button @click="deletePost" class="btn btn-danger justify-end m-1" v-show="$root.logged.id == post.idUser ">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash" viewBox="0 0 16 16">
             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
             <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
           </svg>
           </button>
-          <button @click="moderatePost" class="btn btn-warning justify-end m-1" v-show="userConnected[0].isAdmin == 1">
+          <button @click="moderatePost" class="btn btn-warning justify-end m-1" v-show="$root.logged.isAdmin == 1">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
             <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
             <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
@@ -81,7 +81,7 @@
   </div>
   
   <div v-else> 
-    <div v-show="userConnected[0].isAdmin == 1">Post modéré mettre un v-show pour que cela soit seulement visible d'un admin
+    <div v-show="$root.logged.isAdmin == 1">Post modéré mettre un v-show pour que cela soit seulement visible d'un admin
       
       <div class="body-post  media">
         <p class="fw-bold fw-light fs-5 mt-2">Le post n°{{ post.id }} dont l'idUser est :{{post.idUser}} a été modéré </p>
@@ -100,19 +100,17 @@
     </div>
   </div>
   <div v-if="showCreateComment">
-    <WriteComment :post="post" :userConnected="userConnected"/>
+    <WriteComment :post="post"/>
   </div>
   <div v-if="comments.length" class="my-2">
    <div v-for="comment in comments" :key="comment.id">
-        <SingleComment :post="post" :userConnected="userConnected" :comment="comment"/>
+        <SingleComment :comment="comment" :post="post"/>
             
         <br>
     </div>
   </div>
 
-  
-  
-  
+ 
                     <!--début de la boucle des commentaires-->
       
       
@@ -138,7 +136,7 @@ export default {
           isIntered:false,
           idUserPost:this.post.idUser, // doublon avec id
           idUserComment:'',
-          comments: {
+          /*comments: {
               id:"",
               idUser:"",
               idPost:"",
@@ -146,17 +144,7 @@ export default {
               creationDate:"",
               isModerated:""
             },
-            userPost: {
-              firstName: '',
-              lastName: '',
-              department: '',
-              location: '',
-              picture: '',
-              email: '' ,
-              id: ''
-            },
-            userPostDetails: []
-          
+            */comments: [], //déjà dans postList
       }
   },
   mounted() {
@@ -192,14 +180,9 @@ export default {
 */
         this.getUserPostDetails();
 
-
-
   },
   created() {
     
-    
-        
-
         //test get One User
         /*
         //axios.get('/auth', this.Post.idUser) // quelle donnée mettre ici ? cela ne marche pas
@@ -215,15 +198,10 @@ export default {
   },
   methods: {
     getUserPostDetails() {
-      let idToSend = {"id": this.idUserPost}
-      axios.get('/auth/user', idToSend)
-        .then(response => {console.log(response)})
-        .then((response) => {this.formatUserPostDetails(response.data)})
-    },
-    formatUserPostDetails(user) {
-      for (let key in user) {
-        this.userPostDetails.push({ ...user[key], id: key });
-      }
+      
+      //const formData = new FormData()
+			//formData.append("id", this.idUserPost);
+      
     },
     toggleModifyPost() {
             console.log('modify Post ouvre un espace pour modifier un post')
@@ -232,7 +210,7 @@ export default {
     deletePost() {
       console.log('delete Post')
       /*
-      if (userConnected[0].id == userPost[0].id) { // si l'utilisateur connecté correspond à l'utilisateur qui a créé le post
+      if ($root.logged.id == userPost[0].id) { // si l'utilisateur connecté correspond à l'utilisateur qui a créé le post
         */try {
           const id = this.post.id
           console.log('id' + id)
@@ -269,15 +247,17 @@ export default {
     },
     deModeratePost() {
       console.log('click modération retirée du post')
-        const isModerated = 0
+        /*const isModerated = 0
 				const formData = new FormData()
 				formData.append('isModerated', isModerated)
-        formData.append('id', this.userConnected[0].id);
-				console.log(formData)
+        formData.append('id', this.$root.logged.id);
+				console.log(formData)*/
+        // nouveau
+        let moderatePost = {"isModerated": 1, "idUser": this.post.idUser, "id": this.post.id}
         try {
-          axios.put('posts/moderate', formData) // /posts/
+          axios.put('posts/moderate', moderatePost) // /posts/
             .then(() => console.log("le post a cessé d'être modéré"))
-            .then(response => response.json())
+            //.then(response => response.json())
             // rafraichir la page ?
             //.then(() => this.$router.push({ name: 'Posts' })
             .catch( err => console.log(err))

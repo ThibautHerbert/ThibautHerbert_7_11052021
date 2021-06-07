@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios'
-//import { defineComponent } from '@vue/composition-api'
+
 import SinglePost from './SinglePost.vue'
 import WritePost from './WritePost.vue'
 //import ModifyPost from './ModifyPost.vue'
@@ -8,29 +8,12 @@ import WriteComment from './WriteComment.vue'
 
 export default {
     name: 'PostList',
-    props: ['posts', 'userConnected'], // si j'enlève le props posts tous les posts disparaissent du navigateur, le style et le html ci dessous
+    props: ['posts'], // si j'enlève le props posts tous les posts disparaissent du navigateur, le style et le html ci dessous
     components: { SinglePost, WritePost, WriteComment }, // si j'enlève le component SinglePost le contenu de la bdd disparait 
     data() {
         return {
             showCreatePost: false,
-            Comment : [{ // données sur les commentaires
-                id: '',
-                idUser: '',
-                idPost:'',
-                body: '',
-                creationDate: '',
-                isModerated: '' ,
-            }], 
-            userComment : [{ //données sur les utilisateurs qui ont commentés
-                firstName: '',
-                lastName: '',
-                department: '',
-                location: '',
-                picture: '',
-                email: '' ,
-                id: ''
-            }],
-
+            Comments : [], 
         }
     },
     methods: {
@@ -66,13 +49,11 @@ export default {
         </button>
     
         <div v-if="showCreatePost">
-            <WritePost :userConnected="userConnected"/>
+            <WritePost />
         </div>
     
         <div v-for="post in posts" :key="post.id">
-            <SinglePost :post="post" :userConnected="userConnected"/>
-            
-            <br>
+            <SinglePost :post="post" />
         </div>
     </div>
 </template>

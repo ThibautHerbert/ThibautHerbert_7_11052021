@@ -2,8 +2,8 @@
   <div> 
         <div class="card-body write-comment mx-auto" >
             <div class="d-flex align-items-center">
-                <img src="{{userConnected[0].picture}}" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
-                <label for="FormControlTextarea1">Commentez la publication {{userConnected[0].firstName}} ! opt :répondez à prénom dont id: {{post.idUser}}</label>
+                <img :src="urlImg + $root.logged.picture" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
+                <label for="FormControlTextarea1">Commentez la publication {{$root.logged.firstName}} et répondez à {{post.user_name}} !</label>
             </div>
             <div class="form-group ">
                 <form>
@@ -30,8 +30,9 @@ export default {
     data() {
        return {
         // données pour un nouveau Commentaire
+        urlImg: 'http://localhost:5000/images/',
         body:'',
-        idUser: this.userConnected[0].id, // id de la personne qui commente
+        idUser: this.$root.logged.id, // id de la personne qui commente
         idPost: this.post.id, // id du post commenté
        }
     },
@@ -53,8 +54,8 @@ export default {
 				let commentToSend = {"idUser": this.idUser, "body": this.body, "idPost": this.idPost}
                 try {
                     axios.post('comments/', commentToSend) // /posts/
-                        .then(() => console.log('commentaire publié'))
-                        .then(response => response.json())
+                        .then(() => alert('post publié'))
+                        .then(() => location.reload())
                         // rafraichir la page ?
                         //.then(() => this.$router.push({ name: 'Posts' })
                         .catch( err => console.log(err))
