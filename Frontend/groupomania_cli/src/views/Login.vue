@@ -55,13 +55,6 @@ export default {
             this.$emit('close')
             // rajouter redirection page accueil
         },
-        ValidToken() {
-        if(localStorage.getItem("Token")) {
-            let getResponseLogin = localStorage.getItem("Token");
-            let responseLogin = JSON.parse(getResponseLogin);
-            console.log(responseLogin)
-            }
-        },
         async handleLogin() {
             this.passwordError = this.password.length > 7 ? '' : 'Le mot de passe doit avoir au moins 8 caractères !'
 	        if(!this.passwordError) { // s'il n'y a pas d'erreur de mdp alors :
@@ -70,7 +63,8 @@ export default {
                     password: this.password
                 });
                 localStorage.setItem("Token", response.data.token)
-                this.$router.push({ name: 'Home' })
+                this.$router.push({ name: 'Posts' })
+                    .then(() => location.reload())
             }
         }
 

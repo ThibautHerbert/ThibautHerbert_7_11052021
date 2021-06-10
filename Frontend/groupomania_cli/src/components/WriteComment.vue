@@ -13,7 +13,7 @@
                 </form>
             </div>
             <div class="d-flex ">
-                <button class="btn btn-success" @click="handleSendComment">Publier le commentaire</button>
+                <button class="btn btn-success" @click="handleSendComment(), closeWritingComment()">Publier le commentaire</button>
             </div>
         </div>
   </div>
@@ -37,8 +37,8 @@ export default {
        }
     },
     methods: {
-        closeWriteComment() {
-            this.$emit('close')
+        closeWritingComment() {
+            this.$emit('closeComment')
             // rajouter redirection page post ?
         },
         handleSendComment() {
@@ -54,8 +54,8 @@ export default {
 				let commentToSend = {"idUser": this.idUser, "body": this.body, "idPost": this.idPost}
                 try {
                     axios.post('comments/', commentToSend) // /posts/
-                        .then(() => alert('post publié'))
-                        .then(() => location.reload())
+                        .then(() => alert('commentaire publié'))
+                        //.then(() => location.reload())              // à remplacer le reload par un update de getComments
                         // rafraichir la page ?
                         //.then(() => this.$router.push({ name: 'Posts' })
                         .catch( err => console.log(err))

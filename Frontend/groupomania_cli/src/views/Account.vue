@@ -1,29 +1,29 @@
 <template>
     <div> 
-        <div>
-            <h2>Bienvenue sur ton compte : {{$root.logged.firstName}}</h2>
+        <div v-if="user">
+            <h2>Bienvenue sur ton compte : {{user.firstName}}</h2>
             <div class="d-flex flex-wrap justify-content-center align-items-center">
                 <div class="col-md-4 presentation"><img src="../assets/images/pexels-monstera-6373931-1000px.jpg" alt="carte de présentation"></div>
                 <div class="col-md-4 accountDetails my-2 pb-2 my-account">
                     <h1>Mon compte</h1>
                     <div class="d-flex justify-content-around ">
                         <ul class="list-group text-start">
-                            <li class="list-group-item d-flex">Prénom : {{$root.logged.firstName}}</li>
-                            <li class="list-group-item d-flex">Nom  : {{$root.logged.lastName}} </li>
-                            <li class="list-group-item d-flex ">Département  : {{$root.logged.department}}</li>
-                            <li class="list-group-item d-flex">Lieu de travail  : {{$root.logged.location}}</li>
-                            <li class="list-group-item d-flex">Mail  : {{$root.logged.email}}</li>
+                            <li class="list-group-item d-flex">Prénom : {{user.firstName}}</li>
+                            <li class="list-group-item d-flex">Nom  : {{user.lastName}} </li>
+                            <li class="list-group-item d-flex ">Département  : {{user.department}}</li>
+                            <li class="list-group-item d-flex">Lieu de travail  : {{user.location}}</li>
+                            <li class="list-group-item d-flex">Mail  : {{user.email}}</li>
                         </ul>
                         <div>
                             <label class=" p-1 d-flex">Image de profil  :</label>
-                            <img :src="url + $root.logged.picture" alt="photo de profil" id="PicProfile" class="rounded-circle">
+                            <img :src="url + user.picture" alt="photo de profil" id="PicProfile" class="rounded-circle">
                         </div>
                     </div>
                 </div>
             </div>
            
             <div class="my-3 d-flex justify-content-center">
-                <button class="btn btn-modify mx-1" @click="ModifyAccount">
+                <button class="btn btn-modify mx-1" @click="modifyAccount">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -35,7 +35,7 @@
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
                     </svg>
                     Supprimer mon compte</button>
-                <button class="btn btn-secondary btn-password mx-1" @click="ModifyPassword">
+                <button class="btn btn-secondary btn-password mx-1" @click="modifyPassword">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-unlock" viewBox="0 0 16 16">
                     <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2zM3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H3z"/>
                     </svg>
@@ -51,7 +51,7 @@
                     <h3>Modifier mes informations</h3>
                     <div class="form-group col-md-7 mx-auto">
                         <label for="firstNameInput" class="errorLabel">Mon Prénom : </label>
-                        <input type="text" class="form-control error" id="firstNameInput" aria-describedby="firstNameHelp" placeholder="{{ $root.logged.firstName}} Modifiez votre prénom." required v-model="user.firstName">
+                        <input type="text" class="form-control error" id="firstNameInput" aria-describedby="firstNameHelp" placeholder="{{ user.firstName}} Modifiez votre prénom." required v-model="user.firstName">
                         <small id="firstNameHelp" class="form-text text-muted errorText"> Modifiez votre prénom.</small>
                     </div>
                     <div class="form-group col-md-7 mx-auto">
@@ -60,7 +60,7 @@
                         <small id="lastNameHelp" class="form-text text-muted"> Modifiez votre nom de famille.</small>
                     </div>
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="departmentSelect"> Dans quel département ? {{ $root.logged.department}}</label>
+                        <label for="departmentSelect"> Dans quel département ? {{ user.department}}</label>
                         <select name="department" class="form-select" aria-label="Choix du département" required id="departmentSelect" v-model="user.department">
                             <option value="">Sélectionnez votre pôle d'activité</option>
                             <option value="Ressources Humaines">Ressources Humaines</option>
@@ -90,7 +90,7 @@
                         <input class="form-control" type="file" id="picture" ref="img" @change="imgUpload">
                         <small id="pictureHelp" class="form-text text-muted"> Téléchargez une autre photo ou image de profil.</small>
                     </div>
-                    <button class="btn btn-danger" @click="ConfirmModifyAccount">Confirmer les modifications du compte</button>
+                    <button class="btn btn-danger" @click="confirmModifyAccount">Confirmer les modifications du compte</button>
                 </div>
             </div>
             <!--modifier le mdp -->
@@ -105,13 +105,18 @@
                 <button class="btn btn-success my-5" id="confirmNewPassword" @click="confirmModifyPassword"> Confirmer le nouveau mot de passe</button>
             </div>
         </div>
+        <div v-else>
+            <Login />
+        </div>
     </div> 
 </template>
 
 <script>
 import axios from 'axios'
+import Login from './Login.vue'
 
 export default {
+    components: {Login},
     data() {
         return {
             showModifyAccount: false,
@@ -127,13 +132,16 @@ export default {
         this.user.lastName = this.$root.logged.lastName
         this.user.department = this.$root.logged.department
         this.user.location = this.$root.logged.location
+        this.user.email = this.$root.logged.email
+
+       
     },
     methods: {
-        ModifyAccount() {
+        modifyAccount() {
             console.log('Modifier mon compte')
             this.showModifyAccount = !this.showModifyAccount
         },
-        ModifyPassword() {
+        modifyPassword() {
             console.log('clic sur Modifier mon mot de passe')
             this.showModifyPassword = !this.showModifyPassword
         },
@@ -144,21 +152,27 @@ export default {
                     })
                         .then(() => this.$router.push({ name: 'Login' })) // retaper ses informations pour se connecter
                         .then(() => alert('Veuillez vous reconnecter avec le nouveau mot de passe'))
+                        .then(() => this.modifyPassword())
                         .catch(error => console.log(error))
                 }
         },
         deleteAccount(){
             console.log('Supprimer mon compte')
-            const idDelete = this.$root.logged.id // changer si besoin
+            //const idDelete = this.$root.logged.id // changer si besoin
             //if(idDelete) { //mettre admin aussi
-            axios.delete('auth/', {idDelete})
-                //.then(() => localStorage.removeItem('Token'))
-                .then(response => console.log('réponse de la delete' + response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-                .then(() => alert('Votre compte a bien été supprimé'))
+            try {
+                axios.delete('auth/')
+                .then(() => localStorage.removeItem('Token'))
+                
+                .then(() => location.reload())
                 .then(() => this.$router.push({ name: 'Signup' }))
+                .then(() => alert('Votre compte a bien été supprimé'))
                 .catch(error => console.log(error))
+            } catch (error) {
+				console.log(error)
+			}
         },
-        ConfirmModifyAccount() {
+        confirmModifyAccount() {
             console.log('confirmer Modifier mon compte')
             const formData = new FormData()
 				//formData.append('picture', refs.img) // comment utiliser les refs ?
@@ -169,7 +183,9 @@ export default {
 
                 try {
 					 axios.post('auth/profile', {"firstName":this.user.firstName, "lastName":this.user.lastName, "location": this.user.location, "department": this.user.department})
-                     .then(response => alert('profil modifié'))
+                     .then(() => alert('profil modifié'))
+                     .then(() => this.modifyAccount())
+                     .then(() => location.reload())
 				} catch (error) {
 					console.log(error)
 				}

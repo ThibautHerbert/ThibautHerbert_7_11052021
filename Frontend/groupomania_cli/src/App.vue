@@ -6,10 +6,10 @@
     </a>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
       <li>
-        <router-link :to="{ name: 'Signup'}" v-if="logged" class="dropdown-item">S'inscrire</router-link>
+        <router-link :to="{ name: 'Signup'}" v-if="!logged" class="dropdown-item">S'inscrire</router-link>
       </li>
       <li>
-        <router-link :to="{ name: 'Login'}" v-if="logged" class="dropdown-item">Se connecter</router-link> 
+        <router-link :to="{ name: 'Login'}" v-if="!logged" class="dropdown-item">Se connecter</router-link> 
       </li>
       <li>
         <router-link :to="{ name: 'Logout'}" @click="logout" v-if="logged" class="dropdown-item">Se déconnecter</router-link>
@@ -22,6 +22,7 @@
       <router-link :to="{ name: 'Account', params: { id: logged.id }}">Mon compte</router-link>
       <!--<router-link :to="{ name: 'Account', params: { id: userConnected1[0].id }}">Mon compte N°{{userConnected1[0].id}}</router-link>-->
     </div>
+    
     
     <router-view/>
     <!--
@@ -36,9 +37,10 @@ import axios from 'axios'
 import Footer from './components/Footer.vue'
 import Logout from './views/Logout'
 import Posts from './views/Posts.vue'
+import Signup from './views/Signup.vue'
 
 export default {
-  components: { Footer, Posts },
+  components: { Footer, Posts, Signup },
   data() {
     return {
       logged: null,
@@ -55,12 +57,10 @@ export default {
             //mettre un if loggedIn :
             console.log('logout cliqué')
             localStorage.removeItem('Token');
-            localStorage.removeItem('User');
-            localStorage.removeItem('IdUser');
-            this.userlogged = ! this.userlogged
             this.$router.push({ name: "Login" })
             //renvoyer vers page de connexion
             //.then(() => this.$router.push({ name: 'Login' })
+              .then(() => location.reload())
         },
     
   

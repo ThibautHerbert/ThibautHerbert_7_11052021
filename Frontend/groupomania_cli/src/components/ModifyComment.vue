@@ -13,7 +13,7 @@
                 </form>
             </div>
             <div class="d-flex ">
-                <button class="btn btn-success" @click="handleModifyComment">Publier la modification</button>
+                <button class="btn btn-success" @click="handleModifyComment(), closeWritingComment()">Publier la modification</button>
             </div>
         </div>
     </div>
@@ -36,8 +36,8 @@ export default {
        }
     },
     methods: {
-        closeWritingPost() {
-            this.$emit('closePost')
+        closeWritingComment() {
+            this.$emit('closeComment')
         },
         async handleModifyComment() { // avec ou sans async handleSignup() {
 	        if(this.body) {

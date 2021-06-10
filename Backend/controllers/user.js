@@ -88,7 +88,8 @@ exports.login = (req, res, next) => {
 //deleteUser
     //version avec pool attention, doit refaire avec connection pour que cela marche !
 exports.deleteUser = (req, res) => {
-            db.promise().query('DELETE FROM Users WHERE id= ?', [req.body.id]) // ? is a placeholder ; [req] use the bodyparser
+    
+    db.promise().query('DELETE FROM Users WHERE id= ?', [req.user]) // ? is a placeholder ; [req] use the bodyparser
                 //connection.release() // return the connection to pool
                 /*
                 if(!err) {
@@ -121,41 +122,13 @@ exports.deleteUser = (req, res, next) => {
 };
 */
 
-
-
-// à voir comment écrire la modify :
-
 exports.modifyUser = (req, res, next) => {
-    console.log(req.body, req.user)
-    //res.send(200).json({...req.body}) 
-    //return
-    const {firstName, lastName, location, department} = req.body; //picture
-    
-                db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ? WHERE id = ?', [firstName, lastName, location, department, req.user]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
-                    .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été modifié`}))
-                    .catch(error => res.status(400).json({ error }));
+    const {firstName, lastName, location, department} = req.body; // rajouter picture
+    db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ? WHERE id = ?', [firstName, lastName, location, department, req.user]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
+        .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été modifié`}))
+        .catch(error => res.status(400).json({ error }));
 };
 
-        //2eme autre façon de faire comme pour le signup
-/*
-    const {firstName, lastName, department, location, picture, password, email} = req.body;
-    // const firstName = req.body.name;
-    // vérifie qu'il n'y a pas déjà cet email:
-    db.query('SELECT email FROM Users WHERE email = ?', [email], async (error, results) => {
-        if(error) {console.log(error)}
-        if( results.length < 0 ) { // vérifie si email déjà présent
-            return res.render({ message: "Cet email n'existe pas" }) // error si adresse mail n'existe pas déjà dans la base
-        } 
-*/
-/*
-        let hashedPassword = await bcrypt.hash(password, 10);
-        //console.log(hashedPassword);
-        db.promise().query('UPDATE INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location:location, picture:picture, password: hashedPassword, email:email} )  // ? is a placeholder ;
-            //connection.release() // return the connection to pool
-            .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été modifié`}))
-            .catch(error => res.status(400).json({ error })); 
-        })
-};*/
 exports.modifyPassword = async (req, res, next) => {
     const {password} = req.body;
     let hashedPassword = await bcrypt.hash(password, 10);
@@ -163,8 +136,6 @@ exports.modifyPassword = async (req, res, next) => {
         .then(() => res.status(200).json({ message: `Le mot de passe a été modifié avec succès, veuillez désormais vous reconnecter avec ce nouveau mot de passe`}))
         .catch(error => res.status(400).json({ error }));
 };
-
-
 // getUser
 // Récupère l'utilisateur qui est connecté
 exports.getUserConnected = async (req, res, next) => {
@@ -187,47 +158,7 @@ exports.getUserConnected = async (req, res, next) => {
         }
     })
 }
-
-// récupère un utilisateur avec son id
-/*
-exports.getOneUser = async (req, res, next) => {
-    // const id = req.params.id;
-    const {id} = req.body;   /// attention j'ai rajouté le const id et c'est lui qui est récupéré dans le query et non le userId
-    // if idUser du post
-    //if idUser du comment
-    //db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
-        console.log('Avant getOneUser')
-    //db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
-        //console.log(results);
-    db.promise().query('SELECT * FROM Users WHERE id = ?', {"id": req.body})
-        .then(() => res.status(200).json({ message: `utilisateur récupéré`}))
-        //.then(res => res.send(rows))
-        .catch(error => res.status(400).json({ error }));
-        /*if(!err) {
-           res.send(rows)
-       //     console.log('getOneUser a fonctionné' + rows);
-            console.log('rows ' + rows + 'vide ?');
-            
-        } else {
-            console.log(err)
-        }
-    })*/
-//}
-
-// version 2 getOneUser
-/*
-exports.getOneUser = async (req, res, next) => {
-    const {id} = req.body;
-    db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
-        if(!err) {
-            res.send(rows)
-            console.log('rows ' + rows + 'vide ?'); 
-        } else {
-            console.log(err)
-        }
-    })
-}
-*/
+// à supprimer :
 exports.getOneUser = async (req, res, next) => {
     const {id} = req.body;
     db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
@@ -243,8 +174,7 @@ exports.getOneUser = async (req, res, next) => {
             } else {
                 console.log( "Utilisateur non trouvé.");
                 res.status(404).send({ status: 404, message: "Utilisateur non trouvé." });
-            }
-            
+            } 
         }
     })
 }

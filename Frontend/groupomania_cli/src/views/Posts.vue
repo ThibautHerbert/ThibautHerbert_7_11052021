@@ -1,10 +1,11 @@
 <template>
-  <div class="Post-vue">
+  <div class="Post-vue" v-if="posts.length">
     <h2>{{ header }}</h2>
     <h3>{{ subdescription }}</h3>
-    <div v-if="posts.length" >
         <PostList :posts="posts" />
-    </div>
+  </div>
+  <div v-else>
+    <Login />
    <!-- <div v-else> 
           <div class="spinner-border text-danger" role="status">
             <span class="sr-only">En chargement ...</span>
@@ -16,10 +17,11 @@
 <script>
 import PostList from '../components/PostList'
 import axios from 'axios'
+import Login from './Login.vue'
 
 export default {
     props: [ 'id'],
-    components: { PostList },
+    components: { PostList, Login },
     data() {
         return {
             header: "Bienvenue dans le fil d'actu",
@@ -27,10 +29,16 @@ export default {
             posts: [],
         }
     },
-     mounted() {
-      axios.get('posts', {headers: {Authorization: 'Bearer ' + localStorage.getItem('Token')}})
+    methods: {
+      getPosts() {
+        axios.get('posts', {headers: {Authorization: 'Bearer ' + localStorage.getItem('Token')}})
       .then(response => this.posts = response.data)
       .catch(error => console.log(error))
+      }
+      
+    },
+    mounted() {
+      this.getPosts()
     },
       
 }

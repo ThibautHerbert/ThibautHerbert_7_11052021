@@ -1,15 +1,15 @@
 <template>
 <div>
   <div v-if="showModifyPost">
-    <ModifyPost :post="post" />
+    <ModifyPost :post="post" @closePost="toggleModifyPost"/>
   </div>
-  <div class="post container" v-if="post.isModerated== 0">
+  <div class="post container mt-4" v-if="post.isModerated== 0">
     <div class="media ">
       <div class="d-flex">
         <div><img :src= "url + post.user_picture" class="d-flex justify-content-start m-1 rounded-circle PicProfile" alt="photo du créateur du post"></div>
         <div class="media-body  flex-grow-1 ">
           <router-link :to="{ name: 'PostDetails', params: { id: post.id }}">
-            <h5 class="mt-0 mx-2 text-start nav-link"> {{post.user_name}} de Team {{post.user_location}} a publié :</h5>
+            <h5 class="mt-0 mx-2 text-start nav-link"> {{post.user_name}} de la Team {{post.user_location}} a publié :</h5>
           </router-link>
         </div>
         <div class="mt-1">
@@ -69,20 +69,9 @@
         </div>   
       </div>
     </div>
-    <div class="">
-                <div class="d-flex justify-content-end mx-3 ">
-                    <div class="mx-3">
-                        <button class="btn btn-outline-secondary border rounded m-1" @click="showComment">
-                            Afficher les commentaires
-                        </button>
-                    </div>
-                </div>     
-            </div>
-  </div>
-  
+  </div> 
   <div v-else> 
-    <div v-show="$root.logged.isAdmin == 1">Post modéré mettre un v-show pour que cela soit seulement visible d'un admin
-      
+    <div v-show="$root.logged.isAdmin == 1">Post modéré mettre un v-show pour que cela soit seulement visible d'un admin 
       <div class="body-post  media">
         <p class="fw-bold fw-light fs-5 mt-2">Le post n°{{ post.id }} dont l'idUser est :{{post.idUser}} a été modéré </p>
         <p class="text-center mx-2">{{ post.body }}</p>
@@ -96,25 +85,21 @@
           Retirer la modération
         </button>
       </div>
-      
     </div>
   </div>
   <div v-if="showCreateComment">
-    <WriteComment :post="post"/>
+    <WriteComment :post="post" @closeComment="toggleComment"/>
   </div>
   <div v-if="comments.length" class="my-2">
    <div v-for="comment in comments" :key="comment.id">
+     <div v-if="comment.idPost == post.id">
         <SingleComment :comment="comment" :post="post"/>
-            
-        <br>
+    </div>
     </div>
   </div>
 
- 
                     <!--début de la boucle des commentaires-->
-      
-      
-      
+ 
 </div>
 </template>
 
@@ -147,61 +132,10 @@ export default {
             */comments: [], //déjà dans postList
       }
   },
-  mounted() {
-    //console.log('hello' + this.post.idUser)
-    //console.log('hello coucou' +  post.idUser)
-    console.log(this.comments.idUser)
-    axios.get('comments/')
-      .then(response => this.comments = response.data)
-      .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-      .catch(error => console.log(error))
-/*
-    const idToSend = {"id": 32}
-        axios.get('/auth/user', idToSend)
-      //.then(response => this.idUser = response.data[0].id)
-        .then(response => this.userPost = response.data) //response.data ???
-        .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-        .then(response => response.json())
-        //.then(response => console.log(response.data))
-        .catch(error => console.log(error))
-*/
-/*
-      let idToSend = {"id": this.idUserPost}
-                try {
-                    axios.get('/auth/user', idToSend) // /posts/
-                        .then(() => console.log('utilisateur récupéré'))
-                        .then(response => response.json())
-                        // rafraichir la page ?
-                        //.then(() => this.$router.push({ name: 'Posts' })
-                        .catch( err => console.log(err))
-                } catch (error) {
-					console.log(error)
-				}
-*/
-        this.getUserPostDetails();
-
-  },
-  created() {
-    
-        //test get One User
-        /*
-        //axios.get('/auth', this.Post.idUser) // quelle donnée mettre ici ? cela ne marche pas
-        axios.get('/auth', { id: 35})
-        //console.log('hello' + this.post.idUser)
-        //console.log('hello coucou' +  post.idUser)
-        //.then(response => this.idUser = response.data[0].id)
-          .then(response => this.userPost = response.data) //response.data ???
-          .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-          //.then(response => console.log(response.data))
-          .catch(error => console.log(error))
-        */
-  },
   methods: {
     getUserPostDetails() {
-      
       //const formData = new FormData()
 			//formData.append("id", this.idUserPost);
-      
     },
     toggleModifyPost() {
             console.log('modify Post ouvre un espace pour modifier un post')
@@ -265,6 +199,12 @@ export default {
         console.log(error)
 				}         
     },
+    getComments() {
+      axios.get('comments/', {"idPost":4})
+        .then(response => this.comments = response.data)
+        .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
+        .catch(error => console.log(error))
+    },
     toggleComment() {
       console.log('open write a comment')
       this.showCreateComment = !this.showCreateComment
@@ -274,6 +214,15 @@ export default {
       this.isIntered = !this.isIntered
       console.log(this.isIntered) // le toggle marche mais la classe ne se met pas sur le button ??
     }
+  },
+  created() {
+
+  },
+  mounted() {
+    this.getComments();
+    console.log(this.comments.idUser)
+    this.getUserPostDetails();
+
   },
    /*
   setup(props) {

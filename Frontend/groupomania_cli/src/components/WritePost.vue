@@ -1,12 +1,12 @@
 <template>
-  <div> 
+  <div > 
         <div class="card-body write-post mx-auto" >
             <div class="d-flex align-items-center">
                 <img :src="urlImg + $root.logged.picture" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
                 <label for="FormControlTextarea1">Postez un message {{$root.logged.firstName}} !</label>
             </div>
             <div class="form-group ">
-                <form>
+                <form @submit="handleSendPost">
                     <div>  
                         <textarea class="form-control" id="FormControlTextarea1" rows="3" placeholder="Votre message ici..." v-model="body"></textarea>
                         <label for="FormControlTextarea2" class="d-flex">Du contenu en plus ?</label>
@@ -15,9 +15,8 @@
                 </form>
             </div>
             <div class="d-flex ">
-                <button class="btn btn-success" @click="handleSendPost">Publier</button>
+                <button class="btn btn-success" @click="handleSendPost(), closeWritingPost()" >Publier</button>
             </div>
-            
         </div>
   </div>
 </template>
@@ -65,8 +64,8 @@ export default {
                 try {
                     axios.post('posts/', formData) // /posts/
                         .then(() => alert('post publié'))
-                        .then(() => location.reload())
-                        .then(response => response.json())
+                        //.then(() => location.reload())
+                        //.then(response => response.json())
                         // rafraichir la page ?
                         
                         

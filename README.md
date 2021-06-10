@@ -20,6 +20,7 @@ Enfin, pour lancer le Back-end :
     - lancer la commande nodemon start
 
 Attention pour les connexions à la base de données et au serveur, vous devrez remplacer les variables d'environnement du fichier db.js et controllers/user.js, ou appliquer les données fournies dans un fichier .env pour :
+    
     HOST =
     USER =
     PASSWORD =

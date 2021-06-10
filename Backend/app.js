@@ -18,7 +18,7 @@ const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 
 const limiter = rateLimit({ // spécifie le nombre maximums de requêtes
-    max: 200, // 100 par heure
+    max: 500, // 100 par heure
     windowMs: 60 * 60 * 1000, // pour : 60mn 60secondes 1000 millisecondes
     message: 'Vous avez réalisé trop de requêtes depuis votre adresse IP, merci de réessayer plus tard',
   })

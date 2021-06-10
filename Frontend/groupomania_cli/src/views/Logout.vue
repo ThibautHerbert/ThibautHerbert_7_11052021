@@ -6,17 +6,13 @@
 export default {
 // supprimer le token pour se déconnecter
     methods: {
-        logout() {
+        /*logout() {
             //mettre un if loggedIn :
             console.log('logout cliqué')
             localStorage.removeItem('Token');
             //renvoyer vers page de connexion
-            //this.$router.push({ name: 'Login' })
-        }
+            this.$router.push({ name: 'Login' })
+        }*/
     }
 }
 </script>
-
-<style lang=scss>
-
-</style>

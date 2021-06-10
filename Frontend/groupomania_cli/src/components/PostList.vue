@@ -1,3 +1,20 @@
+<template>
+    <div>
+        <button class="btn btn-primary my-2" @click="togglePost"> 
+            <span v-if="showCreatePost" class="text-white">Ne pas publier de post</span>
+            <span v-else class="text-white">Publier un nouveau post</span>  
+        </button>
+    
+        <div v-if="showCreatePost">
+            <WritePost @closePost="togglePost"/>
+        </div>
+    
+        <div v-for="post in posts" :key="post.id">
+            <SinglePost :post="post" />
+        </div>
+    </div>
+</template>
+
 <script>
 import axios from 'axios'
 
@@ -41,22 +58,7 @@ export default {
 }
 </script>
 
-<template>
-    <div>
-        <button class="btn btn-primary my-2" @click="togglePost"> 
-            <span v-if="showCreatePost" class="text-white">Ne pas publier de post</span>
-            <span v-else class="text-white">Publier un nouveau post</span>  
-        </button>
-    
-        <div v-if="showCreatePost">
-            <WritePost />
-        </div>
-    
-        <div v-for="post in posts" :key="post.id">
-            <SinglePost :post="post" />
-        </div>
-    </div>
-</template>
+
 
 
 <style scoped>

@@ -15,7 +15,7 @@
                 </form>
             </div>
             <div class="d-flex ">
-                <button class="btn btn-success" @click="handleModifyPost">Publier la modification</button>
+                <button class="btn btn-success" @click="handleModifyPost(), closeWritingPost()">Publier la modification</button>
             </div>
             
         </div>

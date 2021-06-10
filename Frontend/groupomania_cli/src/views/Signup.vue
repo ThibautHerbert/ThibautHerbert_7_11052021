@@ -119,13 +119,18 @@ export default {
 				formData.append('email', this.email);
 				formData.append('password', this.password);
 				console.log(formData)
-
+				/* //fonctionne sauf this.$router
 				axios.post('auth/signup', formData)
 					.then(() => console.log('inscription réussie'))
 					.then(response => response.json())
 					//.then(() => this.$router.push({ name: 'Login' })
 					.then(() => alert('Veuillez vous connecter'))
-					.catch( err => console.log(err))    
+					.catch( err => console.log(err))  
+				*/	
+				const response = await axios.post('auth/signup', formData)
+					this.$router.push({ name: 'Login' })
+					alert('Veuillez vous connecter')
+					console.log(response)
 	        }
         }
     }    

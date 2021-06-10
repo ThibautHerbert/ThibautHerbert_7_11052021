@@ -21,8 +21,9 @@ exports.getAllPost = (req, res, next) => {
 
 
 exports.getAllComments = (req, res, next) => {
+    const {idPost} = req.body
     // être plus précis pour formater la date ?
-    db.query('SELECT C.*, U.id user_id, U.firstname user_name, U.picture user_picture, U.location user_location FROM Comments C LEFT JOIN Users U ON U.id = C.idUser ORDER BY creationDate ASC', (err, rows) => {   // rajouter un order by pour avoir les plus récents en premier
+    db.query('SELECT C.*, U.id user_id, U.firstname user_name, U.picture user_picture, U.location user_location FROM Comments C LEFT JOIN Users U ON U.id = C.idUser ORDER BY creationDate ASC', [idPost], (err, rows) => {   // rajouter un order by pour avoir les plus récents en premier
         if(!err) {
             res.send(rows)
         } else {
@@ -35,7 +36,7 @@ exports.getAllComments = (req, res, next) => {
 
 exports.getOneComment = (req, res) => {
     const {id} = req.body
-    db.query('SELECT * FROM Comments WHERE id= ?', [id], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
+    db.query('SELECT * FROM Comments WHERE id = ?, && idPost == Posts.id ORDER BY creationDate ASC', [id], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
         if(!err) {
             res.send(rows)
         } else {

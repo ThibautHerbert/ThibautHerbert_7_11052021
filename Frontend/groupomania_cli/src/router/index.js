@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
@@ -10,12 +10,12 @@ import PostDetails from '../views/PostDetails.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
     component: Home
   },
   {
-    path: '/signup',
+    path: '/',
     name: 'Signup',
     component: Signup
   },
@@ -53,7 +53,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(), // problème path réglé ?
   routes
 })
 
