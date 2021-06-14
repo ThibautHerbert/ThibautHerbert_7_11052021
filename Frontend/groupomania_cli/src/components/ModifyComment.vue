@@ -25,7 +25,7 @@ export default {
     props: ['post', 'comment'],
     data() {
        return {
-        // données pour un nouveau Post
+        // données pour un nouveau commentaire
         urlImg: 'http://localhost:5000/images/',
         body:'',
         idUser: this.$root.logged.id,
@@ -39,12 +39,12 @@ export default {
         closeWritingComment() {
             this.$emit('closeComment')
         },
-        async handleModifyComment() { // avec ou sans async handleSignup() {
+        async handleModifyComment() {
 	        if(this.body) {
 				
 				let commentToModify = {"body": this.comment.body, "idUser": this.idUser, "id": this.id, "idPost": this.idPost}
                 try {
-                    axios.put('comments/', commentToModify) // /posts/
+                    axios.put('comments/', commentToModify) 
                         .then(() => console.log('commentaire modifié'))
                         .then(response => response.json())
                         // rafraichir la page ?
@@ -56,6 +56,6 @@ export default {
                 
 	        }
         } 
-    } // fin de methods 
+    } 
 }
 </script>

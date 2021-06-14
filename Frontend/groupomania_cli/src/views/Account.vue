@@ -140,16 +140,12 @@ export default {
         this.user.department = this.$root.logged.department
         this.user.location = this.$root.logged.location
         this.user.email = this.$root.logged.email
-
-       
     },
     methods: {
         modifyAccount() {
-            console.log('Modifier mon compte')
             this.showModifyAccount = !this.showModifyAccount
         },
         modifyPassword() {
-            console.log('clic sur Modifier mon mot de passe')
             this.showModifyPassword = !this.showModifyPassword
         },
         confirmModifyPassword() {
@@ -164,15 +160,12 @@ export default {
                 }
         },
         deleteAccount(){
-            console.log('Supprimer mon compte')
-            //const idDelete = this.$root.logged.id // changer si besoin
-            //if(idDelete) { //mettre admin aussi
             try {
-                axios.delete('auth/')
+                axios.delete('auth/', {"picture": this.user.picture})
                 .then(() => localStorage.removeItem('Token'))
                 
                 .then(() => location.reload())
-                .then(() => this.$router.push({ name: 'Signup' }))
+                //.then(() => this.$router.push({ name: 'Signup' }))
                 .then(() => alert('Votre compte a bien été supprimé'))
                 .catch(error => console.log(error))
             } catch (error) {
@@ -180,7 +173,6 @@ export default {
 			}
         },
         confirmModifyAccount() {
-            console.log('confirmer Modifier mon compte')
             const formData = new FormData()
 				//formData.append('picture', refs.img) // comment utiliser les refs ?
 				formData.append('firstName', this.user.firstName);

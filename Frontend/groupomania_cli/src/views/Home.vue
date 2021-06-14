@@ -53,12 +53,10 @@ export default {
 }
 @media screen and (min-width: 320px) and (max-width: 380px) {
   .home-image {
-    
     max-width: 300px;
   }
   h1 {
     margin-top: 10px;
   }
-  
 }
 </style>

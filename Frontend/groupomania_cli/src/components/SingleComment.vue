@@ -71,37 +71,30 @@
 </template>
 <script>
 import axios from 'axios'
-//import WriteComment from './WriteComment.vue'
 import ModifyComment from './ModifyComment.vue'
 
 export default {
     components: { ModifyComment, },
-    props: ['post', 'userConnected', 'comment'], // ou posts ?
+    props: ['post', 'userConnected', 'comment'],
     data() {
         return {
             showModifyComment: false,
             url: 'http://localhost:5000/images/'
-            
         }
-        
     },
     methods: {
         toggleComment() {
-            console.log('open write a comment')
             this.showCreateComment = !this.showCreateComment
         },
         toggleModifyComment(){
-            console.log('open modify a comment')
             this.showModifyComment = !this.showModifyComment
         },
         deleteComment(){
-            console.log('delete a comment')
             let deleteComment = {"idUser": this.comment.idUser, "id": this.comment.id, "idPost": this.comment.idPost}
             try {
                 const id = this.comment.id
-                axios.delete('comments/'+ id) // /posts/
+                axios.delete('comments/'+ id) 
                     .then(() => console.log('commentaire supprimé'))
-                    //.then(response => response.json())
                     // rafraichir la page ?
                     //.then(() => this.$router.push({ name: 'Posts' })
                     .catch( err => console.log(err))
@@ -110,22 +103,10 @@ export default {
             }        
         },
         moderateComment(){
-            console.log('moderate a comment')
-            /*const isModerated = 1
-            // if ( logged.isAdmin == 1)
-            const formData = new FormData()
-            // formData.append('isAdmin', logged.isAdmin) // changer le backend si c'est rajouté
-            formData.append('isModerated', isModerated)
-            formData.append('idUser', this.comment.idUser)
-            formData.append('id', this.comment.id);
-            formData.append('idPost', this.comment.idPost)
-            console.log(formData)
-            */
             let moderateComment = {"isModerated": 1, "id": this.comment.id, idPost: this.comment.idPost}
             try {
-                axios.put('comments/moderate', moderateComment) // /posts/
+                axios.put('comments/moderate', moderateComment) 
                     .then(() => console.log('commentaire modéré'))
-                    .then(response => response.json())
                     // rafraichir la page ?
                     //.then(() => this.$router.push({ name: 'Posts' })
                     .catch( err => console.log(err))
@@ -134,21 +115,10 @@ export default {
                     }         
         },
         deModerateComment() {
-            console.log('click modération retirée du commentaire')
-            /* formData ne change rien en bdd mais la requête passe
-            const isModerated = 0
-            const formData = new FormData()
-            formData.append('isModerated', isModerated)
-            formData.append('idUser', this.comment.idUser)
-            formData.append('id', this.comment.id);
-            formData.append('idPost', this.comment.idPost)
-            console.log(formData)
-            */
             let deModerateComment = {"isModerated": 0, "id": this.comment.id, idPost: this.comment.idPost}
             try {
-                axios.put('comments/moderate', deModerateComment) // /posts/
+                axios.put('comments/moderate', deModerateComment)
                     .then(() => console.log("le commentaire a cessé d'être modéré"))
-                    .then(response => response.json())
                     // rafraichir la page ?
                     //.then(() => this.$router.push({ name: 'Posts' })
                     .catch( err => console.log(err))
@@ -158,7 +128,6 @@ export default {
         }
     }
 }
-
 </script>
 
 <style scoped>

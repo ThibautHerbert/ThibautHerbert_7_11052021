@@ -39,12 +39,8 @@ export default {
     },
     mounted() {
       this.getPosts()
-    },
-      
+    }, 
 }
-   
-    
-
 </script>
 
 <style scoped>

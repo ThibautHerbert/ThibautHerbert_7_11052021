@@ -139,7 +139,6 @@ export default {
 				} catch (err) {
 					this.wrongEmail = JSON.stringify(err.response.data.message)
 				}
-				
 	        }
         }
     }    

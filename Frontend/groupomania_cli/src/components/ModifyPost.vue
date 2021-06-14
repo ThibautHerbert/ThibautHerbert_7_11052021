@@ -17,7 +17,6 @@
             <div class="d-flex ">
                 <button class="btn btn-success" @click="handleModifyPost(), closeWritingPost()">Publier la modification</button>
             </div>
-            
         </div>
   </div>
 </template>
@@ -38,10 +37,10 @@ export default {
        }
     },
     methods: {
-        closeWritingPost() {                    // comment l'utiliser ?
+        closeWritingPost() {  
             this.$emit('closePost')
         },
-        handleModifyPost() { // avec ou sans async handleSignup() {
+        handleModifyPost() {
 	        if(this.body) {
 				const formData = new FormData()
 				formData.append('body', this.post.body) //this.body
@@ -50,7 +49,7 @@ export default {
                 formData.append('id', this.post.id);
 				
                 try {
-                    axios.put('posts/' + this.post.id, formData) // /posts/
+                    axios.put('posts/' + this.post.id, formData)
                         .then(() => console.log('post modifié'))
                         // rafraichir la page ?
                         //.then(() => this.$router.push({ name: 'Posts' })
@@ -61,7 +60,7 @@ export default {
                 
 	        }
         } 
-    } // fin de methods 
+    }
 }
 </script>
 

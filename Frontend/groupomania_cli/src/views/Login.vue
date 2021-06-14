@@ -57,7 +57,6 @@ export default {
     methods: {
         closeLogin() {
             this.$emit('close')
-            // rajouter redirection page accueil
         },
         async handleLogin() {
             this.passwordError = this.password.length > 7 ? '' : 'Le mot de passe doit avoir au moins 8 caractères !'
@@ -65,7 +64,7 @@ export default {
             
             if(!this.passwordError) { // s'il n'y a pas d'erreur de mdp alors :
                 try {
-                    const response = await axios.post('auth/login', { // juste login le début de l'url et sans / voir axios.js
+                    const response = await axios.post('auth/login', { // raccourci headers voir axios.js
                         email: this.email,
                         password: this.password
                     });
@@ -74,14 +73,11 @@ export default {
                         .then(() => location.reload())
                         .catch(error => console.log(error))
                 
-                } catch (err) {
-                    
+                } catch (err) {  
                     this.wrongPassword = JSON.stringify(err.response.data.message)
-               
                 }
             }
         }
-
     },
 } 
 </script>

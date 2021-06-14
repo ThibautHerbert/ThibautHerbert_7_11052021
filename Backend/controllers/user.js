@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../db'); // import de la connexion à la base de données
+const fs = require('fs');
 
 exports.signup = (req, res, next) => {
     console.log(req.body);
@@ -95,20 +96,17 @@ exports.login = (req, res, next) => {
 */
 
 //deleteUser
-    //version avec pool attention, doit refaire avec connection pour que cela marche !
 exports.deleteUser = (req, res) => {
-    
-    db.promise().query('DELETE FROM Users WHERE id= ?', [req.user]) // ? is a placeholder ; [req] use the bodyparser
-                /*
-                if(!err) {
-                    res.send(`Le compte de ${ [req.body.firstName] } ${ [req.body.lastName] } a été supprimé`)
-                } else {
-                    console.log(err)
-                }
-                */
-                .then(() => res.status(200).json({ message: `Le compte a été supprimé`}))
-                .catch(error => res.status(400).json({ error })); 
-        //}) // fin 1er query
+    const {picture} = req.body
+    db.promise().query('SELECT picture FROM Users WHERE id= ?', [req.user])
+    console.log(res)
+    console.log(res.picture)
+    //const filename = picture[1]; //const filename = user.picture.split('/images/')[1];
+    fs.unlink(`images/${res}`, () => {
+        db.promise().query('DELETE FROM Users WHERE id= ?', [req.user])
+            .then(() => res.status(200).json({ message: `Le compte a été supprimé`}))
+            .catch(error => res.status(400).json({ error }));
+    })
 };
 // autre écriture de route DELETE ? version P6
 /*

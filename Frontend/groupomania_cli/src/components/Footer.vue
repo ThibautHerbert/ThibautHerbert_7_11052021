@@ -28,7 +28,6 @@ export default {
 
 
 <style scoped>
-/*<style lang="sass">*/
 .bg-footer{
     background : #2c3e50;
 }
