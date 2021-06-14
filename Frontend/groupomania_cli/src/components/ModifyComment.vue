@@ -3,12 +3,12 @@
         <div class="card-body write-comment mx-auto" >
             <div class="d-flex align-items-center">
                 <img :src="urlImg + $root.logged.picture" class="d-flex justify-content-start m-1 rounded-circle pic-post" alt="photo du créateur du post">
-                <label for="FormControlTextarea1">Modifiez votre publication {{$root.logged.firstName}}</label>
+                <label for="FormControlTextarea1">Modifiez votre commentaire {{$root.logged.firstName}}</label>
             </div>
             <div class="form-group ">
                 <form>
                     <div>  
-                        <textarea class="form-control" id="FormControlTextarea1" rows="3" placeholder="Votre message ici..." v-model="body"></textarea>
+                        <textarea class="form-control" id="FormControlTextarea1" rows="3" placeholder="Votre message ici..." v-model="comment.body"></textarea>
                     </div>
                 </form>
             </div>
@@ -22,7 +22,7 @@
 import axios from 'axios'
 
 export default {
-    props: ['post', 'comment', 'userConnected'],
+    props: ['post', 'comment'],
     data() {
        return {
         // données pour un nouveau Post
@@ -42,7 +42,7 @@ export default {
         async handleModifyComment() { // avec ou sans async handleSignup() {
 	        if(this.body) {
 				
-				let commentToModify = {"body": this.body, "idUser": this.idUser, "id": this.id, "idPost": this.idPost}
+				let commentToModify = {"body": this.comment.body, "idUser": this.idUser, "id": this.id, "idPost": this.idPost}
                 try {
                     axios.put('comments/', commentToModify) // /posts/
                         .then(() => console.log('commentaire modifié'))

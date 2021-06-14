@@ -54,17 +54,20 @@
 							<input class="form-control" type="file" id="picture" ref="img" @change="imgUpload">
 							<small id="pictureHelp" class="form-text text-muted"> Téléchargez votre photo ou image de profil.</small>
 						</div>
-						<div class="my-4">
+						<div class="my-2">
 							<div class="form-group col-md-7 mx-auto ">
 								<label for="emailInput"> Adresse Email : </label>
 								<input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="sophiedurand@protonmail.com" required v-model="email">
 								<small id="emailHelp" class="form-text text-muted"> Indiquez votre adresse courriel interne.</small>
+								<div class="errorDiv my-2 d-flex flex-wrap justify-content-center" >
+                                    <span v-if="wrongEmail" class="alert alert-danger"> {{wrongEmail}} !</span>
+                                </div>
 							</div>
 							<div class="form-group col-md-7 mx-auto">
 								<label for="passwordInput"> Mot de passe : </label>
 								<input type="text" class="form-control" id="passwordInput" aria-describedby="passwordHelp" placeholder="********" required v-model="password"> 
 								<small id="passwordHelp" class="form-text text-muted"> Indiquez un mot de passe.</small>
-								<div class="errorDiv" v-if="passwordError"><span class="errorCountry"> {{ passwordError }} </span></div>	
+								<div class="errorDiv my-4 d-flex" v-if="passwordError"><span class="alert alert-danger"> {{ passwordError }} </span></div>	
 							</div>
 						</div>
 						<button  class="btn btn-success my-5" id="confirmSignup">Confirmer mon inscription</button>
@@ -93,6 +96,7 @@ export default {
     		email: '' ,
           	password:'',
 			passwordError: false,
+			wrongEmail: null,
     	}
     },
 	methods: {
@@ -108,7 +112,7 @@ export default {
 		},
         async handleSignup() {
            //validate password
-            this.passwordError = this.password.length > 7 ? '' : 'Le mot de passe doit avoir au moins 8 caractères'
+            this.passwordError = this.password.length > 7 ? '' : 'Le mot de passe doit avoir au moins 8 caractères !'
 	        if(!this.passwordError) {
 				const formData = new FormData()
 				formData.append('picture', this.picture)
@@ -126,11 +130,16 @@ export default {
 					//.then(() => this.$router.push({ name: 'Login' })
 					.then(() => alert('Veuillez vous connecter'))
 					.catch( err => console.log(err))  
-				*/	
-				const response = await axios.post('auth/signup', formData)
+				*/
+				try {
+					const response = await axios.post('auth/signup', formData)
 					this.$router.push({ name: 'Login' })
 					alert('Veuillez vous connecter')
 					console.log(response)
+				} catch (err) {
+					this.wrongEmail = JSON.stringify(err.response.data.message)
+				}
+				
 	        }
         }
     }    
@@ -138,9 +147,6 @@ export default {
 </script>
 
 <style>
-.my-custom-row{
-	background: chocolate;
-}
 .iconTop{
 	max-width: 100px;	
 }

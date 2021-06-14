@@ -8,9 +8,9 @@
             <div class="form-group ">
                 <form>
                     <div>  
-                        <textarea class="form-control" id="FormControlTextarea1" rows="3" placeholder="Votre message ici..." v-model="body"></textarea>
+                        <textarea class="form-control" id="FormControlTextarea1" rows="3" placeholder="Votre message ici..." v-model="post.body"></textarea>
                         <label for="FormControlTextarea2" class="d-flex">Du contenu en plus ?</label>
-                        <textarea class="form-control" id="FormControlTextarea2" rows="1" placeholder="Si vous avez un lien c'est ici..." v-model="url"></textarea>
+                        <textarea class="form-control" id="FormControlTextarea2" rows="1" placeholder="Si vous avez un lien c'est ici..." v-model="post.url"></textarea>
                     </div>
                 </form>
             </div>
@@ -26,7 +26,7 @@
 import axios from 'axios'
 
 export default {
-    props: ['post', 'userConnected'],
+    props: ['post'],
     data() {
        return {
         urlImg: 'http://localhost:5000/images/',
@@ -44,15 +44,14 @@ export default {
         handleModifyPost() { // avec ou sans async handleSignup() {
 	        if(this.body) {
 				const formData = new FormData()
-				formData.append('body', this.body)
-				formData.append('url', this.url);
+				formData.append('body', this.post.body) //this.body
+				formData.append('url', this.post.url); //this.url
                 formData.append('idUser', this.idUser);
                 formData.append('id', this.post.id);
 				
                 try {
                     axios.put('posts/' + this.post.id, formData) // /posts/
                         .then(() => console.log('post modifié'))
-                        .then(response => response.json())
                         // rafraichir la page ?
                         //.then(() => this.$router.push({ name: 'Posts' })
                         .catch( err => console.log(err))

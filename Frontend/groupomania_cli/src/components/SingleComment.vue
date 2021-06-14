@@ -1,5 +1,5 @@
 <template>
-    <div class="comment-container mx-auto">
+    <div class="mx-auto">
         <div  v-if="comment.isModerated== 0">
             <div v-if="showModifyComment">
                 <ModifyComment :post="post" :comment="comment" :userConnected="userConnected" @closeComment="toggleModifyComment"/>
@@ -32,6 +32,7 @@
                     </div>
                     
                     <p class="card-text text-start">{{comment.body}}</p>
+                    <p class="text-end creationDate-post px-1"> Publié le {{ comment.formattedDate }}</p>
                     <div class="text-end">
                         <button class="btn btn-outline-secondary ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="blue" class="bi bi-chat-text" viewBox="0 0 16 16">
@@ -95,11 +96,12 @@ export default {
         },
         deleteComment(){
             console.log('delete a comment')
-            let deleteComment = {"idUser": this.comment.idUser, "id": this.comment.id, idPost: this.comment.idPost}
+            let deleteComment = {"idUser": this.comment.idUser, "id": this.comment.id, "idPost": this.comment.idPost}
             try {
-                axios.delete('comments/', deleteComment) // /posts/
+                const id = this.comment.id
+                axios.delete('comments/'+ id) // /posts/
                     .then(() => console.log('commentaire supprimé'))
-                    .then(response => response.json())
+                    //.then(response => response.json())
                     // rafraichir la page ?
                     //.then(() => this.$router.push({ name: 'Posts' })
                     .catch( err => console.log(err))
@@ -119,7 +121,7 @@ export default {
             formData.append('idPost', this.comment.idPost)
             console.log(formData)
             */
-            let moderateComment = {"isModerated": 1, "idUser": this.comment.idUser, "id": this.comment.id, idPost: this.comment.idPost}
+            let moderateComment = {"isModerated": 1, "id": this.comment.id, idPost: this.comment.idPost}
             try {
                 axios.put('comments/moderate', moderateComment) // /posts/
                     .then(() => console.log('commentaire modéré'))
@@ -142,7 +144,7 @@ export default {
             formData.append('idPost', this.comment.idPost)
             console.log(formData)
             */
-            let deModerateComment = {"isModerated": 0, "idUser": this.comment.idUser, "id": this.comment.id, idPost: this.comment.idPost}
+            let deModerateComment = {"isModerated": 0, "id": this.comment.id, idPost: this.comment.idPost}
             try {
                 axios.put('comments/moderate', deModerateComment) // /posts/
                     .then(() => console.log("le commentaire a cessé d'être modéré"))
@@ -167,8 +169,6 @@ export default {
     min-width: 70px;
     object-fit: cover;
 }
-.comment-container{
-    max-width: 60%;
-}
+
 
 </style>>

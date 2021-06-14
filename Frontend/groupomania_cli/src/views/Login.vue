@@ -24,7 +24,10 @@
                                 <label for="countryInput"> Mot de passe : </label>
                                 <input type="text" class="form-control" id="countryInput" aria-describedby="countryHelp" placeholder="********" required v-model="password"> 
                                 <small id="countryHelp" class="form-text text-muted"> Indiquez un mot de passe.</small>
-                                <div class="errorDiv" v-if="passwordError"><span class="errorCountry"> {{ passwordError }} </span></div>
+                                <div class="errorDiv my-4 d-flex flex-wrap justify-content-center" >
+                                    <span class="alert alert-danger" v-if="passwordError"> {{ passwordError }}</span>
+                                    <span v-if="wrongPassword" class="alert alert-danger "> {{wrongPassword}} !</span>
+                                </div>
                             </div>
                             <button class="btn btn-success my-5" id="confirmLogin"> Me connecter</button>
                             <div class="row">
@@ -47,7 +50,8 @@ export default {
     		email: '' ,
           	password:'',
             passwordError: false,
-          	formCompleted: []
+          	formCompleted: [],
+            wrongPassword: null
     	}
     },     
     methods: {
@@ -57,14 +61,24 @@ export default {
         },
         async handleLogin() {
             this.passwordError = this.password.length > 7 ? '' : 'Le mot de passe doit avoir au moins 8 caractères !'
-	        if(!this.passwordError) { // s'il n'y a pas d'erreur de mdp alors :
-                const response = await axios.post('auth/login', { // juste login le début de l'url et sans / voir axios.js
-                    email: this.email,
-                    password: this.password
-                });
-                localStorage.setItem("Token", response.data.token)
-                this.$router.push({ name: 'Posts' })
-                    .then(() => location.reload())
+	        console.log('test ')
+            
+            if(!this.passwordError) { // s'il n'y a pas d'erreur de mdp alors :
+                try {
+                    const response = await axios.post('auth/login', { // juste login le début de l'url et sans / voir axios.js
+                        email: this.email,
+                        password: this.password
+                    });
+                    localStorage.setItem("Token", response.data.token)
+                    this.$router.push({ name: 'Posts' })
+                        .then(() => location.reload())
+                        .catch(error => console.log(error))
+                
+                } catch (err) {
+                    
+                    this.wrongPassword = JSON.stringify(err.response.data.message)
+               
+                }
             }
         }
 

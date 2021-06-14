@@ -35,8 +35,11 @@
       </div>
       <div class="body-post justify-content-start">
         <p class="text-start mx-2">{{ post.body }}</p>
+        <div class="mx-auto" v-if="post.picture !== NULL"> 
+          <img :src="url + post.picture" alt="image publiée par post.user_name" class="img-posted">
+        </div>
         <p class="bg-light border" v-if="post.url">Mettre embed ou un meta pour afficher la source ? lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
-        <p class="text-end creationDate-post px-1"> Publié le : {{ post.creationDate }}</p>
+        <p class="text-end creationDate-post px-1"> Publié le {{ post.formattedDate }}</p>
       </div>
       <div class="">
         <div class="mx-3 text-start d-flex flex-wrap"  >
@@ -97,9 +100,7 @@
     </div>
     </div>
   </div>
-
                     <!--début de la boucle des commentaires-->
- 
 </div>
 </template>
 
@@ -112,24 +113,16 @@ import SingleComment from './SingleComment.vue'
 
 export default {
   components: { ModifyPost, SingleComment, WriteComment },
-  props: ['post', 'userConnected'], // ou posts ?
+  props: ['post'],
   data() {
       return {
-          showModifyPost: false,
-          showCreateComment: false,
-          url : "http://localhost:5000/images/",
-          isIntered:false,
-          idUserPost:this.post.idUser, // doublon avec id
-          idUserComment:'',
-          /*comments: {
-              id:"",
-              idUser:"",
-              idPost:"",
-              body:"",
-              creationDate:"",
-              isModerated:""
-            },
-            */comments: [], //déjà dans postList
+        showModifyPost: false,
+        showCreateComment: false,
+        url : "http://localhost:5000/images/",
+        isIntered:false,
+        idUserPost:this.post.idUser, // doublon avec id
+        idUserComment:'',
+        comments: [], //déjà dans postList
       }
   },
   methods: {
@@ -138,25 +131,23 @@ export default {
 			//formData.append("id", this.idUserPost);
     },
     toggleModifyPost() {
-            console.log('modify Post ouvre un espace pour modifier un post')
-            this.showModifyPost = !this.showModifyPost
+      console.log('modify Post ouvre un espace pour modifier un post')
+      this.showModifyPost = !this.showModifyPost
     },
     deletePost() {
       console.log('delete Post')
-      /*
-      if ($root.logged.id == userPost[0].id) { // si l'utilisateur connecté correspond à l'utilisateur qui a créé le post
-        */try {
-          const id = this.post.id
-          console.log('id' + id)
-            axios.delete('posts/' + id) // /posts/
-                .then(() => console.log('post supprimé'))
-                .then(response => response.json())
-                // rafraichir la page ?
-                //.then(() => this.$router.push({ name: 'Posts' })
-                .catch( err => console.log(err))
-        } catch (error) {
-        console.log(error)
-				}         
+      try {
+        const id = this.post.id
+        console.log('id' + id)
+          axios.delete('posts/' + id) // /posts/
+              .then(() => console.log('post supprimé'))
+              .then(response => response.json())
+              // rafraichir la page ?
+              //.then(() => this.$router.push({ name: 'Posts' })
+              .catch( err => console.log(err))
+      } catch (error) {
+      console.log(error)
+      }         
     }, 
     moderatePost() {
       console.log('click modération du post')
@@ -168,12 +159,12 @@ export default {
 				console.log(formData)
         //let postToModerate = {"isModerated": 1, "id": this.post.id}
         try {
-            axios.put('posts/moderate', formData) // /posts/
-                .then(() => console.log('post modéré'))
-                .then(response => response.json())
+            //axios.put('posts/moderate', formData) // /posts/
+          axios.post('posts/moderate', {"isModerated": 1, "id": this.post.id})
+            .then(() => console.log('post modéré'))
                 // rafraichir la page ?
                 //.then(() => this.$router.push({ name: 'Posts' })
-                .catch( err => console.log(err))
+            .catch( err => console.log(err))
         } catch (error) {
         console.log(error)
 				}         
@@ -187,17 +178,17 @@ export default {
         formData.append('id', this.$root.logged.id);
 				console.log(formData)*/
         // nouveau
-        let moderatePost = {"isModerated": 1, "idUser": this.post.idUser, "id": this.post.id}
-        try {
-          axios.put('posts/moderate', moderatePost) // /posts/
-            .then(() => console.log("le post a cessé d'être modéré"))
-            //.then(response => response.json())
-            // rafraichir la page ?
-            //.then(() => this.$router.push({ name: 'Posts' })
-            .catch( err => console.log(err))
-        } catch (error) {
-        console.log(error)
-				}         
+      let moderatePost = {"isModerated": 0, "id": this.post.id}
+      try {
+        axios.post('posts/moderate', moderatePost) // /posts/
+          .then(() => console.log("le post a cessé d'être modéré"))
+          //.then(response => response.json())
+          // rafraichir la page ?
+          //.then(() => this.$router.push({ name: 'Posts' })
+          .catch( err => console.log(err))
+      } catch (error) {
+      console.log(error)
+      }         
     },
     getComments() {
       axios.get('comments/', {"idPost":4})
@@ -254,8 +245,12 @@ export default {
 .media-body{
   color: white;
 }
-
-
+.img-posted{
+  max-width: 80%;
+  max-height: 40rem;
+  object-fit: cover;
+  object-position: 20% 20%; /* vérifier intérêt et efficacité*/
+}
 .creationDate-post{
   font-size: 0.7em;
 }
@@ -266,5 +261,6 @@ export default {
 .isInterested{
   background: green;
   color: white;
+  
 }
 </style>

@@ -9,6 +9,11 @@
                 <form @submit="handleSendPost">
                     <div>  
                         <textarea class="form-control" id="FormControlTextarea1" rows="3" placeholder="Votre message ici..." v-model="body"></textarea>
+                        <div class="form-group col-md-7">
+							<label for="picture" class="form-label d-flex">Ajoutez une image :</label>
+							<input class="form-control" type="file" id="picture" ref="img" @change="imgUpload">
+							<small id="pictureHelp" class="form-text text-muted"> Téléchargez votre image.</small>
+						</div>
                         <label for="FormControlTextarea2" class="d-flex">Du contenu en plus ?</label>
                         <textarea class="form-control" id="FormControlTextarea2" rows="1" placeholder="Si vous avez un lien c'est ici..." v-model="url"></textarea>
                     </div>
@@ -38,17 +43,11 @@ export default {
         
        }
     },
-    /*
-    created() {
-        axios.get('/auth/connected')
-        .then(response => this.idUser = response.data[0].id)
-        .then(response => this.picture = response.data[0].picture)
-        .then(response => console.log(response)) // ou si on utilise par ex header de data : .then(response => this.header = response.data)
-        .then(response => console.log('picture' + response.data.picture))
-        .catch(error => console.log(error))
-    },
-    */
     methods: {
+        imgUpload(event) {
+			this.picture = event.target.files[0];
+            console.log(event.target.files[0])
+		},
         closeWritingPost() {
             this.$emit('closePost')
         },
@@ -59,21 +58,17 @@ export default {
 				formData.append('body', this.body)
 				formData.append('url', this.url);
                 formData.append('idUser', this.idUser);
+                formData.append('picture', this.picture); // rajouté le 10 juin
 				console.log(formData)
 				
                 try {
                     axios.post('posts/', formData) // /posts/
                         .then(() => alert('post publié'))
                         //.then(() => location.reload())
-                        //.then(response => response.json())
-                        // rafraichir la page ?
-                        
-                        
                         .catch( err => console.log(err))
                 } catch (error) {
 					console.log(error)
-				}
-                
+				} 
 	        }
         } 
     } // fin de methods 

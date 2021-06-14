@@ -97,10 +97,16 @@
             <div class="col-sm-6 blockForm mx-auto pt-2" v-if="showModifyPassword">
                 <h3>Changer mon mot de passe</h3>
                 <div class="form-group col-md-5 mx-auto">
+                    <label for="countryInput"> Ancien mot de passe : </label>
+                    <input type="text" class="form-control" id="countryInput" aria-describedby="countryHelp" placeholder="..." required v-model="oldPassword"> 
+                    <small id="countryHelp" class="form-text text-muted"> Indiquez votre ancien mot de passe.</small>
+                    <div class="errorDiv" v-if="passwordError"><span> {{ passwordError }} </span></div>
+                </div>
+                <div class="form-group col-md-5 mx-auto">
                     <label for="countryInput"> Nouveau mot de passe : </label>
                     <input type="text" class="form-control" id="countryInput" aria-describedby="countryHelp" placeholder="...de plus de 7 caractères" required v-model="newPassword"> 
                     <small id="countryHelp" class="form-text text-muted"> Indiquez un nouveau mot de passe.</small>
-                    <div class="errorDiv" v-if="passwordError"><span class="errorCountry"> {{ passwordError }} </span></div>
+                    <div class="errorDiv" v-if="passwordError"><span> {{ passwordError }} </span></div>
                 </div>
                 <button class="btn btn-success my-5" id="confirmNewPassword" @click="confirmModifyPassword"> Confirmer le nouveau mot de passe</button>
             </div>
@@ -123,6 +129,7 @@ export default {
             showModifyPassword: false,
             url: 'http://localhost:5000/images/',
             user : {},
+            oldPassword: this.oldPassword,
             newPassword : this.newPassword
         }
     },
@@ -185,7 +192,7 @@ export default {
 					 axios.post('auth/profile', {"firstName":this.user.firstName, "lastName":this.user.lastName, "location": this.user.location, "department": this.user.department})
                      .then(() => alert('profil modifié'))
                      .then(() => this.modifyAccount())
-                     .then(() => location.reload())
+                     //.then(() => location.reload())
 				} catch (error) {
 					console.log(error)
 				}

@@ -1,19 +1,17 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db = require('../db'); // import de la connection à la base de données
+const db = require('../db'); // import de la connexion à la base de données
 
 exports.signup = (req, res, next) => {
     console.log(req.body);
 
     const {firstName, lastName, department, location, picture, password, email} = req.body;
-    // const firstName = req.body.name;
     // vérifie qu'il n'y a pas déjà cet email:
     db.query('SELECT email FROM Users WHERE email = ?', [email], async (error, results) => {
         if(error) {console.log(error)}
         if( results.length > 0 ) { // vérifie si email déjà présent
-            return res.render({ message: 'Cet email est déjà pris' }) // marche pas, si adresse mail existe alors le serveur bloque
+            return res.status(400).json({ message: 'Cet email est déjà pris'});
         } 
-    
         let hashedPassword = await bcrypt.hash(password, 10);
         //console.log('req.file ? ' + req.file)
         
@@ -29,7 +27,7 @@ exports.login = async (req, res, next) => {
     try { // essai du code
         const {password, email} = req.body;
         if( !email || !password ) { // ne précise pas lequel input est faux pour plus de sécurité de connexion 
-            return res.status(400).json({ message: 'Inscrivez un mot de passe et un email correct'}); // s'arrête après le return; message ou error ?
+            return res.status(400).json({ message: 'Inscrivez un mot de passe et un email correct'});
         }
         db.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
             //console.log(results);
@@ -48,8 +46,19 @@ exports.login = async (req, res, next) => {
         })
     } catch (error) {
         console.log(error)
+        return res.status(400).json({ message: 'Inscrivez un mot de passe et un email correct !'});
     }
 };
+
+exports.password = async (req, res, next) => {
+    db.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
+        if( !results || !(await bcrypt.compare(password, results[0].password)) ) { // results[0].password : mdp hashed de la bdd
+            return res.status(401).json({ message: 'Mot de passe ou email incorrect'});
+        } else {
+            res.status(200).json({ message: `L'ancien mot de passe est valide`})
+        }
+    })
+}
 
 //v2 login marche pas  "error": {}
 /*
@@ -90,7 +99,6 @@ exports.login = (req, res, next) => {
 exports.deleteUser = (req, res) => {
     
     db.promise().query('DELETE FROM Users WHERE id= ?', [req.user]) // ? is a placeholder ; [req] use the bodyparser
-                //connection.release() // return the connection to pool
                 /*
                 if(!err) {
                     res.send(`Le compte de ${ [req.body.firstName] } ${ [req.body.lastName] } a été supprimé`)
@@ -98,7 +106,6 @@ exports.deleteUser = (req, res) => {
                     console.log(err)
                 }
                 */
-             // fin  query delete
                 .then(() => res.status(200).json({ message: `Le compte a été supprimé`}))
                 .catch(error => res.status(400).json({ error })); 
         //}) // fin 1er query
