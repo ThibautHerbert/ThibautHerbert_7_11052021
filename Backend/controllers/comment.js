@@ -39,7 +39,6 @@ exports.modifyComment = (req, res) => {
 }
                                                     // 5ème requête delete
 exports.deleteComment = (req, res) => {
-    //db.query('DELETE FROM Comments WHERE idUser = ? && id = ? && idPost = ?', [idUser, id, idPost], (err, rows) => { // ? is a placeholder ; [req] use the bodyparser
     db.query('DELETE FROM Comments WHERE idUser = ? && id= ?', [ req.user, req.params.id ], (err, rows) => {
         if(!err) {
             res.send(`Le commentaire dont l'id utilisateur est ${ req.user } a été supprimé`)
@@ -49,15 +48,13 @@ exports.deleteComment = (req, res) => {
     })
 };
                                                     // 6ème requête moderate
-// model of modify + 
-// add 1 to column isModerated instead of default 0
+// ajoute 1 à isModerated au lieu du 0 par défaut
 exports.moderateComment = (req, res) => {
     const { isModerated, id, idPost} = req.body
     db.query('UPDATE Comments SET isModerated = ? WHERE id = ? && idPost = ?', [isModerated, id, idPost] , (err, rows) => {
         if(!err) {
             if(isModerated==1) {
                 res.send(`Le commentaire n° ${ id } a été modéré, il ne sera plus visible`)
-            // comment appeler des infos de la table users?
             } else {
                 res.send("la modération a été supprimée, le commentaire n° ${ id } sera de nouveau visible")
             }

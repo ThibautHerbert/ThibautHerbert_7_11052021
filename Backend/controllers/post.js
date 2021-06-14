@@ -1,4 +1,3 @@
-// Const Post = require('../models/post');
 const fs = require('fs');
 const db = require('../db');
                                             // 1ere requête findAll
@@ -15,7 +14,7 @@ exports.getAllPosts = (req, res, next) => {
 }
                                                     // 2ème requête findOne
 exports.getOnePost = (req, res) => {
-    db.query('SELECT * FROM Posts WHERE id= ?', [req.params.id], (err, rows) => { // ? is a placeholder ;
+    db.query('SELECT * FROM Posts WHERE id= ?', [req.params.id], (err, rows) => { // ? est un placeholder pour empêcher les injections SQL 
         if(!err) {
             res.send(rows)
         } else {
@@ -25,9 +24,7 @@ exports.getOnePost = (req, res) => {
 }
                                                     // 3ème requête create
 exports.createPost = (req, res) => {
-        //const params = req.body // marche le 10 juin
     const {body, url, idUser, picture} = req.body;
-        //db.promise().query('INSERT INTO Posts SET ?', params , ) //  marche le 10 juin
     db.promise().query('INSERT INTO Posts SET ?', {body: body, url: url, idUser: idUser, picture: req.file.filename})
         .then(() => res.status(200).json({ message: `Le post a été créé`}))
         .catch(error => res.status(400).json({ error }));
@@ -53,31 +50,19 @@ exports.modifyPost = (req, res, next) => {
 */
                                                     // 5ème requête delete
 exports.deletePost = (req, res) => {
-//pour supprimer les images du dossier (images ou picture ?)
-    //const filename = post.imageUrl.split('/images/')[1];
-    //fs.unlink(`images/${filename}`, () => {
-    db.promise().query('DELETE FROM Posts WHERE id= ?', [req.params.id])
-        .then(() => res.status(200).json({ message: `Le post a été supprimé`}))
-        .catch(error => res.status(400).json({ error }));
-};    
-/*
-exports.deletePost = (req, res, next) => {
-    Post.findOne({ _id: req.params.id })
-        .then(post => {
-            const filename = post.imageUrl.split('/images/')[1];
-            fs.unlink(`images/${filename}`, () => {
-                Post.deleteOne({ _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Post supprimé !'}))
+    db.query('SELECT picture FROM Posts WHERE id= ?', [req.params.id], (err, rows) => {
+        if(!err) {
+            console.log(rows[0].picture)
+            fs.unlink(`images/${rows[0].picture}`, () => {
+                db.promise().query('DELETE FROM Posts WHERE id= ?', [req.params.id])
+                    .then(() => res.status(200).json({ message: `Le post a été supprimé`}))
                     .catch(error => res.status(400).json({ error }));
             })
-        })
-        .catch(error => res.status(500).json({ error }));
-    Post.deleteOne({ _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Post supprimé !'}))
-        .catch(error => res.status(400).json({ error }));
-};
-*/
-
+        } else {
+        console.log(err)
+        }
+    })
+}; 
                                                     // 6ème requête moderate
 // add 1 to column isModerated instead of default 0
 exports.moderatePost = (req, res) => {

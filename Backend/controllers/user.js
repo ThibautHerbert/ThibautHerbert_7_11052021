@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../db'); // import de la connexion à la base de données
 const fs = require('fs');
-
+                                            // 1ere requête signup
 exports.signup = (req, res, next) => {
     console.log(req.body);
 
@@ -15,14 +15,12 @@ exports.signup = (req, res, next) => {
         } 
         let hashedPassword = await bcrypt.hash(password, 10);
         //console.log('req.file ? ' + req.file)
-        
-        //console.log(hashedPassword);
         db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location: location, picture: req.file.filename, password: hashedPassword, email:email} )
             .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été créé`}))
             .catch(error => res.status(400).json({ error })); 
         })
 };
-
+                                            // 2eme requête login
 exports.login = async (req, res, next) => {
     console.log(req.body);
     try { // essai du code
@@ -50,7 +48,7 @@ exports.login = async (req, res, next) => {
         return res.status(400).json({ message: 'Inscrivez un mot de passe et un email correct !'});
     }
 };
-
+                                            // 3eme requête password ?
 exports.password = async (req, res, next) => {
     db.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
         if( !results || !(await bcrypt.compare(password, results[0].password)) ) { // results[0].password : mdp hashed de la bdd
@@ -61,79 +59,29 @@ exports.password = async (req, res, next) => {
     })
 }
 
-//v2 login marche pas  "error": {}
-/*
-exports.login = (req, res, next) => {
-    //console.log(req.body);
-    const {password, email} = req.body;
-    connection.promise().query('SELECT * FROM Users WHERE email = ?', [email], )
-        .then(user => {
-            if (!user) {
-                return res.status(401).json({ error: 'Utilisateur non trouvé'});
-            }
-            connection.promise().query('SELECT * FROM Users WHERE password = ?', [password], )
-                .then( () => {
-                    bcrypt.compare(password, user.password) // comment récupérer le hashed password de la bdd ?
-                    .then(valid => {
-                        if (!valid) {
-                            return res.status(401).json({ error: 'Mot de passe incorrect'});
-                        }
-                        res.status(200).json({
-                            userId: user._id,
-                            token: jwt.sign(
-                                { userId: user._id }, // données que l'on veut encoder le payload
-                                process.env.TOKEN, // clé secrête pour l'encodage // changer random token en caché avec dotenv
-                                { expiresIn: process.env.TOKEN_EXPIRY } // argument de configuration durée limitée
-                            )
-                        });
-                    })
-                .catch(error => res.status(500).json({ error }));
-                })
-            .catch(error => res.status(500).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error}));
-}
-*/
-
-//deleteUser
+                                            // requête deleteUser
 exports.deleteUser = (req, res) => {
-    const {picture} = req.body
-    db.promise().query('SELECT picture FROM Users WHERE id= ?', [req.user])
-    console.log(res)
-    console.log(res.picture)
-    //const filename = picture[1]; //const filename = user.picture.split('/images/')[1];
-    fs.unlink(`images/${res}`, () => {
-        db.promise().query('DELETE FROM Users WHERE id= ?', [req.user])
-            .then(() => res.status(200).json({ message: `Le compte a été supprimé`}))
-            .catch(error => res.status(400).json({ error }));
-    })
-};
-// autre écriture de route DELETE ? version P6
-/*
-exports.deleteUser = (req, res, next) => {
-    connection.query('SELECT * FROM Users WHERE email = ?', [email])
-        .then(user => {
-            const filename = user.imageUrl.split('/images/')[1];
-            fs.unlink(`images/${filename}`, () => {
-                connection.query('DELETE FROM Users WHERE id= ?', [req.body.id])
-                    .then(() => res.status(200).json({ message: 'Compte supprimé !'}))
+    db.query('SELECT picture FROM Users WHERE id= ?', [req.user], (err, rows) => {
+        if(!err) {
+            console.log(rows[0].picture)
+            fs.unlink(`images/${rows[0].picture}`, () => {
+                db.promise().query('DELETE FROM Users WHERE id= ?', [req.user])
+                    .then(() => res.status(200).json({ message: `Le compte a été supprimé`}))
                     .catch(error => res.status(400).json({ error }));
             })
-        })
-        .catch(error => res.status(500).json({ error }));
-    connection.query('DELETE FROM Users WHERE id= ?', [req.body.id])
-        .then(() => res.status(200).json({ message: 'Compte supprimé'}))
-        .catch(error => res.status(400).json({ error }));
+        } else {
+        console.log(err)
+        }
+    })
 };
-*/
-
+                                            //  requête modify user
 exports.modifyUser = (req, res, next) => {
     const {firstName, lastName, location, department} = req.body; // rajouter picture
     db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ? WHERE id = ?', [firstName, lastName, location, department, req.user]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
         .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été modifié`}))
         .catch(error => res.status(400).json({ error }));
 };
-
+                                            // requête modify password
 exports.modifyPassword = async (req, res, next) => {
     const {password} = req.body;
     let hashedPassword = await bcrypt.hash(password, 10);
@@ -141,45 +89,20 @@ exports.modifyPassword = async (req, res, next) => {
         .then(() => res.status(200).json({ message: `Le mot de passe a été modifié avec succès, veuillez désormais vous reconnecter avec ce nouveau mot de passe`}))
         .catch(error => res.status(400).json({ error }));
 };
-// getUser
+                                            // requête getUser
 // Récupère l'utilisateur qui est connecté
 exports.getUserConnected = async (req, res, next) => {
     console.log(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN); // token en caché avec dotenv
     const userId = decodedToken.userId;
-    
-    //const id = req.body;   /// attention j'ai rajouté le const id et c'est lui qui est récupéré dans le query et non le userId
-    // if idUser du post
-    //if idUser du comment
-    //db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
+
     db.query('SELECT * FROM Users WHERE id = ?', [userId], async (err, rows) => {
-        //console.log(results);
         if(!err) {
             res.send(rows[0])
             console.log('getUserConnected a fonctionné' + rows);
         } else {
             console.log(err)
-        }
-    })
-}
-// à supprimer :
-exports.getOneUser = async (req, res, next) => {
-    const {id} = req.body;
-    db.query('SELECT * FROM Users WHERE id = ?', [id], async (err, rows) => {
-        if(err) {
-            console.log(err)
-            res.status(500).json({ status: 500, message: "Une erreur est survenue : " + err.message });
-        } else {
-            if (rows.length) {
-                console.log( "Utilisateur trouvé.");
-                
-                res.status(200).json({ status: 200, message: "Utilisateur trouvé." });
-                res.send(rows)
-            } else {
-                console.log( "Utilisateur non trouvé.");
-                res.status(404).send({ status: 404, message: "Utilisateur non trouvé." });
-            } 
         }
     })
 }

@@ -1,5 +1,5 @@
 const multer = require('multer');
-const crypto = require('crypto'); //pas d'install supplémentaire pour ce paquet
+const crypto = require('crypto');
 
 const MIME_TYPES = {
     'image/jpg': 'jpg',
@@ -10,12 +10,10 @@ const MIME_TYPES = {
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, 'images')                    //ne l'envoie jamais dans images ?! est-ce que le path est mauvais ?
+        callback(null, 'images')   
     },
     filename: (req, file, callback) => {
-        console.log(file)
-        console.log(file.originalname)
-        const name = file.originalname + Date.now(); // name à la place de originalname ?
+        const name = file.originalname + Date.now();
         const extension = MIME_TYPES[file.mimetype];
         const hash = crypto.createHash('md5').update(name).digest('hex'); //  méthode pour créer le hachage et passer le nom de l'algorithme de hachage comme 1er argument; 2ème argument le sel en string
         callback(null, hash + '.' + extension); // null signifie il n'y a pas d'erreur

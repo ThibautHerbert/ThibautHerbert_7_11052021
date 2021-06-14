@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import getPost from '../composables/getPost'
 import axios from 'axios'
 
 export default {
