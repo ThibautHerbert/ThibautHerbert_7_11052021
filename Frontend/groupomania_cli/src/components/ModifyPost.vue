@@ -41,7 +41,7 @@ export default {
             this.$emit('closePost')
         },
         handleModifyPost() {
-	        if(this.body) {
+	        if(this.post.body) {
 				const formData = new FormData()
 				formData.append('body', this.post.body) //this.body
 				formData.append('url', this.post.url); //this.url

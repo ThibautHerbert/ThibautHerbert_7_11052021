@@ -27,7 +27,7 @@ export default {
        return {
         // données pour un nouveau commentaire
         urlImg: 'http://localhost:5000/images/',
-        body:'',
+        body:'', // utilité ?
         idUser: this.$root.logged.id,
         id: this.comment.id, // id du comment
         idPost: this.post.id,
@@ -36,17 +36,13 @@ export default {
        }
     },
     methods: {
-        closeWritingComment() {
-            this.$emit('closeComment')
-        },
-        async handleModifyComment() {
-	        if(this.body) {
-				
+        
+        handleModifyComment() {
+	        if(this.comment.body) {
 				let commentToModify = {"body": this.comment.body, "idUser": this.idUser, "id": this.id, "idPost": this.idPost}
                 try {
                     axios.put('comments/', commentToModify) 
                         .then(() => console.log('commentaire modifié'))
-                        .then(response => response.json())
                         // rafraichir la page ?
                         //.then(() => this.$router.push({ name: 'Posts' })
                         .catch( err => console.log(err))
@@ -55,7 +51,10 @@ export default {
 				}
                 
 	        }
-        } 
+        },
+        closeWritingComment() {
+            this.$emit('closeComment')
+        },
     } 
 }
 </script>

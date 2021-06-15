@@ -2,7 +2,7 @@
     <div class="mx-auto">
         <div  v-if="comment.isModerated== 0">
             <div v-if="showModifyComment">
-                <ModifyComment :post="post" :comment="comment" :userConnected="userConnected" @closeComment="toggleModifyComment"/>
+                <ModifyComment :post="post" :comment="comment" @closeComment="toggleModifyComment"/>
             </div>
             <div class="card mx-auto" style="width: 80%;" v-show="comment.idPost == post.id">
                 <div class="card-body bg-light ">
@@ -75,7 +75,7 @@ import ModifyComment from './ModifyComment.vue'
 
 export default {
     components: { ModifyComment, },
-    props: ['post', 'userConnected', 'comment'],
+    props: ['post', 'comment'],
     data() {
         return {
             showModifyComment: false,

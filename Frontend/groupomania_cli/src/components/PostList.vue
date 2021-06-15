@@ -10,7 +10,12 @@
         </div>
     
         <div v-for="post in posts" :key="post.id">
-            <SinglePost :post="post" />
+            
+                <SinglePost :post="post" :comments="comments">
+                    
+                </SinglePost>
+            
+        
         </div>
     </div>
 </template>
@@ -28,7 +33,7 @@ export default {
     data() {
         return {
             showCreatePost: false,
-            Comments : [], 
+            comments : [], 
         }
     },
     methods: {
@@ -39,7 +44,17 @@ export default {
         showComment() {
             console.log('show a comment')
         },
-    },     
+        getComments() {
+            axios.get('comments/', {"idPost":4})
+                .then(response => this.comments = response.data)
+                .then(response => console.log(response))
+                .catch(error => console.log(error))
+        },
+    },
+    mounted() {
+        this.getComments();
+        console.log(this.comments.idUser)
+    },    
 }
 </script>
 

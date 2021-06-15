@@ -35,9 +35,11 @@
       </div>
       <div class="body-post justify-content-start">
         <p class="text-start mx-2">{{ post.body }}</p>
-        <div class="mx-auto" v-if="post.picture !== NULL"> 
-          <img :src="url + post.picture" alt="image publiée par post.user_name" class="img-posted">
+        <div v-if="post.picture === 'NULL'"></div>
+        <div class="mx-auto" v-else> 
+          <a :href="url + post.picture"><img :src="url + post.picture" alt="image publiée par post.user_name" class="img-posted"></a>
         </div>
+        
         <p class="bg-light border" v-if="post.url">Mettre embed ou un meta pour afficher la source ? lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
         <p class="text-end creationDate-post px-1"> Publié le {{ post.formattedDate }}</p>
       </div>
@@ -94,13 +96,14 @@
     <WriteComment :post="post" @closeComment="toggleComment"/>
   </div>
   <div v-if="comments.length" class="my-2">
+                        <!--début de la boucle des commentaires-->
    <div v-for="comment in comments" :key="comment.id">
-     <div v-if="comment.idPost == post.id">
+      <div v-if="comment.idPost == post.id">
         <SingleComment :comment="comment" :post="post"/>
-    </div>
+      </div>
     </div>
   </div>
-                    <!--début de la boucle des commentaires-->
+
 </div>
 </template>
 
@@ -113,7 +116,7 @@ import SingleComment from './SingleComment.vue'
 
 export default {
   components: { ModifyPost, SingleComment, WriteComment },
-  props: ['post'],
+  props: ['post', 'comments'],
   data() {
       return {
         showModifyPost: false,
@@ -122,7 +125,7 @@ export default {
         isInterested:false,
         idUserPost:this.post.idUser,
         idUserComment:'',
-        comments: [], //déjà dans postList
+        //comments: [], //déjà dans postList
       }
   },
   methods: {
@@ -178,12 +181,12 @@ export default {
       console.log(error)
       }         
     },
-    getComments() {
+    /*getComments() {
       axios.get('comments/', {"idPost":4})
         .then(response => this.comments = response.data)
         .then(response => console.log(response))
         .catch(error => console.log(error))
-    },
+    },*/
     toggleComment() {
       console.log('open write a comment')
       this.showCreateComment = !this.showCreateComment
@@ -200,11 +203,11 @@ export default {
   created() {
 
   },
-  mounted() {
+  /*mounted() {
     this.getComments();
     console.log(this.comments.idUser)
 
-  },
+  },*/
 }
 </script>
 
@@ -247,9 +250,25 @@ export default {
   background: #198754;
   color: white;
 }
-.fa-lightbulb:hover{
-  transform: translateY(-20px);
-  transition: .200ms;
+@keyframes interested {
+    0%{
+        transform: translateY(10px);
+        transform: scale(1);
+    }
+    40%{
+        transform: scale(1.5);
+    }
+    80%{
+        transform: translateY(-30px);
+        transform: scale(1.3);
+    }
+    100%{
+        transform: translateY(-20px);
+        transform: scale(1.5);
+    }
+}
+.btn-like:hover > .svg-inline--fa{
+  animation: interested 700ms ease-in forwards;
 }
 
 </style>
