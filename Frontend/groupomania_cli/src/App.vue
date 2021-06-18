@@ -1,8 +1,9 @@
 <template>
 <div>
   <div class="dropdown d-flex justify-content-end fixed-top">
-    <a class="btn btn-connexion dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-      Connexion
+    <a class=" btn-connexion dropdown-toggle rounded" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+      <img src="./assets/Logos/icon-100px.png" alt="Logo Groupomania" class="logo-connexion"> 
+      <span> Connexion</span> 
     </a>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
       <li>
@@ -70,9 +71,62 @@ export default {
 </script>
 
 <style lang="scss">
+@font-face{
+    font-family: 'Roboto';
+    src: url('assets/Fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face{
+    font-family: 'Montserrat';
+    src: url('assets/Fonts/Montserrat/Montserrat-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face{
+    font-family: 'Quicksand';
+    src: url('assets/Fonts/Quicksand/static/Quicksand-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face{
+    font-family: 'Quicksand-SemiBold';
+    src: url('assets/Fonts/Quicksand/static/Quicksand-SemiBold.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'Raleway';
+    src: url('assets/Fonts/Raleway/static/Raleway-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+p{
+  font-family: 'Raleway', sans-serif;
+}
+label{
+  font-family: 'Montserrat', sans-serif;
+}
+@media screen and (min-width: 320px) and (max-width: 380px) {
+  label{
+    font-size: 0.9em;
+  }
+  .btn-connexion span{
+    display:none;
+  }
+}
+.logo-connexion{
+  max-width: 30px;
+  max-height: 30px;
+  border-radius: 50px;
+}
+
 .btn-connexion{
   background: #2c3e50;
-  color: #42b983;
+  
+  padding: 5px;
+  text-decoration: none;
+}
+.btn-connexion span{
+  color: white;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -89,9 +143,11 @@ export default {
   a {
     font-weight: bold;
     color: #2c3e50;
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none;
 
     &.router-link-exact-active {
-      color: #42b983;
+      color: #D1515A;
     }
   }
 }

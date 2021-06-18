@@ -43,6 +43,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+h2{
+  font-family: 'Montserrat', 'Roboto', sans-serif;
+}
+h3{
+  font-family: 'Montserrat', 'Roboto', sans-serif;
+  font-weight: bold;
+}
 
 </style>

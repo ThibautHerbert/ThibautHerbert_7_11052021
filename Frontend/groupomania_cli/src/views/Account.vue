@@ -5,7 +5,7 @@
             <div class="d-flex flex-wrap justify-content-center align-items-center">
                 <div class="col-md-4 presentation"><img src="../assets/images/pexels-monstera-6373931-1000px.jpg" alt="carte de présentation"></div>
                 <div class="col-md-4 accountDetails my-2 pb-2 my-account">
-                    <h1>Mon compte</h1>
+                    <h3>Mon compte</h3>
                     <div class="d-flex justify-content-around ">
                         <ul class="list-group text-start">
                             <li class="list-group-item d-flex">Prénom : {{user.firstName}}</li>
@@ -50,17 +50,17 @@
                 <div class="col-sm-6 blockForm mx-auto py-2" v-if="showModifyAccount">
                     <h3>Modifier mes informations</h3>
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="firstNameInput" class="errorLabel">Mon Prénom : </label>
+                        <label for="firstNameInput" class="errorLabel">Votre Prénom : </label>
                         <input type="text" class="form-control error" id="firstNameInput" aria-describedby="firstNameHelp" placeholder="{{ user.firstName}} Modifiez votre prénom." required v-model="user.firstName">
                         <small id="firstNameHelp" class="form-text text-muted errorText"> Modifiez votre prénom.</small>
                     </div>
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="lastNameInput">Nom : </label>
+                        <label for="lastNameInput">Votre Nom : </label>
                         <input type="text" class="form-control" id="lastNameInput" aria-describedby="lastNameHelp" placeholder="Durand" required v-model="user.lastName">
                         <small id="lastNameHelp" class="form-text text-muted"> Modifiez votre nom de famille.</small>
                     </div>
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="departmentSelect"> Dans quel département ? {{ user.department}}</label>
+                        <label for="departmentSelect"> Changement de département ?</label>
                         <select name="department" class="form-select" aria-label="Choix du département" required id="departmentSelect" v-model="user.department">
                             <option value="">Sélectionnez votre pôle d'activité</option>
                             <option value="Ressources Humaines">Ressources Humaines</option>
@@ -75,7 +75,7 @@
                         <small id="departmentHelp" class="form-text text-muted"> Modifiez votre pôle d'activité.</small>
                     </div>
                     <div class="form-group col-md-7 mx-auto">
-                        <label for="locationSelect">Dans quel bureau es-tu ? </label>
+                        <label for="locationSelect">Changement de bureau ? </label>
                         <select name="location" class="form-select" id="locationSelect" required v-model="user.location">
                             <option value="">Sélectionnez votre bureau</option>
                             <option value="Nantes">Nantes</option>
@@ -98,13 +98,13 @@
                 <h3>Changer mon mot de passe</h3>
                 <div class="form-group col-md-5 mx-auto">
                     <label for="countryInput"> Ancien mot de passe : </label>
-                    <input type="text" class="form-control" id="countryInput" aria-describedby="countryHelp" placeholder="..." required v-model="oldPassword"> 
+                    <input type="text" class="form-control" id="countryInput" aria-describedby="countryHelp" placeholder="... réinscrire votre ancien mot de passe" required v-model="oldPassword"> 
                     <small id="countryHelp" class="form-text text-muted"> Indiquez votre ancien mot de passe.</small>
                     <div class="errorDiv" v-if="passwordError"><span> {{ passwordError }} </span></div>
                 </div>
                 <div class="form-group col-md-5 mx-auto">
                     <label for="countryInput"> Nouveau mot de passe : </label>
-                    <input type="text" class="form-control" id="countryInput" aria-describedby="countryHelp" placeholder="...de plus de 7 caractères" required v-model="newPassword"> 
+                    <input type="text" class="form-control" id="countryInput" aria-describedby="countryHelp" placeholder="... mot de passe de plus de 7 caractères" required v-model="newPassword"> 
                     <small id="countryHelp" class="form-text text-muted"> Indiquez un nouveau mot de passe.</small>
                     <div class="errorDiv" v-if="passwordError"><span> {{ passwordError }} </span></div>
                 </div>
@@ -150,14 +150,17 @@ export default {
         },
         confirmModifyPassword() {
             if (this.newPassword) {
-                axios.put('auth/account', {
-                    password: this.newPassword
+                axios.post('auth/password', {"password": this.oldPassword, "email":this.user.email})
+                    .then(() => {
+                         axios.put('auth/account', { password: this.newPassword })
+                            .then(() => this.$router.push({ name: 'Login' })) // retaper ses informations pour se connecter
+                            .then(() => alert('Veuillez vous reconnecter avec le nouveau mot de passe'))
+                            .then(() => this.modifyPassword())
+                            .catch(error => console.log(error))
                     })
-                        .then(() => this.$router.push({ name: 'Login' })) // retaper ses informations pour se connecter
-                        .then(() => alert('Veuillez vous reconnecter avec le nouveau mot de passe'))
-                        .then(() => this.modifyPassword())
-                        .catch(error => console.log(error))
-                }
+                    .catch(error => console.log(error))
+            }
+               
         },
         deleteAccount(){
             try {
@@ -194,6 +197,11 @@ export default {
 </script>
 
 <style scoped>
+
+ul li {
+    font-family: 'Quicksand';
+}
+
 .accountDetails{
     border:#162846 solid 5px;
     max-width: 350px;

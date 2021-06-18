@@ -8,8 +8,8 @@
       <div class="d-flex">
         <div><img :src= "url + post.user_picture" class="d-flex justify-content-start m-1 rounded-circle PicProfile" alt="photo du créateur du post"></div>
         <div class="media-body  flex-grow-1 ">
-          <router-link :to="{ name: 'PostDetails', params: { id: post.id }}">
-            <h5 class="mt-0 mx-2 text-start nav-link"> {{post.user_name}} de la Team {{post.user_location}} a publié :</h5>
+          <router-link :to="{ name: 'PostDetails', params: { id: post.id }}" class="router-link">
+            <h5 class="mt-0 mx-2 text-start"> {{post.user_name}} de la Team {{post.user_location}} a publié :</h5>
           </router-link>
         </div>
         <div class="mt-1">
@@ -45,10 +45,10 @@
       </div>
       <div class="">
         <div class="mx-3 text-start d-flex flex-wrap"  >
-          <button class=" border rounded-pill m-1 btn-like" @click="interestedPost" :class="{ isInterested: isInterested }">
+          <button class=" border rounded-pill m-1 btn-like d-flex justify-content-around align-items-center" @click="interestedPost" :class="{ isInterested: isInterested }">
               <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="white" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z">
               </path></svg>
-              Intéressant</button>
+              <span v-if="post.isInterested > 0" class="text-white number">{{post.isInterested}}</span>  Intéressant  </button>
           <button class="btn-like border rounded-pill m-1" @click="likePost">
               <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="laugh-beam" class="svg-inline--fa fa-laugh-beam fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="white" d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm141.4 389.4c-37.8 37.8-88 58.6-141.4 58.6s-103.6-20.8-141.4-58.6S48 309.4 48 256s20.8-103.6 58.6-141.4S194.6 56 248 56s103.6 20.8 141.4 58.6S448 202.6 448 256s-20.8 103.6-58.6 141.4zM328 152c-23.8 0-52.7 29.3-56 71.4-.7 8.6 10.8 11.9 14.9 4.5l9.5-17c7.7-13.7 19.2-21.6 31.5-21.6s23.8 7.9 31.5 21.6l9.5 17c4.1 7.4 15.6 4 14.9-4.5-3.1-42.1-32-71.4-55.8-71.4zm-201 75.9l9.5-17c7.7-13.7 19.2-21.6 31.5-21.6s23.8 7.9 31.5 21.6l9.5 17c4.1 7.4 15.6 4 14.9-4.5-3.3-42.1-32.2-71.4-56-71.4s-52.7 29.3-56 71.4c-.6 8.5 10.9 11.9 15.1 4.5zM362.4 288H133.6c-8.2 0-14.5 7-13.5 15 7.5 59.2 58.9 105 121.1 105h13.6c62.2 0 113.6-45.8 121.1-105 1-8-5.3-15-13.5-15z">
               </path></svg>
@@ -62,8 +62,8 @@
               </path></svg>
               Solidaire</button>
           <div class="flex-row justify-content-end">
-            <button class="btn btn-outline-primary border rounded align-self-center m-1" @click="toggleComment">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="blue" class="bi bi-chat-text" viewBox="0 0 16 16">
+            <button class="btn btn-outline-primary border rounded align-self-center m-1 comment" @click="toggleComment">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-text" viewBox="0 0 16 16">
                 <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
                 <path d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8zm0 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z"/>
                 </svg>
@@ -194,11 +194,33 @@ export default {
     interestedPost() {
       console.log('click intéressant')
       this.isInterested = !this.isInterested
-      console.log(this.isInterested) // le toggle marche mais la classe ne se met pas sur le button ??
+      if( this.isInterested ){ // au clic this.isInterested devient true alors rajoute +1
+        try { 
+          console.log('+1')
+          axios.post('posts/interested', {"isInterested": 1, "id": this.post.id})
+            .then(() => console.log('post déclaré intéressant'))
+            .catch( err => console.log(err))
+          axios.post('interested/user', {"idPost":this.post.id}) //idUser récupérer via req.user en backend
+            .then(() => console.log('idUser ajouté à la table intéressant avec le numéro du Post'))
+            .catch( err => console.log(err))
+        } catch (error) {
+        console.log(error)
+				}  
+      } else {  // au clic this.isInterested devient false alors retire 1
+          try { 
+            console.log('-1')
+            axios.post('posts/interested', {"isInterested": 1, "id": this.post.id})
+              .then(() => console.log(" le post n'est plus déclaré intéressant "))
+              .catch( err => console.log(err))
+            axios.delete('interested/user', {"idPost": this.post.id}) //idUser récupéré via req.user en backend
+              .then(() => console.log('idUser supprimé de la table intéressant avec le numéro du Post'))
+              .catch( err => console.log(err))
+          } catch (error) {
+          console.log(error)
+          }  
+      }
+      
     },
-    tested() {
-      this.istested = !this.istested
-    }
   },
   created() {
 
@@ -214,10 +236,25 @@ export default {
 <style >
 
 .media{
-  
   border:#2d3F5d solid 5px;
   border-radius: 10px;
+}
+h5{
+  font-family: 'Quicksand-SemiBold', 'Roboto', sans-serif;
+  color:#D1515A;
   
+}
+.router-link{
+  text-decoration: none;
+  color:#D1515A;
+  padding: 0.5rem 1rem;
+}
+.btn{
+  font-family: 'Montserrat', 'Roboto', sans-serif;
+}
+.comment span {
+  font-family: 'Quicksand-SemiBold', 'Roboto', sans-serif;
+  font-size: .8em; 
 }
 .PicProfile{
     height: 70px;
@@ -240,6 +277,9 @@ export default {
 .svg-inline--fa{
   width: 15px;
   height: 15px;
+}
+.number{
+  margin: 3px;
 }
 .btn-like{
   background: #2D3F5D;

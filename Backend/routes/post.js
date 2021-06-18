@@ -6,11 +6,16 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
 router.post('/', auth, multer, postCtrl.createPost);
-//router.post('/:id/like', auth, multer, postCtrl.likePost);
 router.put('/:id', auth, multer, postCtrl.modifyPost); 
 router.post('/moderate', auth, postCtrl.moderatePost);
 router.delete('/:id', auth, postCtrl.deletePost);
 router.get('/:id', auth, postCtrl.getOnePost);
 router.get('/', auth, postCtrl.getAllPosts);
+router.post('/interested', auth, postCtrl.interestedToPost);
 
+// routes pour la gestion des posts "intéressants"
+/*
+router.post('/user', auth, postCtrl.userInterested);
+router.delete('/user', auth, postCtrl.deleteUserInterested);
+*/
 module.exports = router;

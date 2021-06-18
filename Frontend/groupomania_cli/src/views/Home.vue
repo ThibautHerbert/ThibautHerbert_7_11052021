@@ -16,7 +16,7 @@
         </div>
       </div>
       <div>
-        <h4>Découvrir vite les derniers posts !</h4>
+        <h4>Découvre vite les derniers posts !</h4>
       </div>
     </div>
     <div v-else>

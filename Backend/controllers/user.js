@@ -50,6 +50,7 @@ exports.login = async (req, res, next) => {
 };
                                             // 3eme requête password ?
 exports.password = async (req, res, next) => {
+    const {password, email} = req.body;
     db.query('SELECT * FROM Users WHERE email = ?', [email], async (error, results) => {
         if( !results || !(await bcrypt.compare(password, results[0].password)) ) { // results[0].password : mdp hashed de la bdd
             return res.status(401).json({ message: 'Mot de passe ou email incorrect'});

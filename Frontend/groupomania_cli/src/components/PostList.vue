@@ -63,5 +63,8 @@ img{
     width: 40px;
     height: 40px;
 }
+button span{
+    font-family: 'Montserrat', 'Roboto', sans-serif;
+}
 
 </style>
