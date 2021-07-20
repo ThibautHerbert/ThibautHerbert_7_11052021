@@ -1,5 +1,5 @@
 <template>
-    <section class="row my-5" id="block-form" @click.self="closeLogin">
+    <section class="row my-5 " id="block-form" @click.self="closeLogin">
 		<div class="col">
             <h2 class="mx-3 text-dark" id="form">Pour vous connecter, merci de remplir vos informations :</h2>
             <form class="mx-5" @submit.prevent="handleLogin">

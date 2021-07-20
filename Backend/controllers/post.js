@@ -25,9 +25,19 @@ exports.getOnePost = (req, res) => {
                                                     // 3ème requête create
 exports.createPost = (req, res) => {
     const {body, url, idUser, picture} = req.body;
-    db.promise().query('INSERT INTO Posts SET ?', {body: body, url: url, idUser: idUser, picture: req.file.filename})
-        .then(() => res.status(200).json({ message: `Le post a été créé`}))
-        .catch(error => res.status(400).json({ error }));
+    try {
+        if (picture == '') { // pas de photo postée
+            db.promise().query('INSERT INTO Posts SET ?', {body: body, url: url, idUser: idUser})
+            .then(() => res.status(200).json({ message: `Le post a été créé`}))
+            .catch(error => res.status(400).json({ error }));
+        } else  { // avec photo postée
+            db.promise().query('INSERT INTO Posts SET ?', {body: body, url: url, idUser: idUser, picture: req.file.filename})
+            .then(() => res.status(200).json({ message: `Le post a été créé`}))
+            .catch(error => res.status(400).json({ error }));
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
                                                     // 4ème requête modify
 exports.modifyPost = (req, res) => {

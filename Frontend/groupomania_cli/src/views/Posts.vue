@@ -1,27 +1,29 @@
 <template>
+  <!-- <Loader /> -->
   <div class="Post-vue" v-if="posts.length">
     <h2>{{ header }}</h2>
     <h3>{{ subdescription }}</h3>
         <PostList :posts="posts" />
   </div>
-  <div v-else>
-    <Login />
-   <!-- <div v-else> 
+   <div v-else>
+    <Loader />
+    <!--<div v-else> 
           <div class="spinner-border text-danger" role="status">
             <span class="sr-only">En chargement ...</span>
-          </div>
-        </div>  --> 
-  </div>
+          </div>--> 
+          
+    </div>
 </template>
 
 <script>
 import PostList from '../components/PostList'
 import axios from 'axios'
 import Login from './Login.vue'
+import Loader from '../components/Loader.vue'
 
 export default {
     props: [ 'id'],
-    components: { PostList, Login },
+    components: { PostList, Login, Loader}, //, Loader 
     data() {
         return {
             header: "Bienvenue dans le fil d'actu",
@@ -39,7 +41,7 @@ export default {
     },
     mounted() {
       this.getPosts()
-    }, 
+    },
 }
 </script>
 

@@ -15,10 +15,29 @@ exports.signup = (req, res, next) => {
         } 
         let hashedPassword = await bcrypt.hash(password, 10);
         //console.log('req.file ? ' + req.file)
-        db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location: location, picture: req.file.filename, password: hashedPassword, email:email} )
-            .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été créé`}))
-            .catch(error => res.status(400).json({ error })); 
-        })
+        try {
+            if (picture == '') { // aucune photo n'est envoyée à l'inscription
+                console.log( "photo pas envoyée")
+                db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location: location, password: hashedPassword, email:email} )
+                    .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été créé`}))
+                    .catch(error => res.status(400).json({ error })); 
+            } else  {
+                // une photo est envoyée à l'inscription 
+                    console.log( "photo envoyée")
+                    db.promise().query('INSERT INTO Users SET ?', {firstName:firstName, lastName:lastName, department: department, location: location, picture: req.file.filename, password: hashedPassword, email:email} )
+                        .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été créé`}))
+                        .catch(error => res.status(400).json({ error })); 
+               
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        
+         
+            
+        
+        
+    })
 };
                                             // 2eme requête login
 exports.login = async (req, res, next) => {
@@ -77,11 +96,19 @@ exports.deleteUser = (req, res) => {
 };
                                             //  requête modify user
 exports.modifyUser = (req, res, next) => {
-    const {firstName, lastName, location, department} = req.body; // rajouter picture
+    const {firstName, lastName, location, department, picture} = req.body; // rajouter picture
+    console.log('req file', req.file)
+    console.log('picture', picture)
+    console.log(picture)
+    //console.log('filename', req.file.filename)
+    //debugger
     db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ? WHERE id = ?', [firstName, lastName, location, department, req.user]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
         .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été modifié`}))
         .catch(error => res.status(400).json({ error }));
-};
+
+        // j'ai rajouté picture attention si cela ne marche pas !
+
+    };
                                             // requête modify password
 exports.modifyPassword = async (req, res, next) => {
     const {password} = req.body;

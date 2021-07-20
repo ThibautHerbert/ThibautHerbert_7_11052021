@@ -87,7 +87,7 @@
                     </div>
                     <div class="form-group col-md-7 mx-auto">
                         <label for="picture" class="form-label">Téléchargez une image de profil :</label>
-                        <input class="form-control" type="file" id="picture" ref="img" @change="imgUpload">
+                        <input class="form-control" type="file" id="picture" ref="img" @change="newImgUpload">
                         <small id="pictureHelp" class="form-text text-muted"> Téléchargez une autre photo ou image de profil.</small>
                     </div>
                     <button class="btn btn-danger" @click="confirmModifyAccount">Confirmer les modifications du compte</button>
@@ -175,6 +175,15 @@ export default {
 				console.log(error)
 			}
         },
+        newImgUpload(event) {
+            /*
+			this.user.picture = event.target.files[0];
+            console.log("photo modifiée")
+            console.log(event.target.files[0])
+            console.log(this.user.picture)
+            */
+            // fonction rajoutée pour changer la photo du profil
+		},
         confirmModifyAccount() {
             const formData = new FormData()
 				//formData.append('picture', refs.img) // comment utiliser les refs ?
@@ -182,11 +191,13 @@ export default {
 				formData.append('lastName', this.user.lastName);
                 formData.append('location', this.user.location);
 				formData.append('department', this.user.department);
-
+                //formData.append('picture', this.user.picture); // rajouté sans test
+               //console.log(formData.values)
+               debugger
                 try {
-					 axios.post('auth/profile', {"firstName":this.user.firstName, "lastName":this.user.lastName, "location": this.user.location, "department": this.user.department})
+					 axios.post('auth/profile', {"firstName":this.user.firstName, "lastName":this.user.lastName, "location": this.user.location, "department": this.user.department}) // rajout de picture , "picture": this.user.picture
                      .then(() => alert('profil modifié'))
-                     .then(() => this.modifyAccount())
+                     .then(() => this.modifyAccount()) // pour cacher le formulaire
                      //.then(() => location.reload())
 				} catch (error) {
 					console.log(error)

@@ -1,5 +1,5 @@
 <template>
-	<section class="row my-4" id="block-form" @click.self="closeSignup" @submit.prevent="handleSignup">
+	<section class="row my-4 wrapper" id="block-form" @click.self="closeSignup" @submit.prevent="handleSignup">
 		<div class="col">
 			<h2 class="text-dark" id="form">Pour vous inscrire, merci de remplir vos informations :</h2>
 			<form class="container" enctype="multipart/form-data">	
@@ -24,7 +24,7 @@
 							<small id="lastNameHelp" class="form-text text-muted"> Indiquez votre nom de famille.</small>
 						</div>
 						<div class="form-group col-md-7 mx-auto">
-							<label for="departmentSelect">Département - Pôle : </label>
+							<label for="departmentSelect">Département : </label>
 							<select name="department" class="form-select" aria-label="Choix du département" required id="departmentSelect" v-model="department">
 								<option value="">Sélectionnez votre pôle d'activité</option>
 								<option value="Ressources Humaines">Ressources Humaines</option>
@@ -39,7 +39,7 @@
 							<small id="departmentHelp" class="form-text text-muted"> Indiquez votre pôle d'activité.</small>
 						</div>
 						<div class="form-group col-md-7 mx-auto">
-							<label for="locationSelect">Lieu - Où ? - Dans quel bureau ? </label>
+							<label for="locationSelect">Dans quel bureau ? </label>
 							<select name="location" class="form-select" id="locationSelect" required v-model="location">
 								<option value="">Sélectionnez votre bureau</option>
 								<option value="Nantes">Nantes</option>
@@ -154,5 +154,19 @@ export default {
 }
 .blockLogo{
 	background: #2D3F5D;
+}
+@keyframes hidden {
+    0%{
+        opacity: 0;
+    }
+    90%{
+        opacity: 0;
+    }
+    100%{  
+        opacity: 1;
+    }
+}
+.wrapper{
+    animation: hidden 3s 0s both;
 }
 </style>
