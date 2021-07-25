@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const path = require('path');
+//const db = require('./db');
 
 const cookieParser = require('cookie-parser'); // est-ce utile ?
 //paquets de sécurité :
@@ -54,8 +55,15 @@ app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/interested', interestedRoutes);
 
-app.get('/', (req, res) => {
-    res.send("<h1>Page d'accueil Backend</h1>")
+app.get('/api', (req, res) => {
+  try {
+    res.send("<h1>Page d'accueil Backend</h1> Base de données connectée")
+    res.status(200).json({ message: `Base de données connectée`})
+  } catch (error) {
+    return res.status(400).json({ message: 'Il semblerait que la base de données ne soit pas connectée, réessayez plus tard'});
+  }
+    
+    //return res.status(400).json({ message: 'Il semblerait que la base de données ne soit pas connectée, réessayez plus tard'});
 });
 
 module.exports = app;

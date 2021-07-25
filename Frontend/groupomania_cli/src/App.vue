@@ -23,7 +23,7 @@
       <router-link :to="{ name: 'Account', params: { id: logged.id }}">Mon compte</router-link>
       <!--<router-link :to="{ name: 'Account', params: { id: userConnected1[0].id }}">Mon compte N°{{userConnected1[0].id}}</router-link>-->
     </div>
-    
+    <div id="db-connected" class="" v-if="db != `<h1>Page d'accueil Backend</h1> Base de données connectée`"></div>
     
     <router-view/>
     <!--
@@ -45,13 +45,29 @@ export default {
   data() {
     return {
       logged: null,
+      db:'',
+
       
     }
   },
+  
   created() {
     axios.get('/auth/connected')
       .then(response => this.logged = response.data)
       .catch(error => console.log(error))
+
+    axios.get('')//, (res, err) => {
+      //console.log('test réussie')
+      //this.db = 'Il semblerait que la base de données ne soit pas connectée, réessayez plus tard'
+      //if (res) { console.log ("cool") } else { console.log("pas cool" )} // aucun console.log n'apparait
+      
+    //})
+         
+          
+          .then(response => this.db = response.data)
+          //.catch(error => console.log('Il semblerait que la base de données ne soit pas connectée, réessayez plus tard'))
+          .catch(error => document.getElementById("db-connected").innerHTML = "Problème lié au serveur, veuillez réessayer plus tard")
+          
   },
   methods: {
     logout() {
@@ -63,8 +79,18 @@ export default {
             //.then(() => this.$router.push({ name: 'Login' })
               .then(() => location.reload())
         },
-    
-  
+    /*getDBConnexion() {
+        axios.get('http://localhost:5000/api')
+          .then(response => console.log(response.data))
+          .catch(error => this.db = response.data)
+    },*/
+    /*mounted() {
+      getDBConnexion(){
+          axios.get('http://localhost:5000/api')
+            .then(response => console.log(response.data))
+            .catch(error => this.db = response.data)
+      }
+    }*/
   }
   
 }
@@ -98,6 +124,20 @@ export default {
     src: url('assets/Fonts/Raleway/static/Raleway-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+}
+#db-connected{
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  margin: 20%;
+  padding: 5%;
+  display: flex;
+  background: crimson;
+  border-radius: 40px;
+  font-family: 'Raleway','Montserrat', sans-serif;
+  box-shadow:  5px 5px 5px #2c3e50;
+  z-index: 99;
+
 }
 p{
   font-family: 'Raleway', sans-serif;

@@ -96,19 +96,11 @@ exports.deleteUser = (req, res) => {
 };
                                             //  requête modify user
 exports.modifyUser = (req, res, next) => {
-    const {firstName, lastName, location, department, picture} = req.body; // rajouter picture
-    console.log('req file', req.file)
-    console.log('picture', picture)
-    console.log(picture)
-    //console.log('filename', req.file.filename)
-    //debugger
-    db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ? WHERE id = ?', [firstName, lastName, location, department, req.user]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
+    const {firstName, lastName, location, department, picture} = req.body;
+    db.promise().query('UPDATE Users SET firstName = ?, lastName = ?, location = ?, department = ?, picture = ? WHERE id = ?', [firstName, lastName, location, department, req.file.filename, req.user]) // {firstName:firstName, lastName:lastName, id: id} )  // ? is a placeholder ;
         .then(() => res.status(200).json({ message: `Le compte de ${ firstName } ${ lastName } a été modifié`}))
         .catch(error => res.status(400).json({ error }));
-
-        // j'ai rajouté picture attention si cela ne marche pas !
-
-    };
+};
                                             // requête modify password
 exports.modifyPassword = async (req, res, next) => {
     const {password} = req.body;

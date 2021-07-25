@@ -176,26 +176,29 @@ export default {
 			}
         },
         newImgUpload(event) {
-            /*
+            
 			this.user.picture = event.target.files[0];
             console.log("photo modifiée")
             console.log(event.target.files[0])
             console.log(this.user.picture)
-            */
+            
             // fonction rajoutée pour changer la photo du profil
 		},
         confirmModifyAccount() {
+            console.log(this.user)
+
             const formData = new FormData()
 				//formData.append('picture', refs.img) // comment utiliser les refs ?
 				formData.append('firstName', this.user.firstName);
 				formData.append('lastName', this.user.lastName);
                 formData.append('location', this.user.location);
 				formData.append('department', this.user.department);
-                //formData.append('picture', this.user.picture); // rajouté sans test
+                let pictureTest = document.getElementById("picture").files[0]
+                formData.append('picture', pictureTest); // rajouté sans test
                //console.log(formData.values)
                debugger
                 try {
-					 axios.post('auth/profile', {"firstName":this.user.firstName, "lastName":this.user.lastName, "location": this.user.location, "department": this.user.department}) // rajout de picture , "picture": this.user.picture
+					 axios.post('auth/profile', formData ) // rajout de picture , "picture": this.user.picture
                      .then(() => alert('profil modifié'))
                      .then(() => this.modifyAccount()) // pour cacher le formulaire
                      //.then(() => location.reload())

@@ -40,7 +40,7 @@
           <a :href="url + post.picture"><img :src="url + post.picture" alt="image publiée par post.user_name" class="img-posted"></a>
         </div>
         
-        <p class="bg-light border" v-if="post.url">Mettre embed ou un meta pour afficher la source ? lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
+        <p class="bg-light border" v-if="post.url"> Lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
         <p class="text-end creationDate-post px-1"> Publié le {{ post.formattedDate }}</p>
       </div>
       <div class="">
@@ -77,7 +77,7 @@
   </div> 
   <div v-else> 
     <div v-show="$root.logged.isAdmin == 1">Post modéré mettre un v-show pour que cela soit seulement visible d'un admin 
-      <div class="body-post  media">
+      <div class="body-post media">
         <p class="fw-bold fw-light fs-5 mt-2">Le post n°{{ post.id }} dont l'idUser est :{{post.idUser}} a été modéré </p>
         <p class="text-center mx-2">{{ post.body }}</p>
         <p class="bg-light border" v-if="post.url">Mettre embed ou un meta pour afficher la source ? lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
@@ -209,10 +209,11 @@ export default {
       } else {  // au clic this.isInterested devient false alors retire 1
           try { 
             console.log('-1')
-            axios.post('posts/interested', {"isInterested": 1, "id": this.post.id})
+            //console.log(this.post.id , 'post.id idPost du -1') ça marche
+            axios.post('posts/interested', {"isInterested": 1, "id": this.post.id}) // ou faire la route put avec /:id ?
               .then(() => console.log(" le post n'est plus déclaré intéressant "))
               .catch( err => console.log(err))
-            axios.delete('interested/user', {"idPost": this.post.id}) //idUser récupéré via req.user en backend
+            axios.delete('interested/user', {"idPost": this.post.id}) //idUser récupéré via req.user en backend // l'envoi dans le header ne se fait pas !
               .then(() => console.log('idUser supprimé de la table intéressant avec le numéro du Post'))
               .catch( err => console.log(err))
           } catch (error) {

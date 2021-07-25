@@ -97,30 +97,25 @@ exports.moderatePost = (req, res) => {
 exports.interestedToPost = (req, res) => {
     const {isInterested, idPost, id} = req.body;
     db.query('SELECT I.*, U.firstName, U.lastName FROM isInterestedToPost I RIGHT JOIN Users U ON U.id = I.idUser WHERE I.idUser = ? && I.idPost = ?', [req.user, id] , (err, rows) => { // WHERE I.idUser = ? && P.id = ?
-    // juste id ou les 3 id ?
-    
         //console.log(rows[0].firstName)
         console.log(rows)
         console.log(req.user)
-        
         //console.log('idPost' + rows[0].idPost)
         //db.promise().query('UPDATE Posts SET isInterested = ? WHERE idPost = ? && idUser = ? && id = ?', {isInterested: isInterested, idPost: idPost, idUser: idUser, id: id})
         try {    
             if(rows[0].idUser == req.user && id == rows[0].idPost) {
-                console.log('test try')
                 console.log('test try: ', rows[0].idUser, req.user , id, rows[0].idPost)
                 // la requête passe dans rows dans tous les cas même si la table isInterestedToPost est vide
-                db.promise().query('UPDATE Posts SET isInterested = isInterested - ? WHERE id = ?', [isInterested, id]) // attention remettre la soustraction - au lieu du +
+                db.promise().query('UPDATE Posts SET isInterested = isInterested - ? WHERE id = ?', [isInterested, id]) // le -1 n'est pas pris en compte
                     .then(() => res.status(200).json({ message: `Le post n'est plus noté intéressant par ${rows[0].firstName} idUser: ${req.user}`}))
                     .catch(error => res.status(400).json({ error }));
-            
+                return // rajouté pour empêcher l'erreur de multiple réponses
             } else { 
                 return res.status(400).json({ message: "Il n'y a pas d'utilisateur à ce numéro !"});
             }
         } catch (error) {
             console.log(error)
             console.log('test catch')
-            
         }
         try{
             console.log('test try 2')
@@ -129,7 +124,7 @@ exports.interestedToPost = (req, res) => {
                     .then(() => res.status(200).json({ message: `Le post a été noté intéressant par ${rows[0].firstName} idUser: ${req.user}`}))
                     .catch(error => res.status(400).json({ error }));
             } else { 
-                return res.status(400).json({ message: "Cet utilisateur a déjà noté le post comme intéressant!"}); // mettre un statut 200 ?
+                return res.status(400).json({ message: "Cet utilisateur a déjà noté le post comme intéressant!"});
             }
         } catch (error) {
             console.log(error)
