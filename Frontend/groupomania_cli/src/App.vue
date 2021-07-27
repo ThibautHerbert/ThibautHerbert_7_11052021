@@ -137,7 +137,6 @@ export default {
   font-family: 'Raleway','Montserrat', sans-serif;
   box-shadow:  5px 5px 5px #2c3e50;
   z-index: 99;
-
 }
 p{
   font-family: 'Raleway', sans-serif;

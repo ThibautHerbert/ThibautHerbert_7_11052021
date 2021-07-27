@@ -20,7 +20,7 @@
                 </form>
             </div>
             <div class="d-flex ">
-                <button class="btn btn-success" @click="handleSendPost(), closeWritingPost()" >Publier</button>
+                <button class="btn btn-success" @click="handleSendPost(), closeWritingPost(), newPost()" >Publier</button>
             </div>
         </div>
   </div>
@@ -40,7 +40,6 @@ export default {
         url:'',
         idUser: this.$root.logged.id,
         picture:'',
-        
        }
     },
     methods: {
@@ -51,27 +50,28 @@ export default {
         closeWritingPost() {
             this.$emit('closePost')
         },
-        async handleSendPost() { // avec ou sans async handleSignup() {
+        async handleSendPost() {
 	        if(this.body) {
 				
 				const formData = new FormData()
 				formData.append('body', this.body)
 				formData.append('url', this.url);
                 formData.append('idUser', this.idUser);
-                formData.append('picture', this.picture); // rajouté le 10 juin
-				console.log(formData)
-				
+                formData.append('picture', this.picture);
+
                 try {
-                    axios.post('posts/', formData) // /posts/
+                    axios.post('posts/', formData)
                         .then(() => alert('post publié'))
-                        //.then(() => location.reload())
                         .catch( err => console.log(err))
                 } catch (error) {
 					console.log(error)
-				} 
+				}
 	        }
+        },
+        newPost() { // méthode emit pour actualiser les posts au niveau grand parent (Posts), parent (PostList)
+            this.$emit('newPostTriggered')
         } 
-    } // fin de methods 
+    }
 }
 </script>
 

@@ -16,7 +16,7 @@ export default {
             <img alt="Groupomania logo en blanc" src="../assets/Logos/icon-left-font-monochrome-white.svg">
             <nav class="navbar navbar-expand justify-content-center bg-">  
                 <a href="/home" class="nav-link"> Accueil</a>
-                <a href="/contact" class="nav-link"> Derniers posts</a>
+                <a href="/posts" class="nav-link"> Derniers posts</a>
                 <a href="/contact" class="nav-link"> Conditions générales</a>
             </nav>
         </div>

@@ -12,7 +12,7 @@
                             <li class="list-group-item d-flex">Nom  : {{user.lastName}} </li>
                             <li class="list-group-item d-flex ">Département  : {{user.department}}</li>
                             <li class="list-group-item d-flex">Lieu de travail  : {{user.location}}</li>
-                            <li class="list-group-item d-flex">Mail  : {{user.email}}</li>
+                            <li class="list-group-item d-flex text-truncate">Mail  : {{user.email}}</li>
                         </ul>
                         <div>
                             <label class=" p-1 d-flex">Image de profil  :</label>
@@ -21,7 +21,6 @@
                     </div>
                 </div>
             </div>
-           
             <div class="my-3 d-flex justify-content-center">
                 <button class="btn btn-modify mx-1" @click="modifyAccount">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -41,11 +40,10 @@
                     </svg>
                     Changer mon mot de passe</button>
             </div>
-            
             <!--modifier le compte -->
             <div> 
                 <div class="iconTop mx-auto"> 
-                            <img src="../assets/Logos/icon.png" class="img-fluid" alt="logo Groupomania">
+                    <img src="../assets/Logos/icon.png" class="img-fluid" alt="logo Groupomania">
                 </div>
                 <div class="col-sm-6 blockForm mx-auto py-2" v-if="showModifyAccount">
                     <h3>Modifier mes informations</h3>
@@ -153,20 +151,18 @@ export default {
                 axios.post('auth/password', {"password": this.oldPassword, "email":this.user.email})
                     .then(() => {
                          axios.put('auth/account', { password: this.newPassword })
-                            .then(() => this.$router.push({ name: 'Login' })) // retaper ses informations pour se connecter
+                            .then(() => this.$router.push({ name: 'Login' })) // afin de retaper ses informations pour se connecter
                             .then(() => alert('Veuillez vous reconnecter avec le nouveau mot de passe'))
                             .then(() => this.modifyPassword())
                             .catch(error => console.log(error))
                     })
                     .catch(error => console.log(error))
-            }
-               
+            }   
         },
-        deleteAccount(){
+        deleteAccount(){ //suppression au double clic
             try {
                 axios.delete('auth/', {"picture": this.user.picture})
                 .then(() => localStorage.removeItem('Token'))
-                
                 .then(() => location.reload())
                 //.then(() => this.$router.push({ name: 'Signup' }))
                 .then(() => alert('Votre compte a bien été supprimé'))
@@ -175,33 +171,22 @@ export default {
 				console.log(error)
 			}
         },
-        newImgUpload(event) {
-            
+        newImgUpload(event) { // fonction pour récupérer et changer la photo du profil
 			this.user.picture = event.target.files[0];
-            console.log("photo modifiée")
-            console.log(event.target.files[0])
-            console.log(this.user.picture)
-            
-            // fonction rajoutée pour changer la photo du profil
 		},
         confirmModifyAccount() {
-            console.log(this.user)
-
             const formData = new FormData()
-				//formData.append('picture', refs.img) // comment utiliser les refs ?
 				formData.append('firstName', this.user.firstName);
 				formData.append('lastName', this.user.lastName);
                 formData.append('location', this.user.location);
 				formData.append('department', this.user.department);
                 let pictureTest = document.getElementById("picture").files[0]
-                formData.append('picture', pictureTest); // rajouté sans test
-               //console.log(formData.values)
-               debugger
+                formData.append('picture', pictureTest);
+
                 try {
-					 axios.post('auth/profile', formData ) // rajout de picture , "picture": this.user.picture
+					 axios.post('auth/profile', formData ) 
                      .then(() => alert('profil modifié'))
                      .then(() => this.modifyAccount()) // pour cacher le formulaire
-                     //.then(() => location.reload())
 				} catch (error) {
 					console.log(error)
 				}
@@ -211,11 +196,9 @@ export default {
 </script>
 
 <style scoped>
-
 ul li {
     font-family: 'Quicksand';
 }
-
 .accountDetails{
     border:#162846 solid 5px;
     max-width: 350px;
@@ -244,5 +227,4 @@ ul li {
 .list-group{
     max-width: 50%;
 }
-
 </style>

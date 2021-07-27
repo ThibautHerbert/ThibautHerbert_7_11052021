@@ -16,13 +16,13 @@
                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                                     </svg>
                         </button>
-                        <button @click="deleteComment" class=" btn btn-danger btn-sm justify-end m-1" v-show="$root.logged.id == comment.idUser ">
+                        <button @click="deleteComment(), onDeleteComment()" class=" btn btn-danger btn-sm justify-end m-1" v-show="$root.logged.id == comment.idUser ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="white" class="bi bi-trash" viewBox="0 0 16 16">
                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                             <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
                         </svg>
                         </button>
-                        <button @click="moderateComment" class="btn btn-warning btn-sm justify-end m-1" v-show="$root.logged.isAdmin == 1">
+                        <button @click="moderateComment(), onModerationComment()" class="btn btn-warning btn-sm justify-end m-1" v-show="$root.logged.isAdmin == 1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
                             <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
                             <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
@@ -30,10 +30,8 @@
                         </button>
                         </div>
                     </div>
-                    
                     <p class="card-text text-start">{{comment.body}}</p>
                     <p class="text-end creationDate-post px-1"> Publié le {{ comment.formattedDate }}</p>
-                   
                 </div>
             </div>
         </div>
@@ -49,7 +47,7 @@
                     </div>
                     <p class="text-center mx-2">{{ comment.body }}</p>
                     <p class="text-end creationDate-post px-1"> Publié le : {{ comment.creationDate }}</p>
-                    <button @click="deModerateComment" class="btn btn-warning justify-end m-1">
+                    <button @click="deModerateComment(), onDeModerationComment()" class="btn btn-warning justify-end m-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
                         <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
                         <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
@@ -88,37 +86,40 @@ export default {
                 const id = this.comment.id
                 axios.delete('comments/'+ id) 
                     .then(() => console.log('commentaire supprimé'))
-                    // rafraichir la page ?
-                    //.then(() => this.$router.push({ name: 'Posts' })
                     .catch( err => console.log(err))
             } catch (error) {
             console.log(error)
             }        
+        },
+        onDeleteComment() { // méthode emit pour actualiser les commentaires et retirer le commentaire supprimé au niveau grand parent (PostList), parent (SinglePost)
+            this.$emit('deleteCommentTriggered')
         },
         moderateComment(){
             let moderateComment = {"isModerated": 1, "id": this.comment.id, idPost: this.comment.idPost}
             try {
                 axios.put('comments/moderate', moderateComment) 
                     .then(() => console.log('commentaire modéré'))
-                    // rafraichir la page ?
-                    //.then(() => this.$router.push({ name: 'Posts' })
                     .catch( err => console.log(err))
             } catch (error) {
-            console.log(error)
-                    }         
+                console.log(error)
+            }         
+        },
+        onModerationComment() { // méthode emit pour mettre la modération du commentaire au niveau grand parent (PostList), parent (SinglePost)
+            this.$emit('moderationCommentTriggered')
         },
         deModerateComment() {
             let deModerateComment = {"isModerated": 0, "id": this.comment.id, idPost: this.comment.idPost}
             try {
                 axios.put('comments/moderate', deModerateComment)
                     .then(() => console.log("le commentaire a cessé d'être modéré"))
-                    // rafraichir la page ?
-                    //.then(() => this.$router.push({ name: 'Posts' })
                     .catch( err => console.log(err))
             } catch (error) {
                 console.log(error)
             }       
-        }
+        },
+        onDeModerationComment() { // méthode emit pour retirer la modération du post au niveau grand parent (Posts), parent (PostList)
+            this.$emit('deModerationCommentTriggered')
+        },
     }
 }
 </script>
@@ -131,6 +132,4 @@ export default {
     min-width: 70px;
     object-fit: cover;
 }
-
-
 </style>>

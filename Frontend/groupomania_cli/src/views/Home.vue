@@ -2,9 +2,7 @@
   <div class="home">
     <div v-if="$root.logged">
       <div class="d-flex justify-content-center" >
-        <img src="url" alt="image de profil" class="rounded-circle pic-profile" width="50" height="50">
-        <h3 class="mx-3">Bonjour </h3>
-        <p>Team </p>
+        
       </div>
       <div class="">
         <div class="d-flex justify-content-center align-items-center flex-wrap">
@@ -16,7 +14,7 @@
         </div>
       </div>
       <div>
-        <h4>Découvre vite les derniers posts !</h4>
+        <router-link :to="{ name: 'Posts'}">Découvre vite les derniers posts !</router-link>
       </div>
     </div>
     <div v-else>
@@ -48,8 +46,14 @@ export default {
 }
 </script>
 <style scoped>
+h1{
+  font-family: 'Montserrat', 'Roboto', sans-serif;
+}
 .pic-profile{
     object-fit: cover;  
+}
+.home-image{
+  max-width: 80%;
 }
 @media screen and (min-width: 320px) and (max-width: 380px) {
   .home-image {

@@ -105,13 +105,12 @@ export default {
         },
 		imgUpload(event) {
 			this.picture = event.target.files[0];
-			//this.picture = this.$refs.img.files[0]
 			let picName = this.picture.name
 			console.log(picName)
 			console.log(event.target.files[0])
 		},
         async handleSignup() {
-           //validate password
+           // condition ternaire pour vérifier la taille du mot de passe
             this.passwordError = this.password.length > 7 ? '' : 'Le mot de passe doit avoir au moins 8 caractères !'
 	        if(!this.passwordError) {
 				const formData = new FormData()
@@ -123,19 +122,11 @@ export default {
 				formData.append('email', this.email);
 				formData.append('password', this.password);
 				console.log(formData)
-				/* //fonctionne sauf this.$router
-				axios.post('auth/signup', formData)
-					.then(() => console.log('inscription réussie'))
-					.then(response => response.json())
-					//.then(() => this.$router.push({ name: 'Login' })
-					.then(() => alert('Veuillez vous connecter'))
-					.catch( err => console.log(err))  
-				*/
+
 				try {
 					const response = await axios.post('auth/signup', formData)
 					this.$router.push({ name: 'Login' })
 					alert('Veuillez vous connecter')
-					console.log(response)
 				} catch (err) {
 					this.wrongEmail = JSON.stringify(err.response.data.message)
 				}

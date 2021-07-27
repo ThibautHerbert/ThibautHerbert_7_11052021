@@ -6,7 +6,6 @@ const db = mysql.createConnection({
     password: process.env.PASSWORD,
     database: process.env.DATABASE
 })
-    // pool.connect ne fonctionne pas, seul (create)connection peut s'utiliser avec .connect
 db.connect((err) => {
     if(err){
         throw err + console.log('la connexion à Mysql a échouée');

@@ -1,7 +1,7 @@
 <template>
 <div>
   <div v-if="showModifyPost">
-    <ModifyPost :post="post" @closePost="toggleModifyPost"/>
+    <ModifyPost :post="post" @closePost="toggleModifyPost" />
   </div>
   <div class="post container mt-4" v-if="post.isModerated== 0">
     <div class="media ">
@@ -19,13 +19,13 @@
                       <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                       </svg>
             </button>
-          <button @click="deletePost" class="btn btn-danger justify-end m-1" v-show="$root.logged.id == post.idUser ">
+          <button @click="deletePost(), onDeletePost()" class="btn btn-danger justify-end m-1" v-show="$root.logged.id == post.idUser ">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash" viewBox="0 0 16 16">
             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
             <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
           </svg>
           </button>
-          <button @click="moderatePost" class="btn btn-warning justify-end m-1" v-show="$root.logged.isAdmin == 1">
+          <button @click="moderatePost(), onModerationPost()" class="btn btn-warning justify-end m-1" v-show="$root.logged.isAdmin == 1">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
             <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
             <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
@@ -70,19 +70,19 @@
                 <span v-if="showCreateComment"> Ne pas publier de commentaire</span>
                 <span v-else> Ecrire un commentaire </span>  
             </button>
-          </div>     
+          </div>   
         </div>   
       </div>
     </div>
   </div> 
   <div v-else> 
-    <div v-show="$root.logged.isAdmin == 1">Post modéré mettre un v-show pour que cela soit seulement visible d'un admin 
+    <div v-show="$root.logged.isAdmin == 1"> 
       <div class="body-post media">
         <p class="fw-bold fw-light fs-5 mt-2">Le post n°{{ post.id }} dont l'idUser est :{{post.idUser}} a été modéré </p>
         <p class="text-center mx-2">{{ post.body }}</p>
-        <p class="bg-light border" v-if="post.url">Mettre embed ou un meta pour afficher la source ? lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
-        <p class="text-end creationDate-post px-1"> Publié le : {{ post.creationDate }}</p>
-        <button @click="deModeratePost" class="btn btn-warning justify-end m-1">
+        <p class="bg-light border" v-if="post.url"> lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
+        <p class="text-end creationDate-post px-1"> Publié le : {{ post.formattedDate }}</p>
+        <button @click="deModeratePost(), onDeModerationPost()" class="btn btn-warning justify-end m-1">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
           <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
           <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
@@ -93,13 +93,13 @@
     </div>
   </div>
   <div v-if="showCreateComment">
-    <WriteComment :post="post" @closeComment="toggleComment"/>
+    <WriteComment :post="post" @closeComment="toggleComment" @newCommentTriggered="newComment" />
   </div>
   <div v-if="comments.length" class="my-2">
                         <!--début de la boucle des commentaires-->
    <div v-for="comment in comments" :key="comment.id">
       <div v-if="comment.idPost == post.id">
-        <SingleComment :comment="comment" :post="post"/>
+        <SingleComment :comment="comment" :post="post" @deleteCommentTriggered="onDeleteComment" @moderationCommentTriggered="onModerationComment" @deModerationCommentTriggered="onDeModerationComment" />
       </div>
     </div>
   </div>
@@ -125,7 +125,6 @@ export default {
         isInterested:false,
         idUserPost:this.post.idUser,
         idUserComment:'',
-        //comments: [], //déjà dans postList
       }
   },
   methods: {
@@ -139,56 +138,47 @@ export default {
           axios.delete('posts/' + id) // /posts/
               .then(() => console.log('post supprimé'))
               .then(response => response.json())
-              // rafraichir la page ?
               //.then(() => this.$router.push({ name: 'Posts' })
               .catch( err => console.log(err))
       } catch (error) {
       console.log(error)
       }         
-    }, 
+    },
+    onDeletePost() { // méthode emit pour retirer le post supprimé au niveau grand parent (Posts), parent (PostList)
+      this.$emit('deletePostTriggered')
+    },
     moderatePost() {
-      console.log('click modération du post')
       if(this.post.body) {
 				const isModerated = 1
 				const formData = new FormData()
 				formData.append('isModerated', isModerated)
         formData.append('id', this.post.id);
-				console.log(formData)
-        //let postToModerate = {"isModerated": 1, "id": this.post.id}
         try {
-            //axios.put('posts/moderate', formData) // /posts/
           axios.post('posts/moderate', {"isModerated": 1, "id": this.post.id})
             .then(() => console.log('post modéré'))
-                // rafraichir la page ?
-                //.then(() => this.$router.push({ name: 'Posts' })
             .catch( err => console.log(err))
         } catch (error) {
         console.log(error)
 				}         
 	    }
     },
+    onModerationPost() { // méthode emit pour mettre la modération du post au niveau grand parent (Posts), parent (PostList)
+      this.$emit('moderationPostTriggered')
+    },
     deModeratePost() {
-      console.log('click modération retirée du post')
       let moderatePost = {"isModerated": 0, "id": this.post.id}
       try {
         axios.post('posts/moderate', moderatePost) // /posts/
           .then(() => console.log("le post a cessé d'être modéré"))
-          //.then(response => response.json())
-          // rafraichir la page ?
-          //.then(() => this.$router.push({ name: 'Posts' })
           .catch( err => console.log(err))
       } catch (error) {
       console.log(error)
       }         
     },
-    /*getComments() {
-      axios.get('comments/', {"idPost":4})
-        .then(response => this.comments = response.data)
-        .then(response => console.log(response))
-        .catch(error => console.log(error))
-    },*/
+    onDeModerationPost() { // méthode emit pour retirer la modération du post au niveau grand parent (Posts), parent (PostList)
+      this.$emit('deModerationPostTriggered')
+    },
     toggleComment() {
-      console.log('open write a comment')
       this.showCreateComment = !this.showCreateComment
     },
     interestedPost() {
@@ -200,7 +190,7 @@ export default {
           axios.post('posts/interested', {"isInterested": 1, "id": this.post.id})
             .then(() => console.log('post déclaré intéressant'))
             .catch( err => console.log(err))
-          axios.post('interested/user', {"idPost":this.post.id}) //idUser récupérer via req.user en backend
+          axios.post('interested/user/like', {"idPost":this.post.id}) //idUser récupérer via req.user en backend
             .then(() => console.log('idUser ajouté à la table intéressant avec le numéro du Post'))
             .catch( err => console.log(err))
         } catch (error) {
@@ -209,28 +199,32 @@ export default {
       } else {  // au clic this.isInterested devient false alors retire 1
           try { 
             console.log('-1')
-            //console.log(this.post.id , 'post.id idPost du -1') ça marche
-            axios.post('posts/interested', {"isInterested": 1, "id": this.post.id}) // ou faire la route put avec /:id ?
+            // retirer 1 à isInterested :
+            axios.post('posts/interested', {"isInterested": 1, "id": this.post.id})
               .then(() => console.log(" le post n'est plus déclaré intéressant "))
               .catch( err => console.log(err))
-            axios.delete('interested/user', {"idPost": this.post.id}) //idUser récupéré via req.user en backend // l'envoi dans le header ne se fait pas !
+            // supprimer le rang de la table isInterestedToPost :
+            axios.post('interested/user/unlike', {"idPost": this.post.id})
               .then(() => console.log('idUser supprimé de la table intéressant avec le numéro du Post'))
               .catch( err => console.log(err))
           } catch (error) {
           console.log(error)
           }  
-      }
-      
+      } 
     },
+    newComment() { // méthode emit pour actualiser les commentaires au niveau grand parent (PostList), enfant (WriteComment)
+      this.$emit('newCommentTriggered')
+    },
+    onDeleteComment() { // méthode emit pour retirer le commentaire au niveau grand parent (PostList), enfant (SingleComment)
+      this.$emit('deleteCommentTriggered')
+    },
+    onModerationComment() { // méthode emit pour mettre la modération du commentaire au niveau grand parent (PostList), enfant (SingleComment)
+          this.$emit('moderationCommentTriggered')
+      },
+    onDeModerationComment() { // méthode emit pour retirer la modération du post au niveau grand parent (PostList), enfant (SingleComment)
+          this.$emit('deModerationCommentTriggered')
+      },
   },
-  created() {
-
-  },
-  /*mounted() {
-    this.getComments();
-    console.log(this.comments.idUser)
-
-  },*/
 }
 </script>
 
@@ -243,7 +237,6 @@ export default {
 h5{
   font-family: 'Quicksand-SemiBold', 'Roboto', sans-serif;
   color:#D1515A;
-  
 }
 .router-link{
   text-decoration: none;

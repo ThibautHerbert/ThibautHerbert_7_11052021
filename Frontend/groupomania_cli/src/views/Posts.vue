@@ -1,18 +1,12 @@
 <template>
-  <!-- <Loader /> -->
   <div class="Post-vue" v-if="posts.length">
     <h2>{{ header }}</h2>
     <h3>{{ subdescription }}</h3>
-        <PostList :posts="posts" />
+        <PostList :posts="posts" @newPostTriggered="getPosts" @deletePostTriggered="getPosts" @moderationPostTriggered="getPosts" @deModerationPostTriggered="getPosts"/>
   </div>
-   <div v-else>
-    <Loader />
-    <!--<div v-else> 
-          <div class="spinner-border text-danger" role="status">
-            <span class="sr-only">En chargement ...</span>
-          </div>--> 
-          
-    </div>
+  <div v-else>
+    <Loader />     
+  </div>
 </template>
 
 <script>
@@ -23,7 +17,7 @@ import Loader from '../components/Loader.vue'
 
 export default {
     props: [ 'id'],
-    components: { PostList, Login, Loader}, //, Loader 
+    components: { PostList, Login, Loader},
     data() {
         return {
             header: "Bienvenue dans le fil d'actu",
@@ -53,5 +47,4 @@ h3{
   font-family: 'Montserrat', 'Roboto', sans-serif;
   font-weight: bold;
 }
-
 </style>

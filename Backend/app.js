@@ -1,9 +1,8 @@
 const express = require('express');
 const mysql = require('mysql2');
 const path = require('path');
-//const db = require('./db');
 
-const cookieParser = require('cookie-parser'); // est-ce utile ?
+const cookieParser = require('cookie-parser');
 //paquets de sécurité :
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -21,7 +20,7 @@ const interestedRoutes = require('./routes/interested');
 
 
 const limiter = rateLimit({ // spécifie le nombre maximums de requêtes
-    max: 500, // 100 par heure
+    max: 500, // selon le nombre d'utilisateurs et d'interaction entre chacun la jauge peut être diminué ou augmenté : 100 par heure par exemple
     windowMs: 60 * 60 * 1000, // pour : 60mn 60secondes 1000 millisecondes
     message: 'Vous avez réalisé trop de requêtes depuis votre adresse IP, merci de réessayer plus tard',
   })
@@ -33,7 +32,6 @@ app.use(helmet());
 app.use(express.json());
 // parse URL encoded bodies as sent by HTML forms
 app.use(express.urlencoded({extended: false}))
-
 
 app.use(cookieParser());
 
@@ -62,8 +60,6 @@ app.get('/api', (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: 'Il semblerait que la base de données ne soit pas connectée, réessayez plus tard'});
   }
-    
-    //return res.status(400).json({ message: 'Il semblerait que la base de données ne soit pas connectée, réessayez plus tard'});
 });
 
 module.exports = app;

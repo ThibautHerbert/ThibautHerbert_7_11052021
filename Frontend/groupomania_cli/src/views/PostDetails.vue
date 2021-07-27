@@ -1,14 +1,16 @@
 <template>
-  <div>détail d'un seul post
-        <div v-if="error">{{ error }}</div>
+  <div>Détail du post
+        
         <div v-if="post" class="post" >
-            <p>Publié le  post[0].creationDate  par </p>
-            <h3>post[0].idUser</h3>
-            <p> post[0].body </p>
-            <p> post[0].url </p>
+            <p>Publié le  post.creationDate  par </p>
+            <h3>post.idUser</h3>
+            <p> post.body </p>
+            <p> post.url </p>
+            <div>Commentaires :</div>
+            <p></p>
         </div>
-        <div>Commentaires :</div>
-        <p>à insérer : commentaire</p>
+        
+        <div v-else class="error">{{ error }}</div>
   </div>
   
 </template>
@@ -26,7 +28,8 @@ export default {
                 body:'',
                 creationDate:'',
                 isModerated:''
-            }]
+            }],
+            error: "Pas de post à cette adresse"
         }
     },
     props: ['id', 'post'],
@@ -46,6 +49,13 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.error{
+  padding: 5%;
+  background: crimson;
+  border-radius: 40px;
+  font-family: 'Raleway','Montserrat', sans-serif;
+  box-shadow:  5px 5px 5px #2c3e50;
+  z-index: 99;
+}
 </style>

@@ -13,9 +13,4 @@ router.get('/:id', auth, postCtrl.getOnePost);
 router.get('/', auth, postCtrl.getAllPosts);
 router.post('/interested', auth, postCtrl.interestedToPost);
 
-// routes pour la gestion des posts "intéressants"
-/*
-router.post('/user', auth, postCtrl.userInterested);
-router.delete('/user', auth, postCtrl.deleteUserInterested);
-*/
 module.exports = router;

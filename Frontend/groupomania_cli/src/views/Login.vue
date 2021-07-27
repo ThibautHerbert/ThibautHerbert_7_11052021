@@ -59,8 +59,7 @@ export default {
             this.$emit('close')
         },
         async handleLogin() {
-            this.passwordError = this.password.length > 7 ? '' : 'Le mot de passe doit avoir au moins 8 caractères !'
-	        console.log('test ')
+            this.passwordError = this.password.length > 7 ? '' : 'Le mot de passe doit avoir au moins 8 caractères !' // condition ternaire pour vérifier la taille du mot de passe
             
             if(!this.passwordError) { // s'il n'y a pas d'erreur de mdp alors :
                 try {
@@ -72,7 +71,6 @@ export default {
                     this.$router.push({ name: 'Posts' })
                         .then(() => location.reload())
                         .catch(error => console.log(error))
-                
                 } catch (err) {  
                     this.wrongPassword = JSON.stringify(err.response.data.message)
                 }
@@ -83,7 +81,6 @@ export default {
 </script>
 
 <style>
-
 *{
     font-family: 'Calibri', 'Courier New', Courier, monospace;
     color: black;
@@ -91,5 +88,4 @@ export default {
 .bg-logo{
     background: #42b983;
 }
-
 </style>
