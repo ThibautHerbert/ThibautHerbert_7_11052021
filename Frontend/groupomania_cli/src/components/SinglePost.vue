@@ -76,7 +76,7 @@
     </div>
   </div> 
   <div v-else> 
-    <div v-show="$root.logged.isAdmin == 1"> 
+    <div v-show="$root.logged.isAdmin == 1 && post.body"> 
       <div class="body-post media">
         <p class="fw-bold fw-light fs-5 mt-2">Le post n°{{ post.id }} dont l'idUser est :{{post.idUser}} a été modéré </p>
         <p class="text-center mx-2">{{ post.body }}</p>

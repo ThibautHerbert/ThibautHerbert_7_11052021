@@ -1,10 +1,11 @@
 <template>
     <div> 
-        <div v-if="user">
+        
+        <div v-if="Object.keys(user).length">
             <h2>Bienvenue sur ton compte : {{user.firstName}}</h2>
-            <div class="d-flex flex-wrap justify-content-center align-items-center">
-                <div class="col-md-4 presentation"><img src="../assets/images/pexels-monstera-6373931-1000px.jpg" alt="carte de présentation"></div>
-                <div class="col-md-4 accountDetails my-2 pb-2 my-account">
+            <div class="d-flex flex-wrap justify-content-around align-items-center">
+                <div class="presentation"><img src="../assets/images/pexels-monstera-6373931-1000px.jpg" alt="carte de présentation"></div>
+                <div class="accountDetails my-2 pb-2 my-account">
                     <h3>Mon compte</h3>
                     <div class="d-flex justify-content-around ">
                         <ul class="list-group text-start">
@@ -196,6 +197,9 @@ export default {
 </script>
 
 <style scoped>
+.test2{
+    border: solid red 3px;
+}
 ul li {
     font-family: 'Quicksand';
 }

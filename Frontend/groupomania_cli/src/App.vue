@@ -21,14 +21,10 @@
       <router-link :to="{ name: 'Home'}">Accueil</router-link> |
       <router-link :to="{ name: 'Posts'}">Fil d'actualité</router-link> |
       <router-link :to="{ name: 'Account', params: { id: logged.id }}">Mon compte</router-link>
-      <!--<router-link :to="{ name: 'Account', params: { id: userConnected1[0].id }}">Mon compte N°{{userConnected1[0].id}}</router-link>-->
     </div>
     <div id="db-connected" class="" v-if="db != `<h1>Page d'accueil Backend</h1> Base de données connectée`"></div>
     
     <router-view/>
-    <!--
-    <Posts />
-    -->
     <Footer />
   </div>
 </template>
@@ -46,8 +42,6 @@ export default {
     return {
       logged: null,
       db:'',
-
-      
     }
   },
   
@@ -56,41 +50,16 @@ export default {
       .then(response => this.logged = response.data)
       .catch(error => console.log(error))
 
-    axios.get('')//, (res, err) => {
-      //console.log('test réussie')
-      //this.db = 'Il semblerait que la base de données ne soit pas connectée, réessayez plus tard'
-      //if (res) { console.log ("cool") } else { console.log("pas cool" )} // aucun console.log n'apparait
-      
-    //})
-         
-          
-          .then(response => this.db = response.data)
-          //.catch(error => console.log('Il semblerait que la base de données ne soit pas connectée, réessayez plus tard'))
-          .catch(error => document.getElementById("db-connected").innerHTML = "Problème lié au serveur, veuillez réessayer plus tard")
-          
+    axios.get('')
+      .then(response => this.db = response.data)
+      .catch(error => document.getElementById("db-connected").innerHTML = "Problème lié au serveur, veuillez réessayer plus tard")
   },
   methods: {
     logout() {
-            //mettre un if loggedIn :
-            console.log('logout cliqué')
-            localStorage.removeItem('Token');
-            this.$router.push({ name: "Login" })
-            //renvoyer vers page de connexion
-            //.then(() => this.$router.push({ name: 'Login' })
-              .then(() => location.reload())
-        },
-    /*getDBConnexion() {
-        axios.get('http://localhost:5000/api')
-          .then(response => console.log(response.data))
-          .catch(error => this.db = response.data)
-    },*/
-    /*mounted() {
-      getDBConnexion(){
-          axios.get('http://localhost:5000/api')
-            .then(response => console.log(response.data))
-            .catch(error => this.db = response.data)
-      }
-    }*/
+      localStorage.removeItem('Token');
+      this.$router.push({ name: "Login" })
+        .then(() => location.reload())
+    },
   }
   
 }
