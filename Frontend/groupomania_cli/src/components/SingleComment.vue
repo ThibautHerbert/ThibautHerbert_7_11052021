@@ -37,8 +37,8 @@
         </div>
         <div v-else>
             <div v-show="$root.logged.isAdmin == 1">
-                <div class="body-post  media">
-                    <div class="d-flex mx-1">
+                <div class="body-post media-moderated mx-auto " style="width: 80%;">
+                    <div class="d-flex mx-1" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
                             <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353L4.54.146zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1H5.1z"/>
                             <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
@@ -46,7 +46,7 @@
                         <p class="fw-bold fw-light fs-5 mt-2 mx-1">Le commentaire n°{{ comment.id }} dont l'idUser est :{{comment.idUser}} a été modéré </p>
                     </div>
                     <p class="text-center mx-2">{{ comment.body }}</p>
-                    <p class="text-end creationDate-post px-1"> Publié le : {{ comment.creationDate }}</p>
+                    <p class="text-end creationDate-post px-1"> Publié le : {{ comment.formattedDate }}</p>
                     <button @click="deModerateComment(), onDeModerationComment()" class="btn btn-warning justify-end m-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
                         <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>

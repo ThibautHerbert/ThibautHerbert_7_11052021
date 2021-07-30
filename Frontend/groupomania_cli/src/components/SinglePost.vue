@@ -33,7 +33,7 @@
           </button>
         </div>
       </div>
-      <div class="body-post justify-content-start">
+      <div class="justify-content-start">
         <p class="text-start mx-2">{{ post.body }}</p>
         <div v-if="post.picture === 'NULL'"></div>
         <div class="mx-auto" v-else> 
@@ -77,7 +77,7 @@
   </div> 
   <div v-else> 
     <div v-show="$root.logged.isAdmin == 1 && post.body"> 
-      <div class="body-post media">
+      <div class="media-moderated container">
         <p class="fw-bold fw-light fs-5 mt-2">Le post n°{{ post.id }} dont l'idUser est :{{post.idUser}} a été modéré </p>
         <p class="text-center mx-2">{{ post.body }}</p>
         <p class="bg-light border" v-if="post.url"> lien : <a href="{{ post.url }}">{{ post.url }}</a></p>
@@ -232,6 +232,10 @@ export default {
 
 .media{
   border:#2d3F5d solid 5px;
+  border-radius: 10px;
+}
+.media-moderated{
+  border:#D1515A solid 5px;
   border-radius: 10px;
 }
 h5{
