@@ -29,3 +29,14 @@ Attention pour les connexions à la base de données et au serveur, vous devrez 
     TOKEN = 
     TOKEN_EXPIRY = 
     CONNECTION_LIMIT
+    
+Droits administrateurs :
+Si vous vous connectez à la base de données fournie:
+Afin de tester un utilisateur avec des droits Administrateur connectez-vous avec :
+email : com@groupomania.com
+mot de passe : test1234
+
+Un utilisateur avec droit d'administrateur peut modérer toutes les publications et tous les commentaires (c'est à dire cacher les éléments des autres utilisateurs). Seul cet utilisateur peut voir les publications et commentaires modérés, et il peut également choisir de retirer cette modération.
+
+Si vous ne vous connectez pas à la base de données fournie, il faudra manipuler la base de données vous même pour permettre à un utilisateur d'être modérateur :
+Table Users : isAdmin = 1
